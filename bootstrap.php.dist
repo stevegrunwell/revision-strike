@@ -1,0 +1,31 @@
+<?php
+if ( ! defined( 'PROJECT' ) ) {
+	define( 'PROJECT', __DIR__ . '/includes/' );
+}
+
+if ( ! defined( 'ABSPATH' ) ) {
+	define( 'ABSPATH', __DIR__ . '/tests/dummy-files/' );
+}
+
+if ( ! defined( 'WPINC' ) ) {
+	define( 'WPINC', ABSPATH . 'wp-includes' );
+}
+
+if ( ! defined( 'DAY_IN_SECONDS' ) ) {
+	define( 'DAY_IN_SECONDS', 60 * 60 * 24 );
+}
+if ( ! file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	throw new PHPUnit_Framework_Exception(
+		'ERROR' . PHP_EOL . PHP_EOL .
+		'You must use Composer to install the test suite\'s dependencies!' . PHP_EOL
+	);
+}
+
+date_default_timezone_set( 'UTC' );
+
+require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/tests/test-tools/TestCase.php';
+
+WP_Mock::setUsePatchwork( true );
+WP_Mock::bootstrap();
+WP_Mock::tearDown();
