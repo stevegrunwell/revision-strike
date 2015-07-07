@@ -1,0 +1,58 @@
+<?php
+/**
+ * Tests for the plugin's bootstrapping.
+ *
+ * @package Revision Strike
+ * @author Steve Grunwell
+ */
+
+namespace Grunwell\RevisionStrike;
+
+use WP_Mock as M;
+use RevisionStrike;
+
+class PluginBootstrapTest extends TestCase {
+
+	protected $testFiles = [
+		'../revision-strike.php',
+	];
+
+	public function setUp() {
+		M::wpPassthruFunction( 'register_activation_hook' );
+		M::wpPassthruFunction( 'register_deactivation_hook' );
+
+		parent::setUp();
+	}
+
+	public function test_revisionstrike_init() {
+		$this->assertFalse( isset( $GLOBALS['revision_strike'] ) );
+
+		\revisionstrike_init();
+
+		$this->assertInstanceOf( 'RevisionStrike', $GLOBALS['revision_strike'] );
+	}
+
+	public function test_revisionstrike_register_cron() {
+		M::wpFunction( 'wp_next_scheduled', array(
+			'times'  => 1,
+			'args'   => array( RevisionStrike::STRIKE_ACTION ),
+			'return' => false,
+		) );
+
+		M::wpFunction( 'wp_schedule_event', array(
+			'times'  => 1,
+			'args'   => array( M\Functions::type( 'int' ), 'daily', RevisionStrike::STRIKE_ACTION ),
+		) );
+
+		\revisionstrike_register_cron();
+	}
+
+	public function test_revisionstrike_deregister_cron() {
+		M::wpFunction( 'wp_clear_scheduled_hook', array(
+			'times'  => 1,
+			'args'   => array( RevisionStrike::STRIKE_ACTION ),
+		) );
+
+		\revisionstrike_deregister_cron();
+	}
+}
