@@ -18,12 +18,20 @@ class RevisionStrikeCLI extends WP_CLI {
 	/**
 	 * Remove old post revisions.
 	 *
+	 * ## OPTIONS
+	 *
+	 * [--days=<days>]
+	 * : Remove revisions on posts published at least <days> days ago.
+	 *
 	 * ## EXAMPLES
 	 *
 	 *   wp revisionstrike clean
+	 *   wp revisionstrike clean --days=45
 	 */
 	public function clean( $args, $assoc_args ) {
-		do_action( RevisionStrike::STRIKE_ACTION );
+		$days = isset( $assoc_args['days'] ) ? absint( $assoc_args['days'] ) : false;
+
+		do_action( RevisionStrike::STRIKE_ACTION, $days );
 	}
 
 }

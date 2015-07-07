@@ -22,9 +22,22 @@ class CLITest extends TestCase {
 	public function test_clean() {
 		$cli = new RevisionStrikeCLI;
 
-		M::expectAction( RevisionStrike::STRIKE_ACTION );
+		M::expectAction( RevisionStrike::STRIKE_ACTION, false );
 
 		$cli->clean( array(), array() );
+	}
+
+	public function test_clean_with_days_argument() {
+		$cli = new RevisionStrikeCLI;
+
+		M::wpPassthruFunction( 'absint', array(
+			'times' => 1,
+			'args'  => array( 7 ),
+		) );
+
+		M::expectAction( RevisionStrike::STRIKE_ACTION, 7 );
+
+		$cli->clean( array(), array( 'days' => 7 ) );
 	}
 
 }

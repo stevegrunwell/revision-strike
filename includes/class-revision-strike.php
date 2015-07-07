@@ -9,9 +9,10 @@
 class RevisionStrike {
 
 	/**
-	 * @var int $revision_expiration_time The cached revision expiration time.
+	 * @var int $revision_expiration_threshold The cached number of days since a post's publishing
+	 *                                         before its revisions can be removed.
 	 */
-	protected $revision_expiration_time;
+	protected $revision_expiration_threshold;
 
 	/**
 	 * The action called to trigger the clean-up process.
@@ -34,10 +35,17 @@ class RevisionStrike {
 
 	/**
 	 * Clean up ("strike") post revisions for posts older than a certain number of seconds.
+	 *
+	 * @param int|bool $days The number of days old a post must be in order for its revisions to be
+	 *                       struck. A boolean FALSE will defer to get_revision_expiration_time().
 	 */
-	public function strike() {
-		$strike_before_timestamp = time() - $this->get_revision_expiration_time();
-		$revision_ids            = $this->get_revision_ids( $strike_before_timestamp, 50 );
+	public function strike( $days = false ) {
+		if ( false === $days ) {
+			$days = $this->get_revision_expiration_threshold();
+		}
+
+		// Collect the revision IDs
+		$revision_ids = $this->get_revision_ids( $days, 50 );
 
 		if ( ! empty( $revision_ids ) ) {
 			foreach ( $revision_ids as $revision_id ) {
@@ -47,30 +55,22 @@ class RevisionStrike {
 	}
 
 	/**
-	 * Get the number of seconds since a post's publish date that must have passed before revisions
-	 * can be struck.
+	 * Get the number of days since a post's publish date that must have passed before revisions can
+	 * be struck.
 	 *
-	 * @return int A number of seconds.
+	 * @return int A number of days.
 	 */
-	protected function get_revision_expiration_time() {
-		if ( ! is_null( $this->revision_expiration_time ) ) {
-			return $this->revision_expiration_time;
+	protected function get_revision_expiration_threshold() {
+		if ( ! is_null( $this->revision_expiration_threshold ) ) {
+			return $this->revision_expiration_threshold;
 		}
 
-		$time = 30 * DAY_IN_SECONDS; // Default: 30 days
-
-		/**
-		 * Controls the age (in seconds) a published post much reach before its revisions are eligible
-		 * to be purged.
-		 *
-		 * @param int $time The age (in seconds) a published post must reach before it can be purged.
-		 */
-		$time = apply_filters( 'revisionstrike_expiration_time', $time );
+		$time = 30; // @todo pull this from a settings page
 
 		// Cache the result
-		$this->revision_expiration_time = intval( $time );
+		$this->revision_expiration_threshold = intval( $time );
 
-		return $this->revision_expiration_time;
+		return $this->revision_expiration_threshold;
 	}
 
 	/**
@@ -78,13 +78,13 @@ class RevisionStrike {
 	 *
 	 * @global $wpdb
 	 *
-	 * @param int $timestamp The Unix timestamp of the time before which all revisions should be
-	 *                       purged from the database: time() - $this->get_revision_expiration_time().
-	 * @param int $limit     The maximum number of revisions to remove on each pass.
+	 * @param int $days  The number of days since a post's publish date that must pass before we can
+	 *                   purge the post revisions.
+	 * @param int $limit The maximum number of revisions to remove on each pass.
 	 *
 	 * @return array An array of post IDs (unless 'fields' is manipulated in $args).
 	 */
-	protected function get_revision_ids( $expiration_time, $limit = 50 ) {
+	protected function get_revision_ids( $days, $limit = 50 ) {
 		global $wpdb;
 
 		$limit = absint( $limit );
@@ -95,7 +95,7 @@ class RevisionStrike {
 			WHERE r.post_type = 'revision' AND p.post_date < %s
 			LIMIT %d
 			",
-			date( 'Y-m-d', strtotime( $expiration_time ) ),
+			date( 'Y-m-d', time() - ( absint( $days ) * DAY_IN_SECONDS ) ),
 			$limit
 		) );
 

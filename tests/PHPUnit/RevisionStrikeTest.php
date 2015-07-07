@@ -38,11 +38,12 @@ class RevisionStrikeTest extends TestCase {
 		$instance = Mockery::mock( 'RevisionStrike' )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
-		$instance->shouldReceive( 'get_revision_expiration_time' )
+		$instance->shouldReceive( 'get_revision_expiration_threshold' )
 			->once()
-			->andReturn( 60 );
+			->andReturn( 30 );
 		$instance->shouldReceive( 'get_revision_ids' )
 			->once()
+			->with( 30, 50 )
 			->andReturn( array( 1, 2, 3 ) );
 
 		M::wpFunction( 'wp_delete_post_revision', array(
@@ -52,31 +53,45 @@ class RevisionStrikeTest extends TestCase {
 		$instance->strike();
 	}
 
-	public function test_get_revision_expiration_time() {
-		$instance = new RevisionStrike;
+	public function test_strike_with_days_argument() {
+		$instance = Mockery::mock( 'RevisionStrike' )
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
+		$instance->shouldReceive( 'get_revision_expiration_threshold' )
+			->never();
+		$instance->shouldReceive( 'get_revision_ids' )
+			->once()
+			->with( 90, 50 )
+			->andReturn( array( 1, 2, 3 ) );
 
-		$method = new ReflectionMethod( $instance, 'get_revision_expiration_time' );
-		$method->setAccessible( true );
+		M::wpFunction( 'wp_delete_post_revision', array(
+			'times'  => 3
+		) );
 
-		$property = new ReflectionProperty( $instance, 'revision_expiration_time' );
-		$property->setAccessible( true );
-
-		M::onFilter( 'revisionstrike_expiration_time' )
-			->with( 60 * 60 * 24 * 30 ) // 30 days
-			->reply( 60 );
-
-		$this->assertEmpty( $property->getValue( $instance ) );
-		$this->assertEquals( 60, $method->invoke( $instance ) );
-		$this->assertEquals( 60, $property->getValue( $instance ) );
+		$instance->strike( 90 );
 	}
 
-	public function test_get_revision_expiration_time_uses_cached_value() {
+	public function test_get_revision_expiration_threshold() {
 		$instance = new RevisionStrike;
 
-		$method = new ReflectionMethod( $instance, 'get_revision_expiration_time' );
+		$method = new ReflectionMethod( $instance, 'get_revision_expiration_threshold' );
 		$method->setAccessible( true );
 
-		$property = new ReflectionProperty( $instance, 'revision_expiration_time' );
+		$property = new ReflectionProperty( $instance, 'revision_expiration_threshold' );
+		$property->setAccessible( true );
+
+		$this->assertEmpty( $property->getValue( $instance ) );
+		$this->assertEquals( 30, $method->invoke( $instance ) );
+		$this->assertEquals( 30, $property->getValue( $instance ) );
+	}
+
+	public function test_get_revision_expiration_threshold_uses_cached_value() {
+		$instance = new RevisionStrike;
+
+		$method = new ReflectionMethod( $instance, 'get_revision_expiration_threshold' );
+		$method->setAccessible( true );
+
+		$property = new ReflectionProperty( $instance, 'revision_expiration_threshold' );
 		$property->setAccessible( true );
 		$property->setValue( $instance, 12345 );
 
@@ -93,7 +108,7 @@ class RevisionStrikeTest extends TestCase {
 		$wpdb = Mockery::mock( '\WPDB' );
 		$wpdb->shouldReceive( 'prepare' )
 			->once()
-			->with( Mockery::any(), '2015-01-01', 25 )
+			->with( Mockery::any(), Mockery::any(), 25 )
 			->andReturn( 'SQL STATEMENT' );
 		$wpdb->shouldReceive( 'get_results' )
 			->once()
@@ -103,7 +118,7 @@ class RevisionStrikeTest extends TestCase {
 
 		M::wpPassthruFunction( 'absint' );
 
-		$result = $method->invoke( $instance, '2015-01-01', 25 );
+		$result = $method->invoke( $instance, 90, 25 );
 		$wpdb   = null;
 
 		$this->assertEquals( array( 1, 2, 3 ), $result );
