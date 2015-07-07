@@ -12,6 +12,8 @@ class WP_CLI {
 	public static function add_command() {}
 	public static function line() {}
 	public static function log() {}
+	public static function success() {}
+	public static function error() {}
 
 }
 

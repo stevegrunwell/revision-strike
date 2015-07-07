@@ -27,9 +27,18 @@ If you make use of [WP-CLI](http://wp-cli.org/) on your site you may trigger Rev
 $ wp revision-strike clean
 ```
 
+#### Arguments
+
+<dl>
+	<dt>--days=&lt;days&gt;</dt>
+	<dd>Remove revisions on posts published at least &lt;days&gt; day(s) ago.</dd>
+	<dt>--verbose</dt>
+	<dd>Enable verbose logging of deleted revisions.</dd>
+</dl>
+
 
 ## Releases
 
 ### 0.1
 
-Initial public release
+Initial public release.
