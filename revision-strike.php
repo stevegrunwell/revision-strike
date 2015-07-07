@@ -12,6 +12,7 @@
  */
 
 require_once dirname( __FILE__ ) . '/includes/class-revision-strike.php';
+require_once dirname( __FILE__ ) . '/includes/class-revision-strike-cli.php';
 
 /**
  * Bootstrap the plugin.

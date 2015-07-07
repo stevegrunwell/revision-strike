@@ -25,6 +25,8 @@ date_default_timezone_set( 'UTC' );
 
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/tests/test-tools/TestCase.php';
+require_once ABSPATH . 'wp-cli.php';
+require_once ABSPATH . 'wp-cli-utils.php';
 
 WP_Mock::setUsePatchwork( true );
 WP_Mock::bootstrap();
