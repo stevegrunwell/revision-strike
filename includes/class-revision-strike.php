@@ -88,7 +88,7 @@ class RevisionStrike {
 		global $wpdb;
 
 		$limit = absint( $limit );
-		$query = $wpdb->get_results( $wpdb->prepare(
+		$query = $wpdb->get_col( $wpdb->prepare(
 			"
 			SELECT r.ID FROM $wpdb->posts r
 			LEFT JOIN $wpdb->posts p ON r.post_parent = p.ID

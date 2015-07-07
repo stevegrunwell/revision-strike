@@ -110,7 +110,7 @@ class RevisionStrikeTest extends TestCase {
 			->once()
 			->with( Mockery::any(), Mockery::any(), 25 )
 			->andReturn( 'SQL STATEMENT' );
-		$wpdb->shouldReceive( 'get_results' )
+		$wpdb->shouldReceive( 'get_col' )
 			->once()
 			->with( 'SQL STATEMENT' )
 			->andReturn( array( 1, 2, 3 ) );
