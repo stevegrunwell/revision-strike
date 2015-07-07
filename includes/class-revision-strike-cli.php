@@ -28,4 +28,4 @@ class RevisionStrikeCLI extends WP_CLI {
 
 }
 
-WP_CLI::add_command( 'revisionstrike', 'RevisionStrikeCLI' );
+WP_CLI::add_command( 'revision-strike', 'RevisionStrikeCLI' );
