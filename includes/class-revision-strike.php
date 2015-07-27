@@ -9,6 +9,11 @@
 class RevisionStrike {
 
 	/**
+	 * @var RevisionStrikeSettings $settings The plugin settings.
+	 */
+	public $settings;
+
+	/**
 	 * @var int $revision_expiration_threshold The cached number of days since a post's publishing
 	 *                                         before its revisions can be removed.
 	 */
@@ -31,6 +36,14 @@ class RevisionStrike {
 	 */
 	public function add_hooks() {
 		add_action( self::STRIKE_ACTION, array( $this, 'strike' ) );
+		add_action( 'admin_init', array( $this, 'settings' ) );
+	}
+
+	/**
+	 * Register the plugin settings page.
+	 */
+	public function settings() {
+		$this->settings = new RevisionStrikeSettings;
 	}
 
 	/**
