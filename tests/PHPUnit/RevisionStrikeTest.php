@@ -30,8 +30,18 @@ class RevisionStrikeTest extends TestCase {
 	public function test_add_hooks() {
 		$instance = new RevisionStrike;
 		M::expectActionAdded( RevisionStrike::STRIKE_ACTION, array( $instance, 'strike' ) );
+		M::expectActionAdded( 'admin_init', array( $instance, 'settings' ) );
 
 		$instance->add_hooks();
+	}
+
+	public function test_settings() {
+		$this->markTestSkipped( 'Need a better instantiation method' );
+		$instance = Mockery::mock( 'RevisionStrike' )->makePartial();
+
+		$instance->settings();
+
+		$this->assertInstanceOf( 'RevisionStrikeSettings', $instance->settings );
 	}
 
 	public function test_strike() {

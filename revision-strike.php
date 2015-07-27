@@ -13,6 +13,7 @@
 
 require_once dirname( __FILE__ ) . '/includes/class-revision-strike.php';
 require_once dirname( __FILE__ ) . '/includes/class-revision-strike-cli.php';
+require_once dirname( __FILE__ ) . '/includes/class-settings.php';
 
 /**
  * Bootstrap the plugin.
@@ -31,6 +32,7 @@ function revisionstrike_register_cron() {
 		wp_schedule_event( time(), 'daily', RevisionStrike::STRIKE_ACTION );
 	}
 }
+
 register_activation_hook( __FILE__, 'revisionstrike_register_cron' );
 
 /**
@@ -39,4 +41,5 @@ register_activation_hook( __FILE__, 'revisionstrike_register_cron' );
 function revisionstrike_deregister_cron() {
 	wp_clear_scheduled_hook( RevisionStrike::STRIKE_ACTION );
 }
+
 register_deactivation_hook( __FILE__, 'revisionstrike_deregister_cron' );
