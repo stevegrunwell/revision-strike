@@ -5,10 +5,11 @@
 	"type"             : "wordpress-plugin",
 	"minimum-stability": "stable",
 	"require-dev"      : {
-		"php"                 : ">=5.3",
-		"10up/wp_mock"        : "dev-master",
-		"antecedent/patchwork": "*",
-		"phpunit/phpunit"     : "4.6.2"
+		"php"                          : ">=5.3",
+		"10up/wp_mock"                 : "dev-master",
+		"antecedent/patchwork"         : "*",
+		"phpunit/phpunit"              : "4.6.2",
+		"codeclimate/php-test-reporter": "dev-master"
 	},
 	"authors"          : [
 		{
