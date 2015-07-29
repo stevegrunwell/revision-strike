@@ -11,6 +11,7 @@ env:
 
 before_script:
   - composer install
+  - mkdir -p build/logs
 
 script:
   - ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
