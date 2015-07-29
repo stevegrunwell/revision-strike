@@ -1,6 +1,6 @@
 # Revision Strike
 
-[![Build Status](https://travis-ci.org/stevegrunwell/revision-strike.png)](https://travis-ci.org/stevegrunwell/revision-strike.svg?branch=master)
+[![Build Status](https://travis-ci.org/stevegrunwell/revision-strike.svg?branch=master)](https://travis-ci.org/stevegrunwell/revision-strike)
 [![Code Climate](https://codeclimate.com/github/stevegrunwell/revision-strike/badges/gpa.svg)](https://codeclimate.com/github/stevegrunwell/revision-strike)
 [![Test Coverage](https://codeclimate.com/github/stevegrunwell/revision-strike/badges/coverage.svg)](https://codeclimate.com/github/stevegrunwell/revision-strike/coverage)
 
