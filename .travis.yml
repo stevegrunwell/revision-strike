@@ -12,7 +12,7 @@ env:
 before_script:
   - composer install
 
-script: ./vendor/bin/phpunit
+script: ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
 
 cache:
   directories:
