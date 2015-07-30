@@ -19,7 +19,7 @@ require_once dirname( __FILE__ ) . '/includes/class-settings.php';
  * Bootstrap the plugin.
  */
 function revisionstrike_init() {
-	$GLOBALS['revision_strike'] = new RevisionStrike;
+	new RevisionStrike;
 }
 
 add_action( 'init', 'revisionstrike_init' );
