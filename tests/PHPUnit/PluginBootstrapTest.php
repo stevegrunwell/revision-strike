@@ -24,14 +24,6 @@ class PluginBootstrapTest extends TestCase {
 		parent::setUp();
 	}
 
-	public function test_revisionstrike_init() {
-		$this->assertFalse( isset( $GLOBALS['revision_strike'] ) );
-
-		\revisionstrike_init();
-
-		$this->assertInstanceOf( 'RevisionStrike', $GLOBALS['revision_strike'] );
-	}
-
 	public function test_revisionstrike_register_cron() {
 		M::wpFunction( 'wp_next_scheduled', array(
 			'times'  => 1,
