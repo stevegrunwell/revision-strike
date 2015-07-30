@@ -9,7 +9,8 @@
 		"10up/wp_mock"                 : "dev-master",
 		"antecedent/patchwork"         : "*",
 		"phpunit/phpunit"              : "4.6.2",
-		"codeclimate/php-test-reporter": "dev-master"
+		"codeclimate/php-test-reporter": "dev-master",
+		"wp-coding-standards/wpcs"     : "dev-master"
 	},
 	"authors"          : [
 		{
@@ -19,5 +20,10 @@
 	],
 	"autoload"         : {
 		"classmap": ["includes/"]
+	},
+	"scripts" : {
+		"post-install-cmd" : [
+			"./vendor/bin/phpcs --config-set installed_paths ../../wp-coding-standards/wpcs;"
+		]
 	}
 }

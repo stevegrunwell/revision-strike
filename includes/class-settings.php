@@ -48,7 +48,7 @@ class RevisionStrikeSettings {
 	public function days_field() {
 		printf(
 			'<input name="revision-strike[days]" id="revision-strike-days" type="number" class="small-text" value="%d" /> %s',
-			$this->get_option( 'days', 30 ),
+			absint( $this->get_option( 'days', 30 ) ),
 			esc_html_x( 'Days', 'Label for revision-strike[days]', 'revision-strike' )
 		);
 
