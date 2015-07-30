@@ -20,6 +20,14 @@ class SettingsTest extends TestCase {
 		'class-settings.php',
 	];
 
+	public function test__construct() {
+		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+		$instance->shouldReceive( 'add_settings_section' )->once();
+		$instance->shouldReceive( 'add_tools_page' )->once();
+
+		$instance->__construct();
+	}
+
 	public function test_add_settings_section() {
 		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
 
@@ -52,6 +60,49 @@ class SettingsTest extends TestCase {
 		M::wpPassthruFunction( '__' );
 
 		$instance->add_settings_section();
+	}
+
+	public function test_add_tools_page() {
+		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+
+		M::wpFunction( 'add_management_page', array(
+			'times'  => 1,
+			'args'   => array(
+				'Revision Strike',
+				'Revision Strike',
+				'edit_published_posts',
+				'revision-strike',
+				array( $instance, 'tools_page' ),
+			),
+		) );
+
+		M::wpPassthruFunction( '__' );
+		M::wpPassthruFunction( '_x' );
+
+		$instance->add_tools_page();
+	}
+
+	public function test_tools_page() {
+		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+
+		M::wpFunction( 'wp_nonce_url', array(
+			'times'  => 1,
+			'args'   => array( 'tools.php?page=revision-strike', 'revision-strike' ),
+		) );
+
+		M::wpFunction( 'submit_button', array(
+			'times'  => 1,
+		) );
+
+		M::wpPassthruFunction( '__' );
+		M::wpPassthruFunction( 'esc_html_e' );
+
+		ob_start();
+		$instance->tools_page();
+		$results = ob_get_contents();
+		ob_end_clean();
+
+
 	}
 
 	public function test_get_option() {

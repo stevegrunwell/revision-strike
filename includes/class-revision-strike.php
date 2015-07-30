@@ -36,7 +36,7 @@ class RevisionStrike {
 	 */
 	public function add_hooks() {
 		add_action( self::STRIKE_ACTION, array( $this, 'strike' ) );
-		add_action( 'admin_init', array( $this, 'settings' ) );
+		add_action( 'admin_menu', array( $this, 'settings' ) );
 	}
 
 	/**

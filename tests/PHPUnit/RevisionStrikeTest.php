@@ -30,7 +30,7 @@ class RevisionStrikeTest extends TestCase {
 	public function test_add_hooks() {
 		$instance = new RevisionStrike;
 		M::expectActionAdded( RevisionStrike::STRIKE_ACTION, array( $instance, 'strike' ) );
-		M::expectActionAdded( 'admin_init', array( $instance, 'settings' ) );
+		M::expectActionAdded( 'admin_menu', array( $instance, 'settings' ) );
 
 		$instance->add_hooks();
 	}
