@@ -118,7 +118,7 @@ class RevisionStrikeTest extends TestCase {
 		$wpdb = Mockery::mock( '\WPDB' );
 		$wpdb->shouldReceive( 'prepare' )
 			->once()
-			->with( Mockery::any(), Mockery::any(), 25 )
+			->with( Mockery::any(), "post', 'page", Mockery::any(), 25 )
 			->andReturn( 'SQL STATEMENT' );
 		$wpdb->shouldReceive( 'get_col' )
 			->once()
@@ -126,12 +126,31 @@ class RevisionStrikeTest extends TestCase {
 			->andReturn( array( 1, 2, 3 ) );
 		$wpdb->posts = 'wp_posts';
 
+		M::onFilter( 'revisionstrike_post_types' )
+			->with( array( 'post' ) )
+			->reply( array( 'post', 'page' ) );
+
 		M::wpPassthruFunction( 'absint' );
 
 		$result = $method->invoke( $instance, 90, 25 );
 		$wpdb   = null;
 
 		$this->assertEquals( array( 1, 2, 3 ), $result );
+	}
+
+	public function test_get_revision_ids_ensures_post_types_are_set() {
+		$instance = new RevisionStrike;
+		$method   = new ReflectionMethod( $instance, 'get_revision_ids' );
+		$method->setAccessible( true );
+
+		M::onFilter( 'revisionstrike_post_types' )
+			->with( array( 'post' ) )
+			->reply( false );
+
+		M::wpPassthruFunction( 'absint' );
+
+		$result = $method->invoke( $instance, 90, 25 );
+		$this->assertEquals( array(), $result );
 	}
 
 }

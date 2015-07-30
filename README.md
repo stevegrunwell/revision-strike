@@ -39,6 +39,36 @@ $ wp revision-strike clean
 </dl>
 
 
+## Filters
+
+Revision Strike leverages the [WordPress Plugin API](https://codex.wordpress.org/Plugin_API) to let you customize its behavior without editing the codebase directly.
+
+### revisionstrike_post_types
+
+Controls the post types for which revisions should be automatically be purged.
+
+<dl>
+	<dt>(array) $post_types</dt>
+	<dd>An array of post types.</dd>
+</dl>
+
+#### Example
+
+By default, Revision Strike only works against posts of the "Post" post type. If you'd like to include other post types (pages, custom post types, etc.), this filter will allow you do so.
+
+```php
+/**
+ * Include the "page" and "book" custom post type in Revision Strike.
+ *
+ * @param array $post_types An array of post types.
+ */
+function theme_set_post_types( $post_types ) {
+	return array( 'post', 'page', 'book' );
+}
+add_filter( 'revisionstrike_post_types', 'theme_set_post_types' );
+```
+
+
 ## Releases
 
 ### 0.1

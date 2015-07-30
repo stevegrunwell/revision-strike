@@ -100,14 +100,27 @@ class RevisionStrike {
 	protected function get_revision_ids( $days, $limit = 50 ) {
 		global $wpdb;
 
+		/**
+		 * Controls the post types for which revisions should be automatically be purged.
+		 *
+		 * @param array $post_types An array of post types.
+		 */
+		$post_types = apply_filters( 'revisionstrike_post_types', array( 'post' ) );
+
+		// Return early if we don't have any eligible post types
+		if ( empty( $post_types ) ) {
+			return array();
+		}
+
 		$limit = absint( $limit );
 		$query = $wpdb->get_col( $wpdb->prepare(
 			"
 			SELECT r.ID FROM $wpdb->posts r
 			LEFT JOIN $wpdb->posts p ON r.post_parent = p.ID
-			WHERE r.post_type = 'revision' AND p.post_date < %s
+			WHERE r.post_type = 'revision' AND p.post_type IN ('%s') AND p.post_date < %s
 			LIMIT %d
 			",
+			implode( "', '", (array) $post_types ),
 			date( 'Y-m-d', time() - ( absint( $days ) * DAY_IN_SECONDS ) ),
 			$limit
 		) );
