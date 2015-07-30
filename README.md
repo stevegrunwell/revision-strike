@@ -74,3 +74,19 @@ add_filter( 'revisionstrike_post_types', 'theme_set_post_types' );
 ### 0.1
 
 Initial public release.
+
+
+## Contributing
+
+All development dependencies for the plugin are installed via [Composer](https://getcomposer.org/). After installing Composer on your system, navigate your terminal session to the plugin directory and run:
+
+	$ composer install
+
+Pull requests on this plugin are welcome, but I ask that you please follow these guidelines:
+
+* Every PR that touches code should include a corresponding test. This plugin uses [PHPUnit](https://phpunit.de/), [WP_Mock](https://github.com/10up/wp_mock), and [Mockery](http://docs.mockery.io/en/latest/). Once #1 is completed, there will also be some functional tests written in [Behat](http://behat.org). Every PR should [generate a passing build in Travis CI](https://travis-ci.org/stevegrunwell/revision-strike) before being considered for merger.
+* Please follow the [WordPress Coding Standards](https://codex.wordpress.org/WordPress_Coding_Standards). If you have any doubts, you can run your PHP through [PHP_CodeSniffer](https://www.squizlabs.com/php-codesniffer) using the "WordPress-Extra" ruleset.
+
+		$ ./vendor/bin/phpcs
+
+* Beyond the coding standards, please properly document all contributions according to the [WordPress Inline Documentation Standards](https://make.wordpress.org/core/handbook/best-practices/inline-documentation-standards/).
