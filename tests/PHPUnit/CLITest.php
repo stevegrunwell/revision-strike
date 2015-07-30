@@ -13,6 +13,7 @@ use Mockery;
 use ReflectionProperty;
 use RevisionStrike;
 use RevisionStrikeCLI;
+use WP_CLI;
 
 class CLITest extends TestCase {
 
@@ -21,15 +22,24 @@ class CLITest extends TestCase {
 		'class-revision-strike-cli.php',
 	];
 
+	public function tearDown() {
+		parent::tearDown();
+
+		\WP_CLI::tearDown();
+	}
+
 	public function test_clean() {
-		$cli = new RevisionStrikeCLI;
+		$rs_cli = new RevisionStrikeCLI;
+		$wp_cli = WP_CLI::getInstance();
+		$wp_cli->shouldReceive( '_line' )->once();
+		$wp_cli->shouldReceive( '_success' )->once();
 
 		M::wpPassthruFunction( 'esc_html__' );
 
-		M::expectActionAdded( 'wp_delete_post_revision', array( $cli, 'count_deleted_revision' ) );
+		M::expectActionAdded( 'wp_delete_post_revision', array( $rs_cli, 'count_deleted_revision' ) );
 		M::expectAction( RevisionStrike::STRIKE_ACTION, false );
 
-		$cli->clean( array(), array() );
+		$rs_cli->clean( array(), array() );
 	}
 
 	public function test_clean_with_days_argument() {
@@ -75,6 +85,16 @@ class CLITest extends TestCase {
 		M::expectAction( RevisionStrike::STRIKE_ACTION, false );
 
 		$cli->clean( array(), array() );
+	}
+
+	public function test_log_deleted_revision() {
+		$rs_cli = new RevisionStrikeCLI;
+		$wp_cli = WP_CLI::getInstance();
+		$wp_cli->shouldReceive( '_log' )->once();
+
+		M::wpPassthruFunction( 'esc_html__' );
+
+		$rs_cli->log_deleted_revision( 4, new \stdClass );
 	}
 
 }
