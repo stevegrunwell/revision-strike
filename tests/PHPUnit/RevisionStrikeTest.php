@@ -87,7 +87,7 @@ class RevisionStrikeTest extends TestCase {
 		$method = new ReflectionMethod( $instance, 'get_revision_expiration_threshold' );
 		$method->setAccessible( true );
 
-		$property = new ReflectionProperty( $instance, 'revision_expiration_threshold' );
+		$property = new ReflectionProperty( $instance, 'expiration_threshold' );
 		$property->setAccessible( true );
 
 		$this->assertEmpty( $property->getValue( $instance ) );
@@ -101,7 +101,7 @@ class RevisionStrikeTest extends TestCase {
 		$method = new ReflectionMethod( $instance, 'get_revision_expiration_threshold' );
 		$method->setAccessible( true );
 
-		$property = new ReflectionProperty( $instance, 'revision_expiration_threshold' );
+		$property = new ReflectionProperty( $instance, 'expiration_threshold' );
 		$property->setAccessible( true );
 		$property->setValue( $instance, 12345 );
 

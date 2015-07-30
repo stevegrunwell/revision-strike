@@ -14,10 +14,10 @@ class RevisionStrike {
 	public $settings;
 
 	/**
-	 * @var int $revision_expiration_threshold The cached number of days since a post's publishing
-	 *                                         before its revisions can be removed.
+	 * @var int $expiration_threshold The cached number of days since a post's publishing before its
+	 *                                revisions can be removed.
 	 */
-	protected $revision_expiration_threshold;
+	protected $expiration_threshold;
 
 	/**
 	 * The action called to trigger the clean-up process.
@@ -74,16 +74,16 @@ class RevisionStrike {
 	 * @return int A number of days.
 	 */
 	protected function get_revision_expiration_threshold() {
-		if ( ! is_null( $this->revision_expiration_threshold ) ) {
-			return $this->revision_expiration_threshold;
+		if ( ! is_null( $this->expiration_threshold ) ) {
+			return $this->expiration_threshold;
 		}
 
 		$time = 30; // @todo pull this from a settings page
 
 		// Cache the result
-		$this->revision_expiration_threshold = intval( $time );
+		$this->expiration_threshold = intval( $time );
 
-		return $this->revision_expiration_threshold;
+		return $this->expiration_threshold;
 	}
 
 	/**
