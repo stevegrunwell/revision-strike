@@ -35,6 +35,10 @@ class RevisionStrikeCLI extends WP_CLI {
 	 * [--days=<days>]
 	 * : Remove revisions on posts published at least <days> days ago.
 	 *
+	 * [--limit=<limit>]
+	 * : The number of days a post should be published before its revisions are
+	 * eligible to be struck.
+	 *
 	 * [--post_type=<post_type>]
 	 * : One or more post types (comma-separated) for which revisions should be struck.
 	 *
@@ -43,11 +47,12 @@ class RevisionStrikeCLI extends WP_CLI {
 	 *
 	 * ## EXAMPLES
 	 *
-	 *   wp revisionstrike clean
-	 *   wp revisionstrike clean --days=45
-	 *   wp revisionstrike clean --post_type=post,page
+	 *   wp revision-strike clean
+	 *   wp revision-strike clean --days=45
+	 *   wp revision-strike clean --limit=75
+	 *   wp revision-strike clean --post_type=post,page
 	 *
-	 * @synopsis [--days=<days>] [--post_type=<post_type>] [--verbose]
+	 * @synopsis [--days=<days>] [--limit=<limit>] [--post_type=<post_type>] [--verbose]
 	 */
 	public function clean( $args, $assoc_args ) {
 		add_action( 'wp_delete_post_revision', array( $this, 'count_deleted_revision' ) );
@@ -58,8 +63,9 @@ class RevisionStrikeCLI extends WP_CLI {
 
 		$instance = $this->get_instance();
 		$args     = array(
-			'days'       => isset( $assoc_args['days'] ) ? $assoc_args['days'] : null,
-			'post_types' => isset( $assoc_args['post_type'] ) ? $assoc_args['post_type'] : null,
+			'days'      => isset( $assoc_args['days'] ) ? $assoc_args['days'] : null,
+			'limit'     => isset( $assoc_args['limit'] ) ? $assoc_args['limit'] : null,
+			'post_type' => isset( $assoc_args['post_type'] ) ? $assoc_args['post_type'] : null,
 		);
 
 		$instance->strike( $args );

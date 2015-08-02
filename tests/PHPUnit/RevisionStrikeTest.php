@@ -66,15 +66,15 @@ class RevisionStrikeTest extends TestCase {
 					'limit' => 100,
 				),
 				array(
-					'days'       => 30,
-					'limit'      => 50,
-					'post_types' => 'post',
+					'days'      => 30,
+					'limit'     => 50,
+					'post_type' => 'post',
 				),
 			),
 			'return' => array(
-				'days'       => 14,
-				'limit'      => 100,
-				'post_types' => 'post',
+				'days'      => 14,
+				'limit'     => 100,
+				'post_type' => 'post',
 			),
 		) );
 

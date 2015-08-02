@@ -47,7 +47,7 @@ class CLITest extends TestCase {
 		$instance = Mockery::mock( 'RevisionStrike' )->makePartial();
 		$instance->shouldReceive( 'strike' )
 			->once()
-			->with( array( 'days' => 7, 'post_types' => null, ) );
+			->with( array( 'days' => 7, 'limit' => null, 'post_type' => null, ) );
 
 		$cli = Mockery::mock( 'RevisionStrikeCLI' )
 			->shouldAllowMockingProtectedMethods()
@@ -59,6 +59,42 @@ class CLITest extends TestCase {
 		M::wpPassthruFunction( 'esc_html__' );
 
 		$cli->clean( array(), array( 'days' => 7 ) );
+	}
+
+	public function test_clean_with_limit_argument() {
+		$instance = Mockery::mock( 'RevisionStrike' )->makePartial();
+		$instance->shouldReceive( 'strike' )
+			->once()
+			->with( array( 'days' => null, 'limit' => 100, 'post_type' => null, ) );
+
+		$cli = Mockery::mock( 'RevisionStrikeCLI' )
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
+		$cli->shouldReceive( 'get_instance' )
+			->once()
+			->andReturn( $instance );
+
+		M::wpPassthruFunction( 'esc_html__' );
+
+		$cli->clean( array(), array( 'limit' => 100 ) );
+	}
+
+	public function test_clean_with_post_type_argument() {
+		$instance = Mockery::mock( 'RevisionStrike' )->makePartial();
+		$instance->shouldReceive( 'strike' )
+			->once()
+			->with( array( 'days' => null, 'limit' => null, 'post_type' => 'page', ) );
+
+		$cli = Mockery::mock( 'RevisionStrikeCLI' )
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
+		$cli->shouldReceive( 'get_instance' )
+			->once()
+			->andReturn( $instance );
+
+		M::wpPassthruFunction( 'esc_html__' );
+
+		$cli->clean( array(), array( 'post_type' => 'page' ) );
 	}
 
 	public function test_clean_with_verbose_argument() {
