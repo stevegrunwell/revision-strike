@@ -34,6 +34,8 @@ $ wp revision-strike clean
 <dl>
 	<dt>--days=&lt;days&gt;</dt>
 	<dd>Remove revisions on posts published at least &lt;days&gt; day(s) ago.</dd>
+	<dt>--post_type=&lt;post_type&gt;</dt>
+	<dd>One or more post types (comma-separated) for which revisions should be struck.</dd>
 	<dt>--verbose</dt>
 	<dd>Enable verbose logging of deleted revisions.</dd>
 </dl>
