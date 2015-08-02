@@ -54,6 +54,33 @@ class SettingsTest extends TestCase {
 		$instance->add_settings_section();
 	}
 
+	public function test_days_field() {
+		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+		$instance->shouldReceive( 'get_option' )
+			->with( 'days', 30 )
+			->andReturn( 30 );
+
+		M::wpPassthruFunction( 'absint', array(
+			'times' => 1,
+			'args'  => array( 30 ),
+		) );
+
+		M::wpPassthruFunction( 'esc_html__', array(
+			'times' => 1,
+		) );
+
+		M::wpPassthruFunction( 'esc_html_x', array(
+			'times' => 1,
+		) );
+
+		ob_start();
+		$instance->days_field();
+		$result = ob_get_contents();
+		ob_end_clean();
+
+		$this->assertContains( 'name="revision-strike[days]"', $result );
+	}
+
 	public function test_get_option() {
 		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
 

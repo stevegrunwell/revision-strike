@@ -34,6 +34,8 @@ $ wp revision-strike clean
 <dl>
 	<dt>--days=&lt;days&gt;</dt>
 	<dd>Remove revisions on posts published at least &lt;days&gt; day(s) ago.</dd>
+	<dt>--post_type=&lt;post_type&gt;</dt>
+	<dd>One or more post types (comma-separated) for which revisions should be struck.</dd>
 	<dt>--verbose</dt>
 	<dd>Enable verbose logging of deleted revisions.</dd>
 </dl>
@@ -48,8 +50,8 @@ Revision Strike leverages the [WordPress Plugin API](https://codex.wordpress.org
 Controls the post types for which revisions should be automatically be purged.
 
 <dl>
-	<dt>(array) $post_types</dt>
-	<dd>An array of post types.</dd>
+	<dt>(string) $post_types</dt>
+	<dd>A comma-separated list of post types.</dd>
 </dl>
 
 #### Example
@@ -60,10 +62,10 @@ By default, Revision Strike only works against posts of the "Post" post type. If
 /**
  * Include the "page" and "book" custom post type in Revision Strike.
  *
- * @param array $post_types An array of post types.
+ * @param string $post_type A comma-separated list of post types.
  */
 function theme_set_post_types( $post_types ) {
-	return array( 'post', 'page', 'book' );
+	return 'post,page,book';
 }
 add_filter( 'revisionstrike_post_types', 'theme_set_post_types' );
 ```

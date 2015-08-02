@@ -31,7 +31,7 @@ if ( class_exists( '\WP_CLI' ) || class_exists( '\WP_CLI_Command' ) ) {
 
 class WP_CLI {
 
-	public static $instance;
+	public static $_instance;
 
 	public static function __callStatic( $name, $args ) {
 		$instance = self::getInstance();
@@ -39,19 +39,19 @@ class WP_CLI {
 	}
 
 	public static function getInstance() {
-		if ( null === static::$instance ) {
-			static::$instance = \Mockery::mock( __CLASS__ )
+		if ( null === static::$_instance ) {
+			static::$_instance = \Mockery::mock( __CLASS__ )
 				->shouldAllowMockingProtectedMethods()
 				->makePartial();
 		}
-		return static::$instance;
+		return static::$_instance;
 	}
 
 	/**
 	 * Here's something you don't often see in a Singleton: something to destroy it!
 	 */
 	public static function tearDown() {
-		static::$instance = null;
+		static::$_instance = null;
 	}
 
 	public function calledStatic( $name, $args ) {
