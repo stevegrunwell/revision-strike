@@ -68,13 +68,13 @@ class RevisionStrikeTest extends TestCase {
 				array(
 					'days'      => 30,
 					'limit'     => 50,
-					'post_type' => 'post',
+					'post_type' => null,
 				),
 			),
 			'return' => array(
 				'days'      => 14,
 				'limit'     => 100,
-				'post_type' => 'post',
+				'post_type' => null,
 			),
 		) );
 
@@ -83,6 +83,33 @@ class RevisionStrikeTest extends TestCase {
 		) );
 
 		$instance->strike( array( 'days' => 14, 'limit' => 100 ) );
+	}
+
+	public function test_strike_filters_post_types() {
+		$settings = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+		$settings->shouldReceive( 'get_option' )
+			->once()
+			->with( 'days', 30 )
+			->andReturn( 30 );
+
+		$instance = Mockery::mock( 'RevisionStrike' )
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
+		$instance->shouldReceive( 'get_revision_ids' )
+			->once()
+			->with( 30, 50, 'POST_TYPE' )
+			->andReturn( array() );
+		$instance->settings = $settings;
+
+		M::onFilter( 'revisionstrike_post_types' )
+			->with( 'post' )
+			->reply( 'POST_TYPE' );
+
+		M::wpPassthruFunction( 'wp_parse_args', array(
+			'times'  => 1,
+		) );
+
+		$instance->strike( array( 'days' => 30, 'limit' => 50, 'post_type' => null, ) );
 	}
 
 	public function test_get_revision_ids() {

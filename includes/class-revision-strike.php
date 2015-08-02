@@ -51,11 +51,21 @@ class RevisionStrike {
 	 */
 	public function strike( $args = array() ) {
 		$default_args = array(
-			'days'       => $this->settings->get_option( 'days', 30 ),
-			'limit'      => 50,
-			'post_type' => 'post',
+			'days'      => $this->settings->get_option( 'days', 30 ),
+			'limit'     => 50,
+			'post_type' => null,
 		);
 		$args         = wp_parse_args( $args, $default_args );
+
+		if ( null === $args['post_type'] ) {
+
+			/**
+			 * Set the default post type(s) for which revisions should be struck.
+			 *
+			 * @param string $post_type A comma-separated list of post types.
+			 */
+			$args['post_type'] = apply_filters( 'revisionstrike_post_types', 'post' );
+		}
 
 		// Collect the revision IDs
 		$revision_ids = $this->get_revision_ids( $args['days'], $args['limit'], $args['post_type'] );
