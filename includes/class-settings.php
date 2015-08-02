@@ -14,13 +14,6 @@ class RevisionStrikeSettings {
 	protected $options;
 
 	/**
-	 * Class constructor.
-	 */
-	public function __construct() {
-		$this->add_settings_section();
-	}
-
-	/**
 	 * Add plugin settings sections.
 	 */
 	public function add_settings_section() {
