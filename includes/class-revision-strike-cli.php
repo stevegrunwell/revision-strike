@@ -79,12 +79,12 @@ class RevisionStrikeCLI extends WP_CLI {
 			);
 
 		} else {
-			return WP_CLI::success( _n(
+			return WP_CLI::success( sprintf( _n(
 				'One post revision was deleted successfully',
 				'%d post revisions were deleted successfully',
 				$this->progress['success'],
 				'revision-strike'
-			) );
+			), $this->progress['success'] ) );
 		}
 	}
 
