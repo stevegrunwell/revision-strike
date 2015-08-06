@@ -62,11 +62,13 @@ class RevisionStrikeCLI extends WP_CLI {
 		}
 
 		$instance = $this->get_instance();
-		$args     = array(
-			'days'      => isset( $assoc_args['days'] ) ? $assoc_args['days'] : null,
-			'limit'     => isset( $assoc_args['limit'] ) ? $assoc_args['limit'] : null,
-			'post_type' => isset( $assoc_args['post_type'] ) ? $assoc_args['post_type'] : null,
-		);
+		$args     = array();
+
+		foreach ( array( 'days', 'limit', 'post_type' ) as $arg ) {
+			if ( isset( $assoc_args[ $arg ] ) ) {
+				$args[ $arg ] = $assoc_args[ $arg ];
+			}
+		}
 
 		$instance->strike( $args );
 

@@ -58,7 +58,7 @@ class CLITest extends TestCase {
 		$instance = Mockery::mock( 'RevisionStrike' )->makePartial();
 		$instance->shouldReceive( 'strike' )
 			->once()
-			->with( array( 'days' => 7, 'limit' => null, 'post_type' => null, ) );
+			->with( array( 'days' => 7, ) );
 
 		$cli = Mockery::mock( 'RevisionStrikeCLI' )
 			->shouldAllowMockingProtectedMethods()
@@ -76,7 +76,7 @@ class CLITest extends TestCase {
 		$instance = Mockery::mock( 'RevisionStrike' )->makePartial();
 		$instance->shouldReceive( 'strike' )
 			->once()
-			->with( array( 'days' => null, 'limit' => 100, 'post_type' => null, ) );
+			->with( array( 'limit' => 100, ) );
 
 		$cli = Mockery::mock( 'RevisionStrikeCLI' )
 			->shouldAllowMockingProtectedMethods()
@@ -94,7 +94,7 @@ class CLITest extends TestCase {
 		$instance = Mockery::mock( 'RevisionStrike' )->makePartial();
 		$instance->shouldReceive( 'strike' )
 			->once()
-			->with( array( 'days' => null, 'limit' => null, 'post_type' => 'page', ) );
+			->with( array( 'post_type' => 'page', ) );
 
 		$cli = Mockery::mock( 'RevisionStrikeCLI' )
 			->shouldAllowMockingProtectedMethods()
