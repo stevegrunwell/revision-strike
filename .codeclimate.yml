@@ -5,4 +5,4 @@ exclude_paths:
   - "bin/*"
   - "features/*"
   - "tests/*"
-  - "util/*"
+  - "utils/*"
