@@ -18,13 +18,13 @@ matrix:
 
 before_script:
   - composer install
-  - bash bin/install-package-tests.sh
   - mkdir -p build/logs
 
 script:
   - ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
   - ./vendor/bin/test-reporter
   - ./vendor/bin/phpcs
+  - bash ./bin/install-package-tests.sh
   - ./vendor/bin/behat
 
 cache:
