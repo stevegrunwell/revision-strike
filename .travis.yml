@@ -7,11 +7,11 @@ php:
   - hhvm
 
 env:
-  - WP_VERSION=master
-  - WP_VERSION=4.2
   global:
     - WP_CLI_BIN_DIR=/tmp/wp-cli-phar
     - WP_CLI_CONFIG_PATH=/tmp/wp-cli-phar/config.yml
+    - WP_VERSION=master
+    - WP_VERSION=4.2
 
 matrix:
   # Nice-to-haves for right now, but not worth considering the build "broken"
