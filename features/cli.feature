@@ -5,7 +5,7 @@ Feature: WP-CLI
 
 	Background:
 		Given a WP install
-		When I try `wp plugin activate revision-strike`
+		When I run `wp plugin activate revision-strike`
     Then STDOUT should be:
     	"""
 			Success: Plugin 'revision-strike' activated.

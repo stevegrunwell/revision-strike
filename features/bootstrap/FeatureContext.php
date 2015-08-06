@@ -227,7 +227,8 @@ class FeatureContext extends BehatContext implements ClosuredContextInterface {
 
 		// Install (but don't activate) Revision Strike
 		$plugin_file = __DIR__ . '/../../revision-strike.php';
-		$this->proc( "ln -s $plugin_file wp-content/plugins/revision-strike.php" )->run_check();
+		$this->proc( 'mkdir wp-content/plugins/revision-strike' )->run_check();
+		$this->proc( "ln -s $plugin_file wp-content/plugins/revision-strike/revision-strike.php" )->run_check();
 	}
 }
 
