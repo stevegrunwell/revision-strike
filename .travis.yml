@@ -18,6 +18,7 @@ matrix:
 
 before_script:
   - composer install
+  - bash bin/install-package-tests.sh
   - mkdir -p build/logs
 
 script:

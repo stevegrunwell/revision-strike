@@ -6,11 +6,11 @@
 	"minimum-stability": "stable",
 	"require-dev"      : {
 		"php"                          : ">=5.3",
-		"10up/wp_mock"                 : "dev-master",
-		"antecedent/patchwork"         : "*",
 		"phpunit/phpunit"              : "4.6.2",
+		"10up/wp_mock"                 : "dev-master",
 		"codeclimate/php-test-reporter": "dev-master",
-		"wp-coding-standards/wpcs"     : "dev-master"
+		"wp-coding-standards/wpcs"     : "dev-master",
+		"behat/behat"                  : "~2.5"
 	},
 	"authors"          : [
 		{
