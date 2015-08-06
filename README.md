@@ -92,3 +92,12 @@ Pull requests on this plugin are welcome, but I ask that you please follow these
 		$ ./vendor/bin/phpcs
 
 * Beyond the coding standards, please properly document all contributions according to the [WordPress Inline Documentation Standards](https://make.wordpress.org/core/handbook/best-practices/inline-documentation-standards/).
+
+### Integration tests
+
+There are a few integration tests for the plugin, written using [Behat](http://behat.org) and scaffolded using [`wp scaffold package-tests`](http://wp-cli.org/commands/scaffold/package-tests/). If you'd like to contribute to these tests, please install the WP CLI Testing framework:
+
+```bash
+$ ./bin/install-package-tests.sh
+$ ./vendor/bin/behat
+```
