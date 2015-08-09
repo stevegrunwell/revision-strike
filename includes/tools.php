@@ -10,7 +10,7 @@ if ( ! isset( $instance, $defaults ) ) {
 	return wp_die( esc_html__( 'You cannot access this page directly', 'revision-strike' ) );
 }
 
-// Handle the execution of revisions
+// Handle the execution of revisions.
 if ( isset( $_GET['nonce'], $_POST['days'], $_POST['limit'] ) && wp_verify_nonce( $_GET['nonce'], 'revision-strike' ) ) {
 	$args  = array(
 		'days'  => absint( $_POST['days'] ),

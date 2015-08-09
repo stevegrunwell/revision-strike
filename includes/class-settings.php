@@ -12,12 +12,14 @@
 class RevisionStrikeSettings {
 
 	/**
-	 * @var RevisionStrike The current RevisionStrike instance.
+	 * The current RevisionStrike instance.
+	 * @var RevisionStrike $instance
 	 */
 	protected $instance;
 
 	/**
-	 * @var array A cache of plugin options.
+	 * A cached copy of the plugin options array.
+	 * @var array $options
 	 */
 	protected $options;
 
@@ -59,7 +61,7 @@ class RevisionStrikeSettings {
 		add_management_page(
 			__( 'Revision Strike', 'revision-strike' ),
 			_x( 'Revision Strike', 'Tools menu link', 'revision-strike' ),
-			'edit_published_posts',
+			'edit_others_posts',
 			'revision-strike',
 			array( $this, 'tools_page' )
 		);
@@ -103,8 +105,8 @@ class RevisionStrikeSettings {
 	/**
 	 * Get an option from the plugin settings.
 	 *
-	 * @param string $option The option name.
-	 * @param mixed $default Optional. The default value for this option. Default is an empty string.
+	 * @param string $option  The option name.
+	 * @param mixed  $default Optional. The default value for this option. Default is an empty string.
 	 */
 	public function get_option( $option, $default = '' ) {
 		if ( null === $this->options ) {
@@ -115,7 +117,7 @@ class RevisionStrikeSettings {
 	}
 
 	/**
-	 * Sanitize callback for the settings section.
+	 * Sanitize callback for the 'revision-strike' settings section.
 	 *
 	 * @param array $input Input to be sanitized.
 	 * @return array The filtered input.

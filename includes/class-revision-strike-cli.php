@@ -16,7 +16,8 @@ if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
 class RevisionStrikeCLI extends WP_CLI {
 
 	/**
-	 * @var RevisionStrike $instance The current instance of the RevisionStrike class.
+	 * The current instance of the RevisionStrike class.
+	 * @var RevisionStrike $instance
 	 */
 	protected $instance;
 
@@ -26,14 +27,15 @@ class RevisionStrikeCLI extends WP_CLI {
 	 * ## OPTIONS
 	 *
 	 * [--days=<days>]
-	 * : Remove revisions on posts published at least <days> days ago.
+	 * : Remove revisions on posts published at least <days> days ago. This is
+	 * determined by the value set on Settings > Writing or a default of 30.
 	 *
 	 * [--limit=<limit>]
-	 * : The number of days a post should be published before its revisions are
-	 * eligible to be struck.
+	 * : The maximum number of revisions to remove. Default value is 50.
 	 *
 	 * [--post_type=<post_type>]
-	 * : One or more post types (comma-separated) for which revisions should be struck.
+	 * : One or more post types (comma-separated) for which revisions should be
+	 * struck. Default value is 'post'.
 	 *
 	 * [--verbose]
 	 * : Enable verbose logging of deleted revisions.

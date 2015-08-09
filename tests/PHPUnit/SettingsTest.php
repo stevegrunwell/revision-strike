@@ -71,7 +71,7 @@ class SettingsTest extends TestCase {
 			'args'   => array(
 				'Revision Strike',
 				'Revision Strike',
-				'edit_published_posts',
+				'edit_others_posts',
 				'revision-strike',
 				array( $instance, 'tools_page' ),
 			),

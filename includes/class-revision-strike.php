@@ -12,12 +12,14 @@
 class RevisionStrike {
 
 	/**
-	 * @var RevisionStrikeSettings $settings The plugin settings.
+	 * The plugin settings.
+	 * @var RevisionStrikeSettings $settings
 	 */
 	public $settings;
 
 	/**
-	 * @var array $statistics Information about Revision Strike's current state.
+	 * Information about Revision Strike's current state.
+	 * @var array $statistics
 	 */
 	protected $statistics;
 
@@ -32,8 +34,8 @@ class RevisionStrike {
 	public function __construct() {
 		$this->settings   = new RevisionStrikeSettings( $this );
 		$this->statistics = array(
-			'count'   => 0, // Number of revision IDs found
-			'deleted' => 0, // Number of revisions deleted
+			'count'   => 0, // Number of revision IDs found.
+			'deleted' => 0, // Number of revisions deleted.
 		);
 
 		$this->add_hooks();
@@ -71,7 +73,7 @@ class RevisionStrike {
 	}
 
 	/**
-	 * Clean up ("strike") post revisions for posts older than a certain number of seconds.
+	 * Clean up ("strike") post revisions for posts that have been published for at least $days days.
 	 *
 	 * @param array $args {
 	 *   Optional. An array of arguments.
@@ -102,7 +104,7 @@ class RevisionStrike {
 			$args['post_type'] = apply_filters( 'revisionstrike_post_types', 'post' );
 		}
 
-		// Collect the revision IDs
+		// Collect the revision IDs.
 		$revision_ids = $this->get_revision_ids( $args['days'], $args['limit'], $args['post_type'] );
 
 		if ( ! empty( $revision_ids ) ) {
@@ -117,9 +119,9 @@ class RevisionStrike {
 	 *
 	 * @global $wpdb
 	 *
-	 * @param int $days        The number of days since a post's publish date that must pass before
+	 * @param int   $days      The number of days since a post's publish date that must pass before
 	 *                         we can purge the post revisions.
-	 * @param int $limit       The maximum number of revision IDs to retrieve.
+	 * @param int   $limit     The maximum number of revision IDs to retrieve.
 	 * @param array $post_type The post types for which revisions should be located.
 	 *
 	 * @return array An array of post IDs (unless 'fields' is manipulated in $args).
@@ -127,7 +129,7 @@ class RevisionStrike {
 	protected function get_revision_ids( $days, $limit, $post_type ) {
 		global $wpdb;
 
-		// Return early if we don't have any eligible post types
+		// Return early if we don't have any eligible post types.
 		if ( ! $post_type ) {
 			return array();
 		}
