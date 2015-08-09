@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+	<title>Revision Strike API Documentation</title>
+	<parser>
+		<package>Revision Strike</package>
+		<target>docs</target>
+		<encoding>utf8</encoding>
+	</parser>
+	<transformer>
+		<target>docs</target>
+	</transformer>
+	<files>
+		<directory>./</directory>
+		<ignore>bin/*</ignore>
+		<ignore>features/*</ignore>
+		<ignore>languages/*</ignore>
+		<ignore>tests/*</ignore>
+		<ignore>vendor/*</ignore>
+	</files>
+</phpdoc>

@@ -10,7 +10,8 @@
 		"10up/wp_mock"                 : "dev-master",
 		"codeclimate/php-test-reporter": "dev-master",
 		"wp-coding-standards/wpcs"     : "dev-master",
-		"behat/behat"                  : "~2.5"
+		"behat/behat"                  : "~2.5",
+		"phpdocumentor/phpdocumentor"  : "2.*"
 	},
 	"authors"          : [
 		{
