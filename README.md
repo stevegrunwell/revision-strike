@@ -87,17 +87,17 @@ All development dependencies for the plugin are installed via [Composer](https:/
 Pull requests on this plugin are welcome, but I ask that you please follow these guidelines:
 
 * Every PR that touches code should include a corresponding test. This plugin uses [PHPUnit](https://phpunit.de/), [WP_Mock](https://github.com/10up/wp_mock), and [Mockery](http://docs.mockery.io/en/latest/). Once #1 is completed, there will also be some functional tests written in [Behat](http://behat.org). Every PR should [generate a passing build in Travis CI](https://travis-ci.org/stevegrunwell/revision-strike) before being considered for merger.
-* Please follow the [WordPress Coding Standards](https://codex.wordpress.org/WordPress_Coding_Standards). If you have any doubts, you can run your PHP through [PHP_CodeSniffer](https://www.squizlabs.com/php-codesniffer) using the "WordPress-Extra" ruleset.
+* Please follow the [WordPress Coding Standards](https://codex.wordpress.org/WordPress_Coding_Standards). If you have any doubts, you can run your PHP through [PHP_CodeSniffer](https://www.squizlabs.com/php-codesniffer) using the **RevisionStrike** ruleset:
 
-		$ ./vendor/bin/phpcs
+		$ vendor/bin/phpcs
 
-* Beyond the coding standards, please properly document all contributions according to the [WordPress Inline Documentation Standards](https://make.wordpress.org/core/handbook/best-practices/inline-documentation-standards/).
+	This CodeSniffer ruleset combines the "WordPress-Extra" and "WordPress-Docs" rulesets for a *very* specific level of coverage; beyond the coding standards, contributed inline documentation will be checked against the [WordPress Inline Documentation Standards](https://make.wordpress.org/core/handbook/best-practices/inline-documentation-standards/).
 
 ### Integration tests
 
 There are a few integration tests for the plugin, written using [Behat](http://behat.org) and scaffolded using [`wp scaffold package-tests`](http://wp-cli.org/commands/scaffold/package-tests/). If you'd like to contribute to these tests, please install the WP CLI Testing framework:
 
 ```bash
-$ ./bin/install-package-tests.sh
-$ ./vendor/bin/behat
+$ bin/install-package-tests.sh
+$ vendor/bin/behat
 ```
