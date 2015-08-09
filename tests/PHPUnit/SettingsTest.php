@@ -20,6 +20,15 @@ class SettingsTest extends TestCase {
 		'class-settings.php',
 	];
 
+	public function test__construct() {
+		$revisionstrike = new \stdClass;
+		$instance       = Mockery::mock( 'RevisionStrikeSettings', array( $revisionstrike ) );
+		$property       = new ReflectionProperty( $instance, 'instance' );
+		$property->setAccessible( true );
+
+		$this->assertEquals( $revisionstrike, $property->getValue( $instance ) );
+	}
+
 	public function test_add_settings_section() {
 		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
 
@@ -52,6 +61,47 @@ class SettingsTest extends TestCase {
 		M::wpPassthruFunction( '__' );
 
 		$instance->add_settings_section();
+	}
+
+	public function test_add_tools_page() {
+		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+
+		M::wpFunction( 'add_management_page', array(
+			'times'  => 1,
+			'args'   => array(
+				'Revision Strike',
+				'Revision Strike',
+				'edit_published_posts',
+				'revision-strike',
+				array( $instance, 'tools_page' ),
+			),
+		) );
+
+		M::wpPassthruFunction( '__' );
+		M::wpPassthruFunction( '_x' );
+		M::wpPassthruFunction( 'esc_html_e' );
+
+		$instance->add_tools_page();
+	}
+
+	public function test_tools_page() {
+		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+		$instance->shouldReceive( 'get_option' )
+			->once()
+			->with( 'days', 30 )
+			->andReturn( 15 );
+
+		M::wpPassthruFunction( 'wp_die' );
+
+		$tools_template = PROJECT . 'tools.php';
+		$this->assertNotContains( $tools_template, get_included_files() );
+
+		// We don't care what's *in* the file, just that it's loaded
+		ob_start();
+		$instance->tools_page();
+		ob_end_clean();
+
+		$this->assertContains( $tools_template, get_included_files() );
 	}
 
 	public function test_days_field() {
@@ -129,7 +179,8 @@ class SettingsTest extends TestCase {
 	public function test_sanitize_settings() {
 		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
 		$input    = array(
-			'days' => 16,
+			'days'  => 16,
+			'limit' => 50,
 		);
 
 		M::wpPassthruFunction( 'absint', array(
@@ -137,11 +188,28 @@ class SettingsTest extends TestCase {
 			'args'   => array( 16 ),
 		) );
 
+		M::wpPassthruFunction( 'absint', array(
+			'times'  => 1,
+			'args'   => array( 50 ),
+		) );
+
 		$this->assertEquals(
 			array(
-				'days' => 16,
+				'days'  => 16,
+				'limit' => 50,
 			),
 			$instance->sanitize_settings( $input )
 		);
+	}
+
+	public function test_sanitize_settings_doesnt_permit_limit_0() {
+		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+		$input    = array(
+			'limit' => 0,
+		);
+
+		M::wpPassthruFunction( 'absint' );
+
+		$this->assertEquals( array( 'limit' => 50 ), $instance->sanitize_settings( $input ) );
 	}
 }

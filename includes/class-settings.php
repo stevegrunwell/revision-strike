@@ -12,9 +12,23 @@
 class RevisionStrikeSettings {
 
 	/**
+	 * @var RevisionStrike The current RevisionStrike instance.
+	 */
+	protected $instance;
+
+	/**
 	 * @var array A cache of plugin options.
 	 */
 	protected $options;
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param RevisionStrike $instance The RevisionStrike instance to which this object belongs.
+	 */
+	public function __construct( $instance = null ) {
+		$this->instance = $instance;
+	}
 
 	/**
 	 * Add plugin settings sections.
@@ -39,6 +53,19 @@ class RevisionStrikeSettings {
 	}
 
 	/**
+	 * Add the Tools > Revision Strike page.
+	 */
+	public function add_tools_page() {
+		add_management_page(
+			__( 'Revision Strike', 'revision-strike' ),
+			_x( 'Revision Strike', 'Tools menu link', 'revision-strike' ),
+			'edit_published_posts',
+			'revision-strike',
+			array( $this, 'tools_page' )
+		);
+	}
+
+	/**
 	 * Generate the revision-strike[days] field.
 	 */
 	public function days_field() {
@@ -55,6 +82,22 @@ class RevisionStrikeSettings {
 				'revision-strike'
 			)
 		);
+	}
+
+	/**
+	 * Generate the Tools > Revision Strike page.
+	 *
+	 * This method works by setting the $default configuration, then loading tools.php, which is a
+	 * more procedural file.
+	 */
+	public function tools_page() {
+		$defaults = array(
+			'days'  => $this->get_option( 'days', 30 ),
+			'limit' => 50,
+		);
+		$instance = $this->instance;
+
+		require_once dirname( __FILE__ ) . '/tools.php';
 	}
 
 	/**
@@ -80,6 +123,13 @@ class RevisionStrikeSettings {
 	public function sanitize_settings( $input ) {
 		if ( isset( $input['days'] ) ) {
 			$input['days'] = absint( $input['days'] );
+		}
+
+		if ( isset( $input['limit'] ) ) {
+			$input['limit'] = absint( $input['limit'] );
+			if ( 0 === $input['limit'] ) {
+				$input['limit'] = 50;
+			}
 		}
 
 		return $input;

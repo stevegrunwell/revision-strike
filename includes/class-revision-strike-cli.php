@@ -21,13 +21,6 @@ class RevisionStrikeCLI extends WP_CLI {
 	protected $instance;
 
 	/**
-	 * @var array $progress An array that holds increments as needed by commands.
-	 */
-	protected $progress = array(
-		'success' => 0,
-	);
-
-	/**
 	 * Remove old post revisions.
 	 *
 	 * ## OPTIONS
@@ -58,8 +51,6 @@ class RevisionStrikeCLI extends WP_CLI {
 	 * @param array $assoc_args An associative array of key-based arguments.
 	 */
 	public function clean( $args, $assoc_args ) {
-		add_action( 'wp_delete_post_revision', array( $this, 'count_deleted_revision' ) );
-
 		if ( isset( $assoc_args['verbose'] ) ) {
 			add_action( 'wp_delete_post_revision', array( $this, 'log_deleted_revision' ), 10, 2 );
 		}
@@ -76,7 +67,9 @@ class RevisionStrikeCLI extends WP_CLI {
 		$instance->strike( $args );
 
 		WP_CLI::line();
-		if ( 0 === $this->progress['success'] ) {
+
+		$stats = $instance->get_stats();
+		if ( 0 === $stats['deleted'] ) {
 			return WP_CLI::success(
 				esc_html__( 'No errors occurred, but no post revisions were removed.', 'revision-strike' )
 			);
@@ -85,17 +78,10 @@ class RevisionStrikeCLI extends WP_CLI {
 			return WP_CLI::success( sprintf( _n(
 				'One post revision was deleted successfully',
 				'%d post revisions were deleted successfully',
-				$this->progress['success'],
+				$stats['deleted'],
 				'revision-strike'
-			), $this->progress['success'] ) );
+			), $stats['deleted'] ) );
 		}
-	}
-
-	/**
-	 * Increment $this->progress['success'] by one.
-	 */
-	public function count_deleted_revision() {
-		$this->progress['success']++;
 	}
 
 	/**

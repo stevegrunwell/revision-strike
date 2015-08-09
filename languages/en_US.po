@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Revision Strike 0.1\n"
-"POT-Creation-Date: 2015-08-08 23:18-0400\n"
-"PO-Revision-Date: 2015-08-09 01:00-0400\n"
+"POT-Creation-Date: 2015-08-09 15:21-0400\n"
+"PO-Revision-Date: 2015-08-09 15:21-0400\n"
 "Last-Translator: Steve Grunwell <steve@stevegrunwell.com>\n"
 "Language-Team: \n"
 "Language: en_US\n"
@@ -16,27 +16,48 @@ msgstr ""
 "X-Poedit-SearchPath-0: includes\n"
 "X-Poedit-SearchPath-1: revision-strike.php\n"
 
-#: includes/class-revision-strike-cli.php:78
+#: includes/class-revision-strike-cli.php:74
 msgid "No errors occurred, but no post revisions were removed."
 msgstr ""
 
-#: includes/class-revision-strike-cli.php:83
+#: includes/class-revision-strike-cli.php:79
 msgid "One post revision was deleted successfully"
 msgstr ""
 
-#: includes/class-revision-strike-cli.php:106
+#: includes/class-revision-strike-cli.php:95
 #, php-format
 msgid "Revision ID %d has been deleted."
 msgstr ""
 
-#: includes/class-settings.php:24
+#: includes/class-settings.php:41 includes/class-settings.php:60
+#: includes/class-settings.php:61
 msgid "Revision Strike"
 msgstr ""
 
-#: includes/class-settings.php:31
+#: includes/class-settings.php:48
 msgid "Expire Revisions after X Days"
 msgstr ""
 
-#: includes/class-settings.php:51
+#: includes/class-settings.php:81
 msgid "Revisions on posts older than this many days will periodically purged."
+msgstr ""
+
+#: includes/tools.php:10
+msgid "You cannot access this page directly"
+msgstr ""
+
+#: includes/tools.php:24
+msgid "No revisions were found that matched your criteria."
+msgstr ""
+
+#: includes/tools.php:27
+msgid "Something went wrong deleting post revisions, please try again!"
+msgstr ""
+
+#: includes/tools.php:31
+msgid "One post revision has been deleted successfully!"
+msgstr ""
+
+#: includes/tools.php:87
+msgid "Strike Revisions"
 msgstr ""

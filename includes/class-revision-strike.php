@@ -17,6 +17,11 @@ class RevisionStrike {
 	public $settings;
 
 	/**
+	 * @var array $statistics Information about Revision Strike's current state.
+	 */
+	protected $statistics;
+
+	/**
 	 * The action called to trigger the clean-up process.
 	 */
 	const STRIKE_ACTION = 'revisionstrike_strike_old_revisions';
@@ -25,7 +30,11 @@ class RevisionStrike {
 	 * Class constructor.
 	 */
 	public function __construct() {
-		$this->settings = new RevisionStrikeSettings;
+		$this->settings   = new RevisionStrikeSettings( $this );
+		$this->statistics = array(
+			'count'   => 0, // Number of revision IDs found
+			'deleted' => 0, // Number of revisions deleted
+		);
 
 		$this->add_hooks();
 	}
@@ -36,6 +45,29 @@ class RevisionStrike {
 	public function add_hooks() {
 		add_action( self::STRIKE_ACTION, array( $this, 'strike' ) );
 		add_action( 'admin_init', array( $this->settings, 'add_settings_section' ) );
+		add_action( 'admin_menu', array( $this->settings, 'add_tools_page' ) );
+		add_action( 'wp_delete_post_revision', array( $this, 'count_deleted_revision' ) );
+	}
+
+	/**
+	 * Increment $this->statistics['deleted'] by one every time a post revision is removed.
+	 */
+	public function count_deleted_revision() {
+		$this->statistics['deleted']++;
+	}
+
+	/**
+	 * Return the current statistics for this RevisionStrike instance.
+	 *
+	 * The statistics array contains the following keys:
+	 * - count: The number of revision IDs found, up to the limit that was passed to strike().
+	 * - deleted: The number of revisions that have been deleted. This number should always be <= the
+	 *            value of "count".
+	 *
+	 * @return array An array of statistics.
+	 */
+	public function get_stats() {
+		return $this->statistics;
 	}
 
 	/**
@@ -113,6 +145,8 @@ class RevisionStrike {
 			date( 'Y-m-d', time() - ( absint( $days ) * DAY_IN_SECONDS ) ),
 			absint( $limit )
 		) );
+
+		$this->statistics['count'] = count( $revision_ids );
 
 		return array_map( 'absint', $revision_ids );
 	}
