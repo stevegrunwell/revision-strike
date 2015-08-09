@@ -20,6 +20,8 @@ require_once dirname( __FILE__ ) . '/includes/class-settings.php';
  */
 function revisionstrike_init() {
 	new RevisionStrike;
+
+	load_plugin_textdomain( 'revision-strike', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 }
 
 add_action( 'init', 'revisionstrike_init' );
