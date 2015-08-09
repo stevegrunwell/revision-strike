@@ -16,7 +16,8 @@ if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
 class RevisionStrikeCLI extends WP_CLI {
 
 	/**
-	 * @var RevisionStrike $instance The current instance of the RevisionStrike class.
+	 * The current instance of the RevisionStrike class.
+	 * @var RevisionStrike $instance
 	 */
 	protected $instance;
 

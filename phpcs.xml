@@ -8,4 +8,5 @@
 	<exclude-pattern>*/Tests/*</exclude-pattern>
 
 	<rule ref="WordPress-Extra"/>
+	<rule ref="WordPress-Docs"/>
 </ruleset>
