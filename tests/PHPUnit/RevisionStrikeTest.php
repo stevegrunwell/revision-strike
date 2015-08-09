@@ -202,4 +202,12 @@ class RevisionStrikeTest extends TestCase {
 		$wpdb   = null;
 	}
 
+	public function test_get_revision_ids_returns_early_with_empty_post_types() {
+		$instance = new RevisionStrike;
+		$method   = new ReflectionMethod( $instance, 'get_revision_ids' );
+		$method->setAccessible( true );
+
+		$this->assertEquals( array(), $method->invoke( $instance, 30, 50, '' ) );
+	}
+
 }
