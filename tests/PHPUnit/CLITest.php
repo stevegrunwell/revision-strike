@@ -13,6 +13,7 @@ use Mockery;
 use ReflectionProperty;
 use RevisionStrike;
 use RevisionStrikeCLI;
+use WP_CLI;
 
 class CLITest extends TestCase {
 
@@ -21,32 +22,104 @@ class CLITest extends TestCase {
 		'class-revision-strike-cli.php',
 	];
 
-	public function test_clean() {
-		$cli = new RevisionStrikeCLI;
+	public function tearDown() {
+		parent::tearDown();
 
-		M::wpPassthruFunction( 'esc_html__' );
+		\WP_CLI::tearDown();
+	}
+
+	public function test_clean() {
+		$wp_cli = WP_CLI::getInstance();
+		$wp_cli->shouldReceive( '_line' )->once();
+		$wp_cli->shouldReceive( '_success' )->once();
+
+		$instance = Mockery::mock( 'RevisionStrike' )->makePartial();
+		$instance->shouldReceive( 'strike' )->once();
+
+		$cli = Mockery::mock( 'RevisionStrikeCLI' )
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
+		$cli->shouldReceive( 'get_instance' )
+			->once()
+			->andReturn( $instance );
+
+		$progress = new ReflectionProperty( $cli, 'progress' );
+		$progress->setAccessible( true );
+		$progress->setValue( $cli, array( 'success' => 5 ) );
+
+		M::wpPassthruFunction( '_n' );
 
 		M::expectActionAdded( 'wp_delete_post_revision', array( $cli, 'count_deleted_revision' ) );
-		M::expectAction( RevisionStrike::STRIKE_ACTION, false );
 
 		$cli->clean( array(), array() );
 	}
 
 	public function test_clean_with_days_argument() {
-		$cli = new RevisionStrikeCLI;
+		$instance = Mockery::mock( 'RevisionStrike' )->makePartial();
+		$instance->shouldReceive( 'strike' )
+			->once()
+			->with( array( 'days' => 7, ) );
 
-		M::wpPassthruFunction( 'absint', array(
-			'times' => 1,
-			'args'  => array( 7 ),
-		) );
+		$cli = Mockery::mock( 'RevisionStrikeCLI' )
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
+		$cli->shouldReceive( 'get_instance' )
+			->once()
+			->andReturn( $instance );
 
-		M::expectAction( RevisionStrike::STRIKE_ACTION, 7 );
+		M::wpPassthruFunction( 'esc_html__' );
 
 		$cli->clean( array(), array( 'days' => 7 ) );
 	}
 
+	public function test_clean_with_limit_argument() {
+		$instance = Mockery::mock( 'RevisionStrike' )->makePartial();
+		$instance->shouldReceive( 'strike' )
+			->once()
+			->with( array( 'limit' => 100, ) );
+
+		$cli = Mockery::mock( 'RevisionStrikeCLI' )
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
+		$cli->shouldReceive( 'get_instance' )
+			->once()
+			->andReturn( $instance );
+
+		M::wpPassthruFunction( 'esc_html__' );
+
+		$cli->clean( array(), array( 'limit' => 100 ) );
+	}
+
+	public function test_clean_with_post_type_argument() {
+		$instance = Mockery::mock( 'RevisionStrike' )->makePartial();
+		$instance->shouldReceive( 'strike' )
+			->once()
+			->with( array( 'post_type' => 'page', ) );
+
+		$cli = Mockery::mock( 'RevisionStrikeCLI' )
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
+		$cli->shouldReceive( 'get_instance' )
+			->once()
+			->andReturn( $instance );
+
+		M::wpPassthruFunction( 'esc_html__' );
+
+		$cli->clean( array(), array( 'post_type' => 'page' ) );
+	}
+
 	public function test_clean_with_verbose_argument() {
-		$cli = new RevisionStrikeCLI;
+		$instance = Mockery::mock( 'RevisionStrike' )->makePartial();
+		$instance->shouldReceive( 'strike' )->once();
+
+		$cli = Mockery::mock( 'RevisionStrikeCLI' )
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
+		$cli->shouldReceive( 'get_instance' )
+			->once()
+			->andReturn( $instance );
+
+		M::wpPassthruFunction( 'esc_html__' );
 
 		M::expectActionAdded(
 			'wp_delete_post_revision',
@@ -55,13 +128,19 @@ class CLITest extends TestCase {
 			2
 		);
 
-		M::expectAction( RevisionStrike::STRIKE_ACTION, false );
-
 		$cli->clean( array(), array( 'verbose' => true ) );
 	}
 
 	public function test_clean_reporting() {
-		$cli = new RevisionStrikeCLI;
+		$instance = Mockery::mock( 'RevisionStrike' )->makePartial();
+		$instance->shouldReceive( 'strike' )->once();
+
+		$cli = Mockery::mock( 'RevisionStrikeCLI' )
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
+		$cli->shouldReceive( 'get_instance' )
+			->once()
+			->andReturn( $instance );
 
 		$property = new ReflectionProperty( $cli, 'progress' );
 		$property->setAccessible( true );
@@ -72,9 +151,17 @@ class CLITest extends TestCase {
 		) );
 		M::wpPassthruFunction( '_n' );
 
-		M::expectAction( RevisionStrike::STRIKE_ACTION, false );
-
 		$cli->clean( array(), array() );
+	}
+
+	public function test_log_deleted_revision() {
+		$rs_cli = new RevisionStrikeCLI;
+		$wp_cli = WP_CLI::getInstance();
+		$wp_cli->shouldReceive( '_log' )->once();
+
+		M::wpPassthruFunction( 'esc_html__' );
+
+		$rs_cli->log_deleted_revision( 4, new \stdClass );
 	}
 
 }

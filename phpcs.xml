@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<ruleset name="RevisionStrike">
+	<description>Coding standard for Revision Strike.</description>
+
+	<file>revision-strike.php</file>
+	<file>includes</file>
+
+	<exclude-pattern>*/Tests/*</exclude-pattern>
+
+	<rule ref="WordPress-Extra"/>
+</ruleset>

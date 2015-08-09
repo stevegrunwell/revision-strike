@@ -6,18 +6,15 @@
  * @author Steve Grunwell
  */
 
+/**
+ * Class that hooks into WordPress, determines revision IDs, and strikes them from the database.
+ */
 class RevisionStrike {
 
 	/**
 	 * @var RevisionStrikeSettings $settings The plugin settings.
 	 */
 	public $settings;
-
-	/**
-	 * @var int $expiration_threshold The cached number of days since a post's publishing before its
-	 *                                revisions can be removed.
-	 */
-	protected $expiration_threshold;
 
 	/**
 	 * The action called to trigger the clean-up process.
@@ -28,6 +25,8 @@ class RevisionStrike {
 	 * Class constructor.
 	 */
 	public function __construct() {
+		$this->settings = new RevisionStrikeSettings;
+
 		$this->add_hooks();
 	}
 
@@ -36,29 +35,44 @@ class RevisionStrike {
 	 */
 	public function add_hooks() {
 		add_action( self::STRIKE_ACTION, array( $this, 'strike' ) );
-		add_action( 'admin_menu', array( $this, 'settings' ) );
-	}
-
-	/**
-	 * Register the plugin settings page.
-	 */
-	public function settings() {
-		$this->settings = new RevisionStrikeSettings;
+		add_action( 'admin_init', array( $this->settings, 'add_settings_section' ) );
+		add_action( 'admin_menu', array( $this->settings, 'add_tools_page' ) );
 	}
 
 	/**
 	 * Clean up ("strike") post revisions for posts older than a certain number of seconds.
 	 *
-	 * @param int|bool $days The number of days old a post must be in order for its revisions to be
-	 *                       struck. A boolean FALSE will defer to get_revision_expiration_time().
+	 * @param array $args {
+	 *   Optional. An array of arguments.
+	 *
+	 *   @type int    $days      The number of days old a post must be in order for its revisions to
+	 *                           be struck. Default is 30.
+	 *   @type int    $limit     The maximum number of posts to delete in a single pass (when run as
+	 *                           cron, per day). Default is 50.
+	 *   @type string $post_type A comma-separated list of post types for which the revisions should
+	 *                           be purged. By default, only revisions for posts will be purged.
+	 * }
 	 */
-	public function strike( $days = false ) {
-		if ( false === $days ) {
-			$days = $this->get_revision_expiration_threshold();
+	public function strike( $args = array() ) {
+		$default_args = array(
+			'days'      => $this->settings->get_option( 'days', 30 ),
+			'limit'     => 50,
+			'post_type' => null,
+		);
+		$args         = wp_parse_args( $args, $default_args );
+
+		if ( null === $args['post_type'] ) {
+
+			/**
+			 * Set the default post type(s) for which revisions should be struck.
+			 *
+			 * @param string $post_type A comma-separated list of post types.
+			 */
+			$args['post_type'] = apply_filters( 'revisionstrike_post_types', 'post' );
 		}
 
 		// Collect the revision IDs
-		$revision_ids = $this->get_revision_ids( $days, 50 );
+		$revision_ids = $this->get_revision_ids( $args['days'], $args['limit'], $args['post_type'] );
 
 		if ( ! empty( $revision_ids ) ) {
 			foreach ( $revision_ids as $revision_id ) {
@@ -68,64 +82,40 @@ class RevisionStrike {
 	}
 
 	/**
-	 * Get the number of days since a post's publish date that must have passed before revisions can
-	 * be struck.
-	 *
-	 * @return int A number of days.
-	 */
-	protected function get_revision_expiration_threshold() {
-		if ( ! is_null( $this->expiration_threshold ) ) {
-			return $this->expiration_threshold;
-		}
-
-		$time = 30; // @todo pull this from a settings page
-
-		// Cache the result
-		$this->expiration_threshold = intval( $time );
-
-		return $this->expiration_threshold;
-	}
-
-	/**
 	 * Find revisions eligible to be removed from the database.
 	 *
 	 * @global $wpdb
 	 *
-	 * @param int $days  The number of days since a post's publish date that must pass before we can
-	 *                   purge the post revisions.
-	 * @param int $limit The maximum number of revisions to remove on each pass.
+	 * @param int $days        The number of days since a post's publish date that must pass before
+	 *                         we can purge the post revisions.
+	 * @param int $limit       The maximum number of revision IDs to retrieve.
+	 * @param array $post_type The post types for which revisions should be located.
 	 *
 	 * @return array An array of post IDs (unless 'fields' is manipulated in $args).
 	 */
-	protected function get_revision_ids( $days, $limit = 50 ) {
+	protected function get_revision_ids( $days, $limit, $post_type ) {
 		global $wpdb;
 
-		/**
-		 * Controls the post types for which revisions should be automatically be purged.
-		 *
-		 * @param array $post_types An array of post types.
-		 */
-		$post_types = apply_filters( 'revisionstrike_post_types', array( 'post' ) );
-
 		// Return early if we don't have any eligible post types
-		if ( empty( $post_types ) ) {
+		if ( ! $post_type ) {
 			return array();
 		}
 
-		$limit = absint( $limit );
-		$query = $wpdb->get_col( $wpdb->prepare(
+		$post_type    = array_map( 'trim', explode( ',', $post_type ) );
+		$revision_ids = $wpdb->get_col( $wpdb->prepare(
 			"
 			SELECT r.ID FROM $wpdb->posts r
 			LEFT JOIN $wpdb->posts p ON r.post_parent = p.ID
 			WHERE r.post_type = 'revision' AND p.post_type IN ('%s') AND p.post_date < %s
+			ORDER BY p.post_date ASC
 			LIMIT %d
 			",
-			implode( "', '", (array) $post_types ),
+			implode( "', '", $post_type ),
 			date( 'Y-m-d', time() - ( absint( $days ) * DAY_IN_SECONDS ) ),
-			$limit
+			absint( $limit )
 		) );
 
-		return array_map( 'absint', $query );
+		return array_map( 'absint', $revision_ids );
 	}
 
 }

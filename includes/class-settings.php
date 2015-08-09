@@ -6,20 +6,15 @@
  * @author Steve Grunwell
  */
 
+/**
+ * Plugin configuration.
+ */
 class RevisionStrikeSettings {
 
 	/**
 	 * @var array A cache of plugin options.
 	 */
 	protected $options;
-
-	/**
-	 * Class constructor.
-	 */
-	public function __construct() {
-		$this->add_settings_section();
-		$this->add_tools_page();
-	}
 
 	/**
 	 * Add plugin settings sections.
@@ -62,7 +57,7 @@ class RevisionStrikeSettings {
 	public function days_field() {
 		printf(
 			'<input name="revision-strike[days]" id="revision-strike-days" type="number" class="small-text" value="%d" /> %s',
-			$this->get_option( 'days', 30 ),
+			absint( $this->get_option( 'days', 30 ) ),
 			esc_html_x( 'Days', 'Label for revision-strike[days]', 'revision-strike' )
 		);
 

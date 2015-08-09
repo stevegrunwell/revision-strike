@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Revision Strike
- * Plugin URI: https://stevegrunwell.com/revision-strike
+ * Plugin URI: https://stevegrunwell.com/blog/revision-strike
  * Description: Periodically purge old post revisions via WP Cron.
  * Version: 0.1
  * Author: Steve Grunwell
@@ -20,6 +20,8 @@ require_once dirname( __FILE__ ) . '/includes/class-settings.php';
  */
 function revisionstrike_init() {
 	new RevisionStrike;
+
+	load_plugin_textdomain( 'revision-strike', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 }
 
 add_action( 'init', 'revisionstrike_init' );

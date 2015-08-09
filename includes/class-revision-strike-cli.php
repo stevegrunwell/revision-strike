@@ -16,6 +16,11 @@ if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
 class RevisionStrikeCLI extends WP_CLI {
 
 	/**
+	 * @var RevisionStrike $instance The current instance of the RevisionStrike class.
+	 */
+	protected $instance;
+
+	/**
 	 * @var array $progress An array that holds increments as needed by commands.
 	 */
 	protected $progress = array(
@@ -30,15 +35,27 @@ class RevisionStrikeCLI extends WP_CLI {
 	 * [--days=<days>]
 	 * : Remove revisions on posts published at least <days> days ago.
 	 *
+	 * [--limit=<limit>]
+	 * : The number of days a post should be published before its revisions are
+	 * eligible to be struck.
+	 *
+	 * [--post_type=<post_type>]
+	 * : One or more post types (comma-separated) for which revisions should be struck.
+	 *
 	 * [--verbose]
 	 * : Enable verbose logging of deleted revisions.
 	 *
 	 * ## EXAMPLES
 	 *
-	 *   wp revisionstrike clean
-	 *   wp revisionstrike clean --days=45
+	 *   wp revision-strike clean
+	 *   wp revision-strike clean --days=45
+	 *   wp revision-strike clean --limit=75
+	 *   wp revision-strike clean --post_type=post,page
 	 *
-	 * @synopsis [--days=<days>] [--verbose]
+	 * @synopsis [--days=<days>] [--limit=<limit>] [--post_type=<post_type>] [--verbose]
+	 *
+	 * @param array $args       A numeric array of position-based arguments.
+	 * @param array $assoc_args An associative array of key-based arguments.
 	 */
 	public function clean( $args, $assoc_args ) {
 		add_action( 'wp_delete_post_revision', array( $this, 'count_deleted_revision' ) );
@@ -47,9 +64,16 @@ class RevisionStrikeCLI extends WP_CLI {
 			add_action( 'wp_delete_post_revision', array( $this, 'log_deleted_revision' ), 10, 2 );
 		}
 
-		$days = isset( $assoc_args['days'] ) ? absint( $assoc_args['days'] ) : false;
+		$instance = $this->get_instance();
+		$args     = array();
 
-		do_action( RevisionStrike::STRIKE_ACTION, $days );
+		foreach ( array( 'days', 'limit', 'post_type' ) as $arg ) {
+			if ( isset( $assoc_args[ $arg ] ) ) {
+				$args[ $arg ] = $assoc_args[ $arg ];
+			}
+		}
+
+		$instance->strike( $args );
 
 		WP_CLI::line();
 		if ( 0 === $this->progress['success'] ) {
@@ -58,12 +82,12 @@ class RevisionStrikeCLI extends WP_CLI {
 			);
 
 		} else {
-			return WP_CLI::success( _n(
+			return WP_CLI::success( sprintf( _n(
 				'One post revision was deleted successfully',
 				'%d post revisions were deleted successfully',
 				$this->progress['success'],
 				'revision-strike'
-			) );
+			), $this->progress['success'] ) );
 		}
 	}
 
@@ -85,6 +109,18 @@ class RevisionStrikeCLI extends WP_CLI {
 			esc_html__( 'Revision ID %d has been deleted.', 'revision-strike' ),
 			$revision_id
 		) );
+	}
+
+	/**
+	 * Get the current RevisionStrike instance.
+	 *
+	 * @return RevisionStrike The current instance in $this->instance.
+	 */
+	protected function get_instance() {
+		if ( null === $this->instance ) {
+			$this->instance = new RevisionStrike;
+		}
+		return $this->instance;
 	}
 
 }

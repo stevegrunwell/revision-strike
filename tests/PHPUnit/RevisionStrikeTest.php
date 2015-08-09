@@ -13,11 +13,13 @@ use Mockery;
 use ReflectionMethod;
 use ReflectionProperty;
 use RevisionStrike;
+use RevisionStrikeSettings;
 
 class RevisionStrikeTest extends TestCase {
 
 	protected $testFiles = [
 		'class-revision-strike.php',
+		'class-settings.php',
 	];
 
 	public function test__construct() {
@@ -25,87 +27,90 @@ class RevisionStrikeTest extends TestCase {
 		$instance->shouldReceive( 'add_hooks' )->once();
 
 		$instance->__construct();
-	}
-
-	public function test_add_hooks() {
-		$instance = new RevisionStrike;
-		M::expectActionAdded( RevisionStrike::STRIKE_ACTION, array( $instance, 'strike' ) );
-		M::expectActionAdded( 'admin_menu', array( $instance, 'settings' ) );
-
-		$instance->add_hooks();
-	}
-
-	public function test_settings() {
-		$this->markTestSkipped( 'Need a better instantiation method' );
-		$instance = Mockery::mock( 'RevisionStrike' )->makePartial();
-
-		$instance->settings();
 
 		$this->assertInstanceOf( 'RevisionStrikeSettings', $instance->settings );
 	}
 
+	public function test_add_hooks() {
+		$instance = new RevisionStrike;
+		$settings = new RevisionStrikeSettings;
+		$instance->settings = $settings;
+
+		M::expectActionAdded( RevisionStrike::STRIKE_ACTION, array( $instance, 'strike' ) );
+		M::expectActionAdded( 'admin_init', array( $settings, 'add_settings_section' ) );
+		M::expectActionAdded( 'admin_menu', array( $settings, 'add_tools_page' ) );
+
+		$instance->add_hooks();
+	}
+
 	public function test_strike() {
-		$instance = Mockery::mock( 'RevisionStrike' )
-			->shouldAllowMockingProtectedMethods()
-			->makePartial();
-		$instance->shouldReceive( 'get_revision_expiration_threshold' )
+		$settings = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+		$settings->shouldReceive( 'get_option' )
 			->once()
+			->with( 'days', 30 )
 			->andReturn( 30 );
-		$instance->shouldReceive( 'get_revision_ids' )
-			->once()
-			->with( 30, 50 )
-			->andReturn( array( 1, 2, 3 ) );
 
-		M::wpFunction( 'wp_delete_post_revision', array(
-			'times'  => 3
-		) );
-
-		$instance->strike();
-	}
-
-	public function test_strike_with_days_argument() {
 		$instance = Mockery::mock( 'RevisionStrike' )
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
-		$instance->shouldReceive( 'get_revision_expiration_threshold' )
-			->never();
 		$instance->shouldReceive( 'get_revision_ids' )
 			->once()
-			->with( 90, 50 )
+			->with( 14, 100, 'post' )
 			->andReturn( array( 1, 2, 3 ) );
+		$instance->settings = $settings;
+
+		M::wpFunction( 'wp_parse_args', array(
+			'times'  => 1,
+			'args'   => array(
+				array(
+					'days'  => 14,
+					'limit' => 100,
+				),
+				array(
+					'days'      => 30,
+					'limit'     => 50,
+					'post_type' => null,
+				),
+			),
+			'return' => array(
+				'days'      => 14,
+				'limit'     => 100,
+				'post_type' => null,
+			),
+		) );
 
 		M::wpFunction( 'wp_delete_post_revision', array(
 			'times'  => 3
 		) );
 
-		$instance->strike( 90 );
+		$instance->strike( array( 'days' => 14, 'limit' => 100 ) );
 	}
 
-	public function test_get_revision_expiration_threshold() {
-		$instance = new RevisionStrike;
+	public function test_strike_filters_post_types() {
+		$settings = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+		$settings->shouldReceive( 'get_option' )
+			->once()
+			->with( 'days', 30 )
+			->andReturn( 30 );
 
-		$method = new ReflectionMethod( $instance, 'get_revision_expiration_threshold' );
-		$method->setAccessible( true );
+		$instance = Mockery::mock( 'RevisionStrike' )
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
+		$instance->shouldReceive( 'get_revision_ids' )
+			->once()
+			->with( 30, 50, 'POST_TYPE' )
+			->andReturn( array() );
+		$instance->settings = $settings;
 
-		$property = new ReflectionProperty( $instance, 'expiration_threshold' );
-		$property->setAccessible( true );
+		M::onFilter( 'revisionstrike_post_types' )
+			->with( 'post' )
+			->reply( 'POST_TYPE' );
 
-		$this->assertEmpty( $property->getValue( $instance ) );
-		$this->assertEquals( 30, $method->invoke( $instance ) );
-		$this->assertEquals( 30, $property->getValue( $instance ) );
-	}
+		M::wpPassthruFunction( 'wp_parse_args', array(
+			'times'  => 1,
+		) );
 
-	public function test_get_revision_expiration_threshold_uses_cached_value() {
-		$instance = new RevisionStrike;
-
-		$method = new ReflectionMethod( $instance, 'get_revision_expiration_threshold' );
-		$method->setAccessible( true );
-
-		$property = new ReflectionProperty( $instance, 'expiration_threshold' );
-		$property->setAccessible( true );
-		$property->setValue( $instance, 12345 );
-
-		$this->assertEquals( 12345, $method->invoke( $instance ) );
+		$instance->strike( array( 'days' => 30, 'limit' => 50, 'post_type' => null, ) );
 	}
 
 	public function test_get_revision_ids() {
@@ -118,7 +123,38 @@ class RevisionStrikeTest extends TestCase {
 		$wpdb = Mockery::mock( '\WPDB' );
 		$wpdb->shouldReceive( 'prepare' )
 			->once()
-			->with( Mockery::any(), "post', 'page", Mockery::any(), 25 )
+			->with( Mockery::any(), 'post', Mockery::any(), 25 )
+			->andReturnUsing( function ( $query ) {
+				if ( false === strpos( $query, 'ORDER BY p.post_date ASC' ) ) {
+					$this->fail( 'Revisions are not being ordered from oldest to newest' );
+				}
+				return 'SQL STATEMENT';
+			} );
+		$wpdb->shouldReceive( 'get_col' )
+			->once()
+			->with( 'SQL STATEMENT' )
+			->andReturn( array( 1, 2, 3 ) );
+		$wpdb->posts = 'wp_posts';
+
+		M::wpPassthruFunction( 'absint' );
+
+		$result = $method->invoke( $instance, 90, 25, 'post' );
+		$wpdb   = null;
+
+		$this->assertEquals( array( 1, 2, 3 ), $result );
+	}
+
+	public function test_get_revision_ids_with_multiple_post_types() {
+		global $wpdb;
+
+		$instance = new RevisionStrike;
+		$method   = new ReflectionMethod( $instance, 'get_revision_ids' );
+		$method->setAccessible( true );
+
+		$wpdb = Mockery::mock( '\WPDB' );
+		$wpdb->shouldReceive( 'prepare' )
+			->once()
+			->with( Mockery::any(), "post', 'page", Mockery::any(), 50 )
 			->andReturn( 'SQL STATEMENT' );
 		$wpdb->shouldReceive( 'get_col' )
 			->once()
@@ -126,31 +162,10 @@ class RevisionStrikeTest extends TestCase {
 			->andReturn( array( 1, 2, 3 ) );
 		$wpdb->posts = 'wp_posts';
 
-		M::onFilter( 'revisionstrike_post_types' )
-			->with( array( 'post' ) )
-			->reply( array( 'post', 'page' ) );
-
 		M::wpPassthruFunction( 'absint' );
 
-		$result = $method->invoke( $instance, 90, 25 );
+		$result = $method->invoke( $instance, 30, 50, 'post,page' );
 		$wpdb   = null;
-
-		$this->assertEquals( array( 1, 2, 3 ), $result );
-	}
-
-	public function test_get_revision_ids_ensures_post_types_are_set() {
-		$instance = new RevisionStrike;
-		$method   = new ReflectionMethod( $instance, 'get_revision_ids' );
-		$method->setAccessible( true );
-
-		M::onFilter( 'revisionstrike_post_types' )
-			->with( array( 'post' ) )
-			->reply( false );
-
-		M::wpPassthruFunction( 'absint' );
-
-		$result = $method->invoke( $instance, 90, 25 );
-		$this->assertEquals( array(), $result );
 	}
 
 }

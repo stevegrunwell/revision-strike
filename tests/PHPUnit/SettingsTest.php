@@ -20,14 +20,6 @@ class SettingsTest extends TestCase {
 		'class-settings.php',
 	];
 
-	public function test__construct() {
-		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
-		$instance->shouldReceive( 'add_settings_section' )->once();
-		$instance->shouldReceive( 'add_tools_page' )->once();
-
-		$instance->__construct();
-	}
-
 	public function test_add_settings_section() {
 		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
 
@@ -101,8 +93,33 @@ class SettingsTest extends TestCase {
 		$instance->tools_page();
 		$results = ob_get_contents();
 		ob_end_clean();
+	}
 
+	public function test_days_field() {
+		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+		$instance->shouldReceive( 'get_option' )
+			->with( 'days', 30 )
+			->andReturn( 30 );
 
+		M::wpPassthruFunction( 'absint', array(
+			'times' => 1,
+			'args'  => array( 30 ),
+		) );
+
+		M::wpPassthruFunction( 'esc_html__', array(
+			'times' => 1,
+		) );
+
+		M::wpPassthruFunction( 'esc_html_x', array(
+			'times' => 1,
+		) );
+
+		ob_start();
+		$instance->days_field();
+		$result = ob_get_contents();
+		ob_end_clean();
+
+		$this->assertContains( 'name="revision-strike[days]"', $result );
 	}
 
 	public function test_get_option() {

@@ -24,6 +24,20 @@ class PluginBootstrapTest extends TestCase {
 		parent::setUp();
 	}
 
+	public function test_revisionstrike_init() {
+		M::wpFunction( 'load_plugin_textdomain', array(
+			'times'  => 1,
+			'args'   => array( 'revision-strike', false, '/path/to/plugin/languages' ),
+		) );
+
+		M::wpFunction( 'plugin_basename', array(
+			'times'  => 1,
+			'return' => '/path/to/plugin/file.php',
+		) );
+
+		revisionstrike_init();
+	}
+
 	public function test_revisionstrike_register_cron() {
 		M::wpFunction( 'wp_next_scheduled', array(
 			'times'  => 1,

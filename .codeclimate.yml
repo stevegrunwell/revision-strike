@@ -2,5 +2,7 @@ languages:
   PHP: true
 
 exclude_paths:
-  - "tests/dummy-files/*"
-  - "tests/test-tools/*"
+  - "bin/*"
+  - "features/*"
+  - "tests/*"
+  - "utils/*"
