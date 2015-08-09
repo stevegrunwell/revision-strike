@@ -30,6 +30,7 @@ class ToolsTest extends TestCase {
 		M::wpPassthruFunction( 'esc_attr' );
 		M::wpPassthruFunction( 'esc_html' );
 		M::wpPassthruFunction( 'esc_html_e' );
+		M::wpPassthruFunction( 'esc_url' );
 	}
 
 	public function test_default_load() {
