@@ -18,9 +18,6 @@
 			"email": "steve@stevegrunwell.com"
 		}
 	],
-	"autoload"         : {
-		"classmap": ["includes/"]
-	},
 	"scripts" : {
 		"post-install-cmd" : [
 			"./vendor/bin/phpcs --config-set installed_paths ../../wp-coding-standards/wpcs;"
