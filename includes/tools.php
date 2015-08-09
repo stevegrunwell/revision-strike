@@ -12,13 +12,35 @@ if ( ! isset( $instance, $defaults ) ) {
 
 // Handle the execution of revisions
 if ( isset( $_GET['nonce'], $_POST['days'], $_POST['limit'] ) && wp_verify_nonce( $_GET['nonce'], 'revision-strike' ) ) {
-	$args = array(
+	$args  = array(
 		'days'  => absint( $_POST['days'] ),
 		'limit' => absint( $_POST['limit'] ),
 	);
 	$instance->strike( $args );
+	$stats = $instance->get_stats();
+	$class = 'error';
 
-	// @todo success message
+	if ( 0 === $stats['count'] ) {
+		$message = __( 'No revisions were found that matched your criteria.', 'revision-strike' );
+
+	} elseif ( 0 === $stats['deleted'] && 0 < $stats['count'] ) {
+		$message = __( 'Something went wrong deleting post revisions, please try again!', 'revision-strike' );
+
+	} else {
+		$message = sprintf( _n(
+			'One post revision has been deleted successfully!',
+			'%d post revisions have been deleted successfully!',
+			$stats['deleted'],
+			'revision-strike'
+		), $stats['deleted'] );
+		$class   = 'updated';
+	}
+
+	printf(
+		'<div class="%s"><p>%s</p></div>',
+		esc_attr( $class ),
+		esc_html( $message )
+	);
 }
 
 ?>
