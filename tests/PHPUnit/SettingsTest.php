@@ -179,7 +179,8 @@ class SettingsTest extends TestCase {
 	public function test_sanitize_settings() {
 		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
 		$input    = array(
-			'days' => 16,
+			'days'  => 16,
+			'limit' => 50,
 		);
 
 		M::wpPassthruFunction( 'absint', array(
@@ -187,11 +188,28 @@ class SettingsTest extends TestCase {
 			'args'   => array( 16 ),
 		) );
 
+		M::wpPassthruFunction( 'absint', array(
+			'times'  => 1,
+			'args'   => array( 50 ),
+		) );
+
 		$this->assertEquals(
 			array(
-				'days' => 16,
+				'days'  => 16,
+				'limit' => 50,
 			),
 			$instance->sanitize_settings( $input )
 		);
+	}
+
+	public function test_sanitize_settings_doesnt_permit_limit_0() {
+		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+		$input    = array(
+			'limit' => 0,
+		);
+
+		M::wpPassthruFunction( 'absint' );
+
+		$this->assertEquals( array( 'limit' => 50 ), $instance->sanitize_settings( $input ) );
 	}
 }

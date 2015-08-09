@@ -125,7 +125,12 @@ class RevisionStrikeSettings {
 			$input['days'] = absint( $input['days'] );
 		}
 
-
+		if ( isset( $input['limit'] ) ) {
+			$input['limit'] = absint( $input['limit'] );
+			if ( 0 === $input['limit'] ) {
+				$input['limit'] = 50;
+			}
+		}
 
 		return $input;
 	}
