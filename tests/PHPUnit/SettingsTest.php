@@ -70,29 +70,31 @@ class SettingsTest extends TestCase {
 
 		M::wpPassthruFunction( '__' );
 		M::wpPassthruFunction( '_x' );
+		M::wpPassthruFunction( 'esc_html_e' );
 
 		$instance->add_tools_page();
 	}
 
 	public function test_tools_page() {
 		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+		$instance->shouldReceive( 'get_option' )
+			->once()
+			->with( 'days', 30 )
+			->andReturn( 15 );
 
-		M::wpFunction( 'wp_nonce_url', array(
-			'times'  => 1,
-			'args'   => array( 'tools.php?page=revision-strike', 'revision-strike' ),
-		) );
+		M::wpPassthruFunction( 'absint' );
+		M::wpPassthruFunction( 'submit_button' );
+		M::wpPassthruFunction( 'wp_nonce_url' );
 
-		M::wpFunction( 'submit_button', array(
-			'times'  => 1,
-		) );
+		$tools_template = PROJECT . 'tools.php';
+		$this->assertNotContains( $tools_template, get_included_files() );
 
-		M::wpPassthruFunction( '__' );
-		M::wpPassthruFunction( 'esc_html_e' );
-
+		// We don't care what's *in* the file, just that it's loaded
 		ob_start();
 		$instance->tools_page();
-		$results = ob_get_contents();
 		ob_end_clean();
+
+		$this->assertContains( $tools_template, get_included_files() );
 	}
 
 	public function test_days_field() {

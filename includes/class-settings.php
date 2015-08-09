@@ -72,44 +72,17 @@ class RevisionStrikeSettings {
 
 	/**
 	 * Generate the Tools > Revision Strike page.
+	 *
+	 * This method works by setting the $default configuration, then loading tools.php, which is a
+	 * more procedural file.
 	 */
 	public function tools_page() {
 		$defaults = array(
-			'days' => 30,
+			'days'  => $this->get_option( 'days', 30 ),
+			'limit' => 50,
 		);
 
-		/** This filter is defined in includes/class-revision-strike.php. */
-		$defaults['days'] = apply_filters( 'revisionstrike_post_types', $defaults['days'] );
-?>
-
-	<div class="wrap">
-		<div id="icon-tools" class="icon32"></div>
-		<h2><?php esc_html_e( 'Revision Strike', 'revision-strike' ); ?></h2>
-
-		<form method="POST" action="<?php echo wp_nonce_url( 'tools.php?page=revision-strike', 'revision-strike' ); ?>">
-			<p><?php esc_html_e(
-				'Revision Strike will remove old revisions from the post database.',
-				'revision-strike'
-			); ?></p>
-
-			<table class="form-table">
-				<tr>
-					<th scope="row"><?php esc_html_e( 'Days', 'revision-strike' ); ?></th>
-					<td>
-						<input name="days" type="number" class="small-text" value="<?php echo absint( $defaults['days'] ); ?>" />
-						<p class="description"><?php esc_html_e(
-							'Revisions will be removed from posts that have been published at least this many days.',
-							'revision-strike'
-						); ?></p>
-					</td>
-				</tr>
-			</table>
-
-			<?php echo submit_button( __( 'Strike Revisions', 'revision-strike' ) ); ?>
-		</form>
-	</div>
-
-<?php
+		require_once dirname( __FILE__ ) . '/tools.php';
 	}
 
 	/**
@@ -136,6 +109,8 @@ class RevisionStrikeSettings {
 		if ( isset( $input['days'] ) ) {
 			$input['days'] = absint( $input['days'] );
 		}
+
+
 
 		return $input;
 	}
