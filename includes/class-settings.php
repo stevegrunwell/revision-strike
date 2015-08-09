@@ -6,6 +6,9 @@
  * @author Steve Grunwell
  */
 
+/**
+ * Plugin configuration.
+ */
 class RevisionStrikeSettings {
 
 	/**

@@ -6,6 +6,9 @@
  * @author Steve Grunwell
  */
 
+/**
+ * Class that hooks into WordPress, determines revision IDs, and strikes them from the database.
+ */
 class RevisionStrike {
 
 	/**

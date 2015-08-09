@@ -53,6 +53,9 @@ class RevisionStrikeCLI extends WP_CLI {
 	 *   wp revision-strike clean --post_type=post,page
 	 *
 	 * @synopsis [--days=<days>] [--limit=<limit>] [--post_type=<post_type>] [--verbose]
+	 *
+	 * @param array $args       A numeric array of position-based arguments.
+	 * @param array $assoc_args An associative array of key-based arguments.
 	 */
 	public function clean( $args, $assoc_args ) {
 		add_action( 'wp_delete_post_revision', array( $this, 'count_deleted_revision' ) );
