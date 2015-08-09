@@ -10,6 +10,7 @@ namespace Grunwell\RevisionStrike;
 
 use WP_Mock as M;
 use Mockery;
+use ReflectionMethod;
 use ReflectionProperty;
 use RevisionStrike;
 use RevisionStrikeCLI;
@@ -20,6 +21,7 @@ class CLITest extends TestCase {
 	protected $testFiles = [
 		'class-revision-strike.php',
 		'class-revision-strike-cli.php',
+		'class-settings.php',
 	];
 
 	public function tearDown() {
@@ -170,6 +172,20 @@ class CLITest extends TestCase {
 		M::wpPassthruFunction( 'esc_html__' );
 
 		$rs_cli->log_deleted_revision( 4, new \stdClass );
+	}
+
+	public function test_get_instance() {
+		$instance = new RevisionStrikeCLI;
+		$method   = new ReflectionMethod( $instance, 'get_instance' );
+		$method->setAccessible( true );
+		$property = new ReflectionProperty( $instance, 'instance' );
+		$property->setAccessible( true );
+
+		$this->assertNull( $property->getValue( $instance ) );
+
+		$method->invoke( $instance );
+
+		$this->assertInstanceOf( 'RevisionStrike', $property->getValue( $instance ) );
 	}
 
 }
