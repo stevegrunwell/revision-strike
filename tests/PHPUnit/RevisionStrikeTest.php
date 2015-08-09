@@ -23,12 +23,18 @@ class RevisionStrikeTest extends TestCase {
 	];
 
 	public function test__construct() {
-		$instance = Mockery::mock( 'RevisionStrike' )->makePartial();
+		$instance   = Mockery::mock( 'RevisionStrike' )->makePartial();
 		$instance->shouldReceive( 'add_hooks' )->once();
+		$statistics = new ReflectionProperty( $instance, 'statistics' );
+		$statistics->setAccessible( true );
 
 		$instance->__construct();
 
 		$this->assertInstanceOf( 'RevisionStrikeSettings', $instance->settings );
+
+		$stats = $statistics->getValue( $instance );
+		$this->assertEquals( 0, $stats['count'] );
+		$this->assertEquals( 0, $stats['deleted'] );
 	}
 
 	public function test_add_hooks() {
@@ -39,8 +45,30 @@ class RevisionStrikeTest extends TestCase {
 		M::expectActionAdded( RevisionStrike::STRIKE_ACTION, array( $instance, 'strike' ) );
 		M::expectActionAdded( 'admin_init', array( $settings, 'add_settings_section' ) );
 		M::expectActionAdded( 'admin_menu', array( $settings, 'add_tools_page' ) );
+		M::expectActionAdded( 'wp_delete_post_revision', array( $instance, 'count_deleted_revision' ) );
 
 		$instance->add_hooks();
+	}
+
+	public function test_count_deleted_revision() {
+		$instance = new RevisionStrike;
+		$property = new ReflectionProperty( $instance, 'statistics' );
+		$property->setAccessible( true );
+		$property->setValue( $instance, array( 'deleted' => 5 ) );
+
+		$instance->count_deleted_revision();
+
+		$this->assertEquals( array( 'deleted' => 6 ), $property->getValue( $instance ) );
+	}
+
+	public function test_get_stats() {
+		$instance = new RevisionStrike;
+		$value    = uniqid();
+		$property = new ReflectionProperty( $instance, 'statistics' );
+		$property->setAccessible( true );
+		$property->setValue( $instance, $value );
+
+		$this->assertEquals( $value, $instance->get_stats() );
 	}
 
 	public function test_strike() {
@@ -119,6 +147,9 @@ class RevisionStrikeTest extends TestCase {
 		$instance = new RevisionStrike;
 		$method   = new ReflectionMethod( $instance, 'get_revision_ids' );
 		$method->setAccessible( true );
+		$property = new ReflectionProperty( $instance, 'statistics' );
+		$property->setAccessible( true );
+		$property->setValue( $instance, array( 'count' => 0 ) );
 
 		$wpdb = Mockery::mock( '\WPDB' );
 		$wpdb->shouldReceive( 'prepare' )
@@ -142,6 +173,9 @@ class RevisionStrikeTest extends TestCase {
 		$wpdb   = null;
 
 		$this->assertEquals( array( 1, 2, 3 ), $result );
+
+		$stats = $property->getValue( $instance );
+		$this->assertEquals( 3, $stats['count'], 'The "count" statistic is not being updated' );
 	}
 
 	public function test_get_revision_ids_with_multiple_post_types() {
