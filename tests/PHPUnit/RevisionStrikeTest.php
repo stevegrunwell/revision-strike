@@ -123,7 +123,12 @@ class RevisionStrikeTest extends TestCase {
 		$wpdb->shouldReceive( 'prepare' )
 			->once()
 			->with( Mockery::any(), 'post', Mockery::any(), 25 )
-			->andReturn( 'SQL STATEMENT' );
+			->andReturnUsing( function ( $query ) {
+				if ( false === strpos( $query, 'ORDER BY p.post_date ASC' ) ) {
+					$this->fail( 'Revisions are not being ordered from oldest to newest' );
+				}
+				return 'SQL STATEMENT';
+			} );
 		$wpdb->shouldReceive( 'get_col' )
 			->once()
 			->with( 'SQL STATEMENT' )

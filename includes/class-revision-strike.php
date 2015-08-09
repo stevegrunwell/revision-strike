@@ -103,6 +103,7 @@ class RevisionStrike {
 			SELECT r.ID FROM $wpdb->posts r
 			LEFT JOIN $wpdb->posts p ON r.post_parent = p.ID
 			WHERE r.post_type = 'revision' AND p.post_type IN ('%s') AND p.post_date < %s
+			ORDER BY p.post_date ASC
 			LIMIT %d
 			",
 			implode( "', '", $post_type ),
