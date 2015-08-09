@@ -21,6 +21,15 @@ There are a number of ways to interact with Revision Strike:
 Upon plugin activation, a hook is registered to trigger the `revisionstrike_strike_old_revisions` action daily, which kicks off the striking process. This hook is then automatically removed upon plugin deactivation.
 
 
+### Tools &rsaquo; Revision Strike
+
+![The Tools > Revision Strike page](assets/screenshot-1.png)
+
+You can manually trigger a revision strike by logging into WordPress and visiting the Tools &rsaquo; Revision Strike page.
+
+> **Note:** You must have the "edit_others_posts" capability (typically "Editor"-level and above) in order to see this page.
+
+
 ### WP-CLI
 
 If you make use of [WP-CLI](http://wp-cli.org/) on your site you may trigger Revision Strike with the following command:
