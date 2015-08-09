@@ -20,6 +20,15 @@ class SettingsTest extends TestCase {
 		'class-settings.php',
 	];
 
+	public function test__construct() {
+		$revisionstrike = new \stdClass;
+		$instance       = Mockery::mock( 'RevisionStrikeSettings', array( $revisionstrike ) );
+		$property       = new ReflectionProperty( $instance, 'instance' );
+		$property->setAccessible( true );
+
+		$this->assertEquals( $revisionstrike, $property->getValue( $instance ) );
+	}
+
 	public function test_add_settings_section() {
 		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
 
@@ -82,9 +91,7 @@ class SettingsTest extends TestCase {
 			->with( 'days', 30 )
 			->andReturn( 15 );
 
-		M::wpPassthruFunction( 'absint' );
-		M::wpPassthruFunction( 'submit_button' );
-		M::wpPassthruFunction( 'wp_nonce_url' );
+		M::wpPassthruFunction( 'wp_die' );
 
 		$tools_template = PROJECT . 'tools.php';
 		$this->assertNotContains( $tools_template, get_included_files() );

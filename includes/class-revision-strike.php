@@ -25,7 +25,7 @@ class RevisionStrike {
 	 * Class constructor.
 	 */
 	public function __construct() {
-		$this->settings = new RevisionStrikeSettings;
+		$this->settings = new RevisionStrikeSettings( $this );
 
 		$this->add_hooks();
 	}

@@ -39,6 +39,7 @@ class ToolsTest extends TestCase {
 			'times'  => 1,
 		) );
 
+		$instance = new \stdClass;
 		$defaults = array(
 			'days'  => 15,
 			'limit' => 50,
@@ -76,8 +77,12 @@ class ToolsTest extends TestCase {
 			'days'  => 30,
 			'limit' => 50,
 		);
-		$_GET['nonce'] = 'MYNONCE';
-		$_POST         = $defaults;
+		$_GET     = array( 'nonce' => 'MYNONCE' );
+		$_POST    = $defaults;
+		$instance = Mockery::mock( 'RevisionStrike' )->makePartial();
+		$instance->shouldReceive( 'strike' )
+			->once()
+			->with( $defaults );
 
 		M::wpFunction( 'wp_verify_nonce', array(
 			'times'  => 1,
@@ -89,8 +94,7 @@ class ToolsTest extends TestCase {
 		include $this->tools_file;
 		ob_end_clean();
 
-		unset( $_GET['nonce'] );
-		unset( $_POST );
+		unset( $_GET, $_POST );
 	}
 
 }

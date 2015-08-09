@@ -12,9 +12,23 @@
 class RevisionStrikeSettings {
 
 	/**
+	 * @var RevisionStrike The current RevisionStrike instance.
+	 */
+	protected $instance;
+
+	/**
 	 * @var array A cache of plugin options.
 	 */
 	protected $options;
+
+	/**
+	 * Class constructor.
+	 *
+	 * @param RevisionStrike $instance The RevisionStrike instance to which this object belongs.
+	 */
+	public function __construct( $instance = null ) {
+		$this->instance = $instance;
+	}
 
 	/**
 	 * Add plugin settings sections.
@@ -81,6 +95,7 @@ class RevisionStrikeSettings {
 			'days'  => $this->get_option( 'days', 30 ),
 			'limit' => 50,
 		);
+		$instance = $this->instance;
 
 		require_once dirname( __FILE__ ) . '/tools.php';
 	}

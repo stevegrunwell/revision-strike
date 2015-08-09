@@ -6,18 +6,17 @@
  * @author Steve Grunwell
  */
 
-if ( ! isset( $defaults ) ) {
+if ( ! isset( $instance, $defaults ) ) {
 	return wp_die( __( 'You cannot access this page directly', 'revision-strike' ) );
 }
 
 // Handle the execution of revisions
 if ( isset( $_GET['nonce'], $_POST['days'], $_POST['limit'] ) && wp_verify_nonce( $_GET['nonce'], 'revision-strike' ) ) {
-	$revisionstrike = new RevisionStrike;
-	$args           = array(
+	$args = array(
 		'days'  => absint( $_POST['days'] ),
 		'limit' => absint( $_POST['limit'] ),
 	);
-	$revisionstrike->strike( $args );
+	$instance->strike( $args );
 
 	// @todo success message
 }
