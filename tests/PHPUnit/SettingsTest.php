@@ -101,6 +101,10 @@ class SettingsTest extends TestCase {
 			->once()
 			->with( 'days', 30 )
 			->andReturn( 15 );
+		$instance->shouldReceive( 'get_option' )
+			->once()
+			->with( 'limit', 50 )
+			->andReturn( 42 );
 
 		M::wpPassthruFunction( 'wp_die' );
 

@@ -122,7 +122,7 @@ class RevisionStrikeSettings {
 	public function tools_page() {
 		$defaults = array(
 			'days'  => $this->get_option( 'days', 30 ),
-			'limit' => 50,
+			'limit' => $this->get_option( 'limit', 50 ),
 		);
 		$instance = $this->instance;
 
