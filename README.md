@@ -44,7 +44,7 @@ $ wp revision-strike clean
 	<dt>--days=&lt;days&gt;</dt>
 	<dd>Remove revisions on posts published at least &lt;days&gt; day(s) ago. This is determined by the value set on Settings &rsaquo; Writing or a default of 30.</dd>
 	<dt>--limit=&lt;limit&gt;</dt>
-	<dd>The maximum number of revisions to remove. Default value is 50.</dd>
+	<dd>The maximum number of revisions to remove. This is determined by the value set on Settings &rsaquo; Writing or a default value of 50.</dd>
 	<dt>--post_type=&lt;post_type&gt;</dt>
 	<dd>One or more post types (comma-separated) for which revisions should be struck. Default value is 'post'.</dd>
 	<dt>--verbose</dt>

@@ -31,7 +31,8 @@ class RevisionStrikeCLI extends WP_CLI {
 	 * determined by the value set on Settings > Writing or a default of 30.
 	 *
 	 * [--limit=<limit>]
-	 * : The maximum number of revisions to remove. Default value is 50.
+	 * : The maximum number of revisions to remove. This is determined by the
+	 * value set on Settings > Writing or a default value of 50.
 	 *
 	 * [--post_type=<post_type>]
 	 * : One or more post types (comma-separated) for which revisions should be
