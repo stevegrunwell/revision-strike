@@ -86,7 +86,7 @@ add_filter( 'revisionstrike_post_types', 'theme_set_post_types' );
 
 ### 0.2
 
-* Added a "Limit" setting to Settings &rsaquo; Writing. (stevegrunwell/revision-strike#13)
+* Added a "Limit" setting to Settings &rsaquo; Writing ([#13](https://github.com/stevegrunwell/revision-strike/issues/13)).
 
 ### 0.1
 
