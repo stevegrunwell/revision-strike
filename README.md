@@ -84,6 +84,10 @@ add_filter( 'revisionstrike_post_types', 'theme_set_post_types' );
 
 ## Releases
 
+### 0.2
+
+* Added a "Limit" setting to Settings &rsaquo; Writing. (stevegrunwell/revision-strike#13)
+
 ### 0.1
 
 Initial public release.
