@@ -58,6 +58,17 @@ class SettingsTest extends TestCase {
 			),
 		) );
 
+		M::wpFunction( 'add_settings_field', array(
+			'times'  => 1,
+			'args'   => array(
+				'revision-strike-limit',
+				'*',
+				array( $instance, 'limit_field' ),
+				'writing',
+				'revision-strike'
+			),
+		) );
+
 		M::wpPassthruFunction( '__' );
 
 		$instance->add_settings_section();
@@ -129,6 +140,33 @@ class SettingsTest extends TestCase {
 		ob_end_clean();
 
 		$this->assertContains( 'name="revision-strike[days]"', $result );
+	}
+
+	public function test_limit_field() {
+		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+		$instance->shouldReceive( 'get_option' )
+			->with( 'limit', 50 )
+			->andReturn( 50 );
+
+		M::wpPassthruFunction( 'absint', array(
+			'times' => 1,
+			'args'  => array( 50 ),
+		) );
+
+		M::wpPassthruFunction( 'esc_html__', array(
+			'times' => 1,
+		) );
+
+		M::wpPassthruFunction( 'esc_html_x', array(
+			'times' => 1,
+		) );
+
+		ob_start();
+		$instance->limit_field();
+		$result = ob_get_contents();
+		ob_end_clean();
+
+		$this->assertContains( 'name="revision-strike[limit]"', $result );
 	}
 
 	public function test_get_option() {
