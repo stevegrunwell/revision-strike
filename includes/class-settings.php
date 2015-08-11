@@ -88,7 +88,7 @@ class RevisionStrikeSettings {
 		printf(
 			'<p class="description">%s</p>',
 			esc_html__(
-				'Revisions on posts older than this many days will periodically purged.',
+				'A post must be published at least this many days before its revisions can be removed.',
 				'revision-strike'
 			)
 		);

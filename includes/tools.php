@@ -59,12 +59,12 @@ if ( isset( $_GET['nonce'], $_POST['days'], $_POST['limit'] ) && wp_verify_nonce
 
 		<table class="form-table">
 			<tr>
-				<th scope="row"><?php esc_html_e( 'Minimum post age', 'revision-strike' ); ?></th>
+				<th scope="row"><?php esc_html_e( 'Post Age Threshold', 'revision-strike' ); ?></th>
 				<td>
 					<input name="days" type="number" class="small-text" value="<?php echo absint( $defaults['days'] ); ?>" />
 					<p class="description"><?php
 						esc_html_e(
-							'Revisions will be removed from posts that have been published at least this many days ago.',
+							'A post must be published at least this many days before its revisions can be removed.',
 							'revision-strike'
 						);
 					?></p>
@@ -76,7 +76,7 @@ if ( isset( $_GET['nonce'], $_POST['days'], $_POST['limit'] ) && wp_verify_nonce
 					<input name="limit" type="number" class="small-text" value="<?php echo absint( $defaults['limit'] ); ?>" />
 					<p class="description"><?php
 						esc_html_e(
-							'The maximum number of revisions to delete at one time.',
+							'The maximum number of revisions to delete.',
 							'revision-strike'
 						);
 					?></p>
