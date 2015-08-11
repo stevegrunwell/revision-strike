@@ -77,6 +77,10 @@ class RevisionStrikeTest extends TestCase {
 			->once()
 			->with( 'days', 30 )
 			->andReturn( 30 );
+		$settings->shouldReceive( 'get_option' )
+			->once()
+			->with( 'limit', 50 )
+			->andReturn( 50 );
 
 		$instance = Mockery::mock( 'RevisionStrike' )
 			->shouldAllowMockingProtectedMethods()
@@ -120,6 +124,10 @@ class RevisionStrikeTest extends TestCase {
 			->once()
 			->with( 'days', 30 )
 			->andReturn( 30 );
+		$settings->shouldReceive( 'get_option' )
+			->once()
+			->with( 'limit', 50 )
+			->andReturn( 50 );
 
 		$instance = Mockery::mock( 'RevisionStrike' )
 			->shouldAllowMockingProtectedMethods()

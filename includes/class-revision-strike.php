@@ -89,7 +89,7 @@ class RevisionStrike {
 	public function strike( $args = array() ) {
 		$default_args = array(
 			'days'      => $this->settings->get_option( 'days', 30 ),
-			'limit'     => 50,
+			'limit'     => $this->settings->get_option( 'limit', 50 ),
 			'post_type' => null,
 		);
 		$args         = wp_parse_args( $args, $default_args );
