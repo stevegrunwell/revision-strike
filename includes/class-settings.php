@@ -52,6 +52,14 @@ class RevisionStrikeSettings {
 			'writing',
 			'revision-strike'
 		);
+
+		add_settings_field(
+			'revision-strike-limit',
+			__( 'Revisions per Day', 'revision-strike' ),
+			array( $this, 'limit_field' ),
+			'writing',
+			'revision-strike'
+		);
 	}
 
 	/**
@@ -81,6 +89,25 @@ class RevisionStrikeSettings {
 			'<p class="description">%s</p>',
 			esc_html__(
 				'Revisions on posts older than this many days will periodically purged.',
+				'revision-strike'
+			)
+		);
+	}
+
+	/**
+	 * Generate the revision-strike[limit] field.
+	 */
+	public function limit_field() {
+		printf(
+			'<input name="revision-strike[limit]" id="revision-strike-limit" type="number" class="small-text" value="%d" /> %s',
+			absint( $this->get_option( 'limit', 50 ) ),
+			esc_html_x( 'Revisions', 'Label for revision-strike[limit]', 'revision-strike' )
+		);
+
+		printf(
+			'<p class="description">%s</p>',
+			esc_html__(
+				'The maximum number of revisions to be removed each day. This works best when the value is higher than the average number of daily revisions.',
 				'revision-strike'
 			)
 		);
