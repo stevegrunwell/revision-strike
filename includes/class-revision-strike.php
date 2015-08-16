@@ -138,7 +138,7 @@ class RevisionStrike {
 		$default_args = array(
 			'days'      => $this->settings->get_option( 'days' ),
 			'limit'     => $this->settings->get_option( 'limit' ),
-			'post_type' => null,
+			'post_type' => $this->settings->get_option( 'post_type' ),
 		);
 		$args         = wp_parse_args( $args, $default_args );
 

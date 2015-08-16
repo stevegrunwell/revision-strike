@@ -118,6 +118,10 @@ class RevisionStrikeTest extends TestCase {
 			->once()
 			->with( 'limit' )
 			->andReturn( 50 );
+		$settings->shouldReceive( 'get_option' )
+			->once()
+			->with( 'post_type' )
+			->andReturn( 'post' );
 
 		$instance = Mockery::mock( 'RevisionStrike' )
 			->shouldAllowMockingProtectedMethods()
@@ -138,13 +142,13 @@ class RevisionStrikeTest extends TestCase {
 				array(
 					'days'      => 30,
 					'limit'     => 50,
-					'post_type' => null,
+					'post_type' => 'post',
 				),
 			),
 			'return' => array(
 				'days'      => 14,
 				'limit'     => 100,
-				'post_type' => null,
+				'post_type' => 'post',
 			),
 		) );
 
@@ -165,6 +169,10 @@ class RevisionStrikeTest extends TestCase {
 			->once()
 			->with( 'limit' )
 			->andReturn( 50 );
+		$settings->shouldReceive( 'get_option' )
+			->once()
+			->with( 'post_type' )
+			->andReturn( 'post' );
 
 		$instance = Mockery::mock( 'RevisionStrike' )
 			->shouldAllowMockingProtectedMethods()
