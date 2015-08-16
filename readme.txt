@@ -48,5 +48,22 @@ Yup, just visit Tools > Revision Strike within the WordPress admin area. If you'
 
 == Changelog ==
 
+= 0.2 =
+
+*August 16, 2015*
+
+* Added a "Limit" setting to Settings &rsaquo; Writing. ([#13](https://github.com/stevegrunwell/revision-strike/issues/13))
+* Added a "clean-all" WP-CLI command. ([#14](https://github.com/stevegrunwell/revision-strike/issues/14))
+* Clarified language on the Settings &rsaquo; Writing and Tools &rsaquo; Revision Strike pages. Props to @GhostToast for the suggestion! ([#16](https://github.com/stevegrunwell/revision-strike/issues/16))
+* Strike requests are now batched into groupings of 50 IDs at a time to avoid overwhelming underpowered machines. ([#17](https://github.com/stevegrunwell/revision-strike/issues/17))
+
 = 0.1 =
+
+*August 9, 2015*
+
 * Initial public release
+
+== Upgrade Notice ==
+
+= 0.2 =
+Performance enhancements, added a `strike-all` WP-CLI command to automatically clean up *all* of your eligible post revisions in one fell swoop.
