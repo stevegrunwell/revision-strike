@@ -198,12 +198,16 @@ class RevisionStrikeTest extends TestCase {
 		$settings = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
 		$settings->shouldReceive( 'get_option' )
 			->once()
-			->with( 'days', 30 )
+			->with( 'days' )
 			->andReturn( 30 );
 		$settings->shouldReceive( 'get_option' )
 			->once()
-			->with( 'limit', 50 )
+			->with( 'limit' )
 			->andReturn( 50 );
+		$settings->shouldReceive( 'get_option' )
+			->once()
+			->with( 'post_type' )
+			->andReturn( 'post' );
 
 		$instance = Mockery::mock( 'RevisionStrike' )
 			->shouldAllowMockingProtectedMethods()
