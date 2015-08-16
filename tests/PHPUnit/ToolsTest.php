@@ -29,6 +29,7 @@ class ToolsTest extends TestCase {
 		M::wpPassthruFunction( 'absint' );
 		M::wpPassthruFunction( 'esc_attr' );
 		M::wpPassthruFunction( 'esc_html' );
+		M::wpPassthruFunction( 'esc_html__' );
 		M::wpPassthruFunction( 'esc_html_e' );
 		M::wpPassthruFunction( 'esc_url' );
 	}
