@@ -18,6 +18,12 @@ class RevisionStrike {
 	public $settings;
 
 	/**
+	 * The canonical source for default settings.
+	 * @var array $defaults
+	 */
+	protected $defaults;
+
+	/**
 	 * Information about Revision Strike's current state.
 	 * @var array $statistics
 	 */
@@ -33,6 +39,11 @@ class RevisionStrike {
 	 */
 	public function __construct() {
 		$this->settings   = new RevisionStrikeSettings( $this );
+		$this->defaults   = array(
+			'days'      => 30,
+			'limit'     => 50,
+			'post_type' => 'post',
+		);
 		$this->statistics = array(
 			'count'   => 0, // Number of revision IDs found.
 			'deleted' => 0, // Number of revisions deleted.
@@ -88,8 +99,8 @@ class RevisionStrike {
 	 */
 	public function strike( $args = array() ) {
 		$default_args = array(
-			'days'      => $this->settings->get_option( 'days', 30 ),
-			'limit'     => $this->settings->get_option( 'limit', 50 ),
+			'days'      => $this->settings->get_option( 'days' ),
+			'limit'     => $this->settings->get_option( 'limit' ),
 			'post_type' => null,
 		);
 		$args         = wp_parse_args( $args, $default_args );
