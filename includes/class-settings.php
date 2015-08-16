@@ -136,16 +136,17 @@ class RevisionStrikeSettings {
 	 * @param mixed  $default Optional. The default value for this option. Default is null, which
 	 *                        will pull its value from $this->instance->defaults.
 	 */
-	public function get_option( $option, $default = '' ) {
+	public function get_option( $option, $default = null ) {
 		if ( null === $this->options ) {
 			$this->options = get_option( 'revision-strike', array() );
 		}
+		$defaults = $this->instance->get_defaults();
 
 		if ( isset( $this->options[ $option ] ) ) {
 			return $this->options[ $option ];
 
-		} elseif( null === $default && isset( $this->instance->defaults[ $default] ) ) {
-			return $this->instance->defaults[ $default ];
+		} elseif ( null === $default && isset( $defaults[ $option ] ) ) {
+			return $defaults[ $option ];
 
 		} else {
 			return $default;

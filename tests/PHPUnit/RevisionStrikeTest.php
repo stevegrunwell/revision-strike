@@ -88,6 +88,16 @@ class RevisionStrikeTest extends TestCase {
 		$wpdb = null;
 	}
 
+	public function test_get_defaults() {
+		$instance = new RevisionStrike;
+		$value    = uniqid();
+		$property = new ReflectionProperty( $instance, 'defaults' );
+		$property->setAccessible( true );
+		$property->setValue( $instance, $value );
+
+		$this->assertEquals( $value, $instance->get_defaults() );
+	}
+
 	public function test_get_stats() {
 		$instance = new RevisionStrike;
 		$value    = uniqid();

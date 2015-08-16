@@ -98,6 +98,15 @@ class RevisionStrike {
 	}
 
 	/**
+	 * Return the current default Revision Strike settings.
+	 *
+	 * @return array An array of default settings.
+	 */
+	public function get_defaults() {
+		return $this->defaults;
+	}
+
+	/**
 	 * Return the current statistics for this RevisionStrike instance.
 	 *
 	 * The statistics array contains the following keys:

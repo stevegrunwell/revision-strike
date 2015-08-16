@@ -175,7 +175,9 @@ class SettingsTest extends TestCase {
 	}
 
 	public function test_get_option() {
-		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+		$rs       = Mockery::mock( 'RevisionStrike' )->makePartial();
+		$rs->shouldReceive( 'get_defaults' )->once();
+		$instance = Mockery::mock( 'RevisionStrikeSettings', array( $rs ) )->makePartial();
 
 		M::wpFunction( 'get_option', array(
 			'times'  => 1,
@@ -189,7 +191,9 @@ class SettingsTest extends TestCase {
 	}
 
 	public function test_get_option_uses_defaults() {
-		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+		$rs       = Mockery::mock( 'RevisionStrike' )->makePartial();
+		$rs->shouldReceive( 'get_defaults' )->once();
+		$instance = Mockery::mock( 'RevisionStrikeSettings', array( $rs ) )->makePartial();
 
 		M::wpFunction( 'get_option', array(
 			'times'  => 1,
@@ -202,8 +206,26 @@ class SettingsTest extends TestCase {
 		$this->assertEquals( 15, $instance->get_option( 'days', 15 ) );
 	}
 
+	public function test_get_option_automatically_pulls_plugin_defaults() {
+		$rs       = Mockery::mock( 'RevisionStrike' )->makePartial();
+		$rs->shouldReceive( 'get_defaults' )
+			->once()
+			->andReturn( array( 'days' => 30 ) );
+		$instance = Mockery::mock( 'RevisionStrikeSettings', array( $rs ) )->makePartial();
+
+		M::wpFunction( 'get_option', array(
+			'times'  => 1,
+			'args'   => array( 'revision-strike', array() ),
+			'return' => array(),
+		) );
+
+		$this->assertEquals( 30, $instance->get_option( 'days' ) );
+	}
+
 	public function test_get_option_caches_value() {
-		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+		$rs       = Mockery::mock( 'RevisionStrike' )->makePartial();
+		$rs->shouldReceive( 'get_defaults' )->once();
+		$instance = Mockery::mock( 'RevisionStrikeSettings', array( $rs ) )->makePartial();
 		$options  = array(
 			'foo' => 'bar',
 		);
