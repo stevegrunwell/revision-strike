@@ -3,16 +3,16 @@ Feature: WP-CLI
 	as a site owner
 	I should be able to use WP-CLI
 
-	Background:
-		Given a WP install
-		When I run `wp plugin activate revision-strike`
+Background:
+	Given a WP install
+	When I run `wp plugin activate revision-strike`
     Then STDOUT should be:
     	"""
 			Success: Plugin 'revision-strike' activated.
     	"""
 
-	Scenario: Removing old revisions with defaults
-		When I run `wp post create --post_title='Test post' --post_status=publish --post_date='2015-01-01 00:00:00' --porcelain`
+Scenario: Removing old revisions with defaults
+	When I run `wp post create --post_title='Test post' --post_status=publish --post_date='2015-01-01 00:00:00' --porcelain`
     Then STDOUT should be a number
     And save STDOUT as {POST_ID}
 
@@ -41,8 +41,8 @@ Feature: WP-CLI
 			0
     	"""
 
-	Scenario: Removing old revisions with limits
-		When I run `wp post create --post_title='Test post' --post_status=publish --post_date='2015-01-01 00:00:00' --porcelain`
+Scenario: Removing old revisions with limits
+	When I run `wp post create --post_title='Test post' --post_status=publish --post_date='2015-01-01 00:00:00' --porcelain`
     Then STDOUT should be a number
     And save STDOUT as {POST_ID}
 
@@ -71,8 +71,8 @@ Feature: WP-CLI
 			1
     	"""
 
-	Scenario: Revisions exist, but post dates are too recent
-		When I run `wp post create --post_title='Test post' --post_status=publish --porcelain`
+Scenario: Revisions exist, but post dates are too recent
+	When I run `wp post create --post_title='Test post' --post_status=publish --porcelain`
     Then STDOUT should be a number
     And save STDOUT as {POST_ID}
 
