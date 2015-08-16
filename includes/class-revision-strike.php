@@ -30,6 +30,11 @@ class RevisionStrike {
 	protected $statistics;
 
 	/**
+	 * The batch size when striking revisions.
+	 */
+	const BATCH_SIZE = 50;
+
+	/**
 	 * The action called to trigger the clean-up process.
 	 */
 	const STRIKE_ACTION = 'revisionstrike_strike_old_revisions';
@@ -152,14 +157,20 @@ class RevisionStrike {
 			$args['post_type'] = apply_filters( 'revisionstrike_post_types', 'post' );
 		}
 
-		// Collect the revision IDs.
-		$revision_ids = $this->get_revision_ids( $args['days'], $args['limit'], $args['post_type'] );
+		// Calculate the number of batches to run.
+		$limit       = self::BATCH_SIZE >= $args['limit'] ? $args['limit'] : self::BATCH_SIZE;
+		$batch_count = ceil( $args['limit'] / $limit );
 
-		if ( ! empty( $revision_ids ) ) {
-			foreach ( $revision_ids as $revision_id ) {
-				wp_delete_post_revision( $revision_id );
+		for ( $i = 0; $i < $batch_count; $i++ ) {
+			$revision_ids = $this->get_revision_ids( $args['days'], $limit, $args['post_type'] );
+
+			if ( ! empty( $revision_ids ) ) {
+				foreach ( $revision_ids as $revision_id ) {
+					wp_delete_post_revision( $revision_id );
+				}
 			}
 		}
+
 	}
 
 	/**
