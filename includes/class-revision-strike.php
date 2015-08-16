@@ -70,6 +70,34 @@ class RevisionStrike {
 	}
 
 	/**
+	 * Count the number of post revisions that are eligible to be struck for the given threshold and
+	 * post types.
+	 *
+	 * @global $wpdb
+	 *
+	 * @param int    $days      The number of days old a post must be in order for its revisions to
+	 *                          be struck.
+	 * @param string $post_type Post types for which revisions should be struck.
+	 * @return int The number of matching post revisions in the database.
+	 */
+	public function count_eligible_revisions( $days, $post_type ) {
+		global $wpdb;
+
+		$post_type = array_map( 'trim', explode( ',', $post_type ) );
+		$count     = $wpdb->get_var( $wpdb->prepare(
+			"
+			SELECT COUNT(r.ID) FROM $wpdb->posts r
+			LEFT JOIN $wpdb->posts p ON r.post_parent = p.ID
+			WHERE r.post_type = 'revision' AND p.post_type IN ('%s') AND p.post_date < %s
+			",
+			implode( "', '", $post_type ),
+			date( 'Y-m-d', time() - ( absint( $days ) * DAY_IN_SECONDS ) )
+		) );
+
+		return absint( $count );
+	}
+
+	/**
 	 * Return the current statistics for this RevisionStrike instance.
 	 *
 	 * The statistics array contains the following keys:

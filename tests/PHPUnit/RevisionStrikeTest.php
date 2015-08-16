@@ -61,6 +61,33 @@ class RevisionStrikeTest extends TestCase {
 		$this->assertEquals( array( 'deleted' => 6 ), $property->getValue( $instance ) );
 	}
 
+	public function test_count_eligible_revisions() {
+		global $wpdb;
+
+		$instance = new RevisionStrike;
+
+		$wpdb = Mockery::mock( '\WPDB' );
+		$wpdb->shouldReceive( 'prepare' )
+			->once()
+			->with( Mockery::any(), 'post', Mockery::any() )
+			->andReturnUsing( function ( $query ) {
+				if ( 0 !== strpos( trim( $query ), 'SELECT COUNT(r.ID) FROM' ) ) {
+					$this->fail( 'Results are not being limited to a count' );
+				}
+				return 'SQL STATEMENT';
+			} );
+		$wpdb->shouldReceive( 'get_var' )
+			->once()
+			->with( 'SQL STATEMENT' )
+			->andReturn( 12 );
+		$wpdb->posts = 'wp_posts';
+
+		M::wpPassthruFunction( 'absint' );
+
+		$this->assertEquals( 12, $instance->count_eligible_revisions( 30, 'post' ) );
+		$wpdb = null;
+	}
+
 	public function test_get_stats() {
 		$instance = new RevisionStrike;
 		$value    = uniqid();
