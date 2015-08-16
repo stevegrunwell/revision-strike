@@ -18,6 +18,12 @@ class RevisionStrike {
 	public $settings;
 
 	/**
+	 * The canonical source for default settings.
+	 * @var array $defaults
+	 */
+	protected $defaults;
+
+	/**
 	 * Information about Revision Strike's current state.
 	 * @var array $statistics
 	 */
@@ -38,6 +44,11 @@ class RevisionStrike {
 	 */
 	public function __construct() {
 		$this->settings   = new RevisionStrikeSettings( $this );
+		$this->defaults   = array(
+			'days'      => 30,
+			'limit'     => 50,
+			'post_type' => 'post',
+		);
 		$this->statistics = array(
 			'count'   => 0, // Number of revision IDs found.
 			'deleted' => 0, // Number of revisions deleted.
@@ -61,6 +72,43 @@ class RevisionStrike {
 	 */
 	public function count_deleted_revision() {
 		$this->statistics['deleted']++;
+	}
+
+	/**
+	 * Count the number of post revisions that are eligible to be struck for the given threshold and
+	 * post types.
+	 *
+	 * @global $wpdb
+	 *
+	 * @param int    $days      The number of days old a post must be in order for its revisions to
+	 *                          be struck.
+	 * @param string $post_type Post types for which revisions should be struck.
+	 * @return int The number of matching post revisions in the database.
+	 */
+	public function count_eligible_revisions( $days, $post_type ) {
+		global $wpdb;
+
+		$post_type = array_map( 'trim', explode( ',', $post_type ) );
+		$count     = $wpdb->get_var( $wpdb->prepare(
+			"
+			SELECT COUNT(r.ID) FROM $wpdb->posts r
+			LEFT JOIN $wpdb->posts p ON r.post_parent = p.ID
+			WHERE r.post_type = 'revision' AND p.post_type IN ('%s') AND p.post_date < %s
+			",
+			implode( "', '", $post_type ),
+			date( 'Y-m-d', time() - ( absint( $days ) * DAY_IN_SECONDS ) )
+		) );
+
+		return absint( $count );
+	}
+
+	/**
+	 * Return the current default Revision Strike settings.
+	 *
+	 * @return array An array of default settings.
+	 */
+	public function get_defaults() {
+		return $this->defaults;
 	}
 
 	/**
@@ -93,9 +141,9 @@ class RevisionStrike {
 	 */
 	public function strike( $args = array() ) {
 		$default_args = array(
-			'days'      => $this->settings->get_option( 'days', 30 ),
-			'limit'     => $this->settings->get_option( 'limit', 50 ),
-			'post_type' => null,
+			'days'      => $this->settings->get_option( 'days' ),
+			'limit'     => $this->settings->get_option( 'limit' ),
+			'post_type' => $this->settings->get_option( 'post_type' ),
 		);
 		$args         = wp_parse_args( $args, $default_args );
 

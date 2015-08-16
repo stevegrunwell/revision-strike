@@ -88,6 +88,47 @@ class RevisionStrikeCLI extends WP_CLI {
 	}
 
 	/**
+	 * Remove *all* old post revisions from the WordPress database.
+	 *
+	 * This command will recursively strike all the old post revisions from the database,
+	 * giving a site a fresh start that the regular Revision Strike cron job can maintain.
+	 *
+	 * ## OPTIONS
+	 *
+	 * [--days=<days>]
+	 * : Remove revisions on posts published at least <days> days ago. This is
+	 * determined by the value set on Settings > Writing or a default of 30.
+	 *
+	 * [--post_type=<post_type>]
+	 * : One or more post types (comma-separated) for which revisions should be
+	 * struck. Default value is 'post'.
+	 *
+	 * [--verbose]
+	 * : Enable verbose logging of deleted revisions.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *   wp revision-strike clean-all
+	 *   wp revision-strike clean-all --days=45
+	 *   wp revision-strike clean-all --post_type=post,page
+	 *
+	 * @synopsis [--days=<days>] [--post_type=<post_type>] [--verbose]
+	 * @alias clean-all
+	 *
+	 * @param array $args       A numeric array of position-based arguments.
+	 * @param array $assoc_args An associative array of key-based arguments.
+	 */
+	public function clean_all( $args, $assoc_args ) {
+		$instance = $this->get_instance();
+		$assoc_args['limit'] = $instance->count_eligible_revisions(
+			isset( $assoc_args['days'] ) ? $assoc_args['days'] : $instance->settings->get_option( 'days' ),
+			isset( $assoc_args['post_type'] ) ? $assoc_args['post_type'] : $instance->settings->get_option( 'post_type' )
+		);
+
+		return $this->clean( $args, $assoc_args );
+	}
+
+	/**
 	 * Log a deleted post revision.
 	 *
 	 * @param int          $revision_id Post revision ID.

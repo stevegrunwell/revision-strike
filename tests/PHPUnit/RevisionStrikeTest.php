@@ -61,6 +61,43 @@ class RevisionStrikeTest extends TestCase {
 		$this->assertEquals( array( 'deleted' => 6 ), $property->getValue( $instance ) );
 	}
 
+	public function test_count_eligible_revisions() {
+		global $wpdb;
+
+		$instance = new RevisionStrike;
+
+		$wpdb = Mockery::mock( '\WPDB' );
+		$wpdb->shouldReceive( 'prepare' )
+			->once()
+			->with( Mockery::any(), 'post', Mockery::any() )
+			->andReturnUsing( function ( $query ) {
+				if ( 0 !== strpos( trim( $query ), 'SELECT COUNT(r.ID) FROM' ) ) {
+					$this->fail( 'Results are not being limited to a count' );
+				}
+				return 'SQL STATEMENT';
+			} );
+		$wpdb->shouldReceive( 'get_var' )
+			->once()
+			->with( 'SQL STATEMENT' )
+			->andReturn( 12 );
+		$wpdb->posts = 'wp_posts';
+
+		M::wpPassthruFunction( 'absint' );
+
+		$this->assertEquals( 12, $instance->count_eligible_revisions( 30, 'post' ) );
+		$wpdb = null;
+	}
+
+	public function test_get_defaults() {
+		$instance = new RevisionStrike;
+		$value    = uniqid();
+		$property = new ReflectionProperty( $instance, 'defaults' );
+		$property->setAccessible( true );
+		$property->setValue( $instance, $value );
+
+		$this->assertEquals( $value, $instance->get_defaults() );
+	}
+
 	public function test_get_stats() {
 		$instance = new RevisionStrike;
 		$value    = uniqid();
@@ -75,12 +112,16 @@ class RevisionStrikeTest extends TestCase {
 		$settings = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
 		$settings->shouldReceive( 'get_option' )
 			->once()
-			->with( 'days', 30 )
+			->with( 'days' )
 			->andReturn( 30 );
 		$settings->shouldReceive( 'get_option' )
 			->once()
-			->with( 'limit', 50 )
+			->with( 'limit' )
 			->andReturn( 50 );
+		$settings->shouldReceive( 'get_option' )
+			->once()
+			->with( 'post_type' )
+			->andReturn( 'post' );
 
 		$instance = Mockery::mock( 'RevisionStrike' )
 			->shouldAllowMockingProtectedMethods()
@@ -101,13 +142,13 @@ class RevisionStrikeTest extends TestCase {
 				array(
 					'days'      => 30,
 					'limit'     => 50,
-					'post_type' => null,
+					'post_type' => 'post',
 				),
 			),
 			'return' => array(
 				'days'      => 14,
 				'limit'     => 100,
-				'post_type' => null,
+				'post_type' => 'post',
 			),
 		) );
 
@@ -122,12 +163,16 @@ class RevisionStrikeTest extends TestCase {
 		$settings = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
 		$settings->shouldReceive( 'get_option' )
 			->once()
-			->with( 'days', 30 )
+			->with( 'days' )
 			->andReturn( 30 );
 		$settings->shouldReceive( 'get_option' )
 			->once()
-			->with( 'limit', 50 )
+			->with( 'limit' )
 			->andReturn( 50 );
+		$settings->shouldReceive( 'get_option' )
+			->once()
+			->with( 'post_type' )
+			->andReturn( 'post' );
 
 		$instance = Mockery::mock( 'RevisionStrike' )
 			->shouldAllowMockingProtectedMethods()
@@ -153,12 +198,16 @@ class RevisionStrikeTest extends TestCase {
 		$settings = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
 		$settings->shouldReceive( 'get_option' )
 			->once()
-			->with( 'days', 30 )
+			->with( 'days' )
 			->andReturn( 30 );
 		$settings->shouldReceive( 'get_option' )
 			->once()
-			->with( 'limit', 50 )
+			->with( 'limit' )
 			->andReturn( 50 );
+		$settings->shouldReceive( 'get_option' )
+			->once()
+			->with( 'post_type' )
+			->andReturn( 'post' );
 
 		$instance = Mockery::mock( 'RevisionStrike' )
 			->shouldAllowMockingProtectedMethods()

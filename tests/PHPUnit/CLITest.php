@@ -164,6 +164,38 @@ class CLITest extends TestCase {
 		$cli->clean( array(), array() );
 	}
 
+	public function test_clean_all() {
+		$wp_cli = WP_CLI::getInstance();
+
+		$instance = Mockery::mock( 'RevisionStrike' )->makePartial();
+		$instance->shouldReceive( 'count_eligible_revisions' )
+			->once()
+			->with( 45, 'post,page' )
+			->andReturn( 777 );
+
+		$settings = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+		$settings->shouldReceive( 'get_option' )
+			->never()
+			->with( 'days' );
+		$settings->shouldReceive( 'get_option' )
+			->once()
+			->with( 'post_type' )
+			->andReturn( 'post,page' );
+		$instance->settings = $settings;
+
+		$cli = Mockery::mock( 'RevisionStrikeCLI' )
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
+		$cli->shouldReceive( 'get_instance' )
+			->once()
+			->andReturn( $instance );
+		$cli->shouldReceive( 'clean' )
+			->once()
+			->with( array(), array( 'days' => 45, 'limit' => 777 ) );
+
+		$cli->clean_all( array(), array( 'days' => 45, ) );
+	}
+
 	public function test_log_deleted_revision() {
 		$rs_cli = new RevisionStrikeCLI;
 		$wp_cli = WP_CLI::getInstance();

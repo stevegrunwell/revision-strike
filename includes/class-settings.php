@@ -81,7 +81,7 @@ class RevisionStrikeSettings {
 	public function days_field() {
 		printf(
 			'<input name="revision-strike[days]" id="revision-strike-days" type="number" class="small-text" value="%d" /> %s',
-			absint( $this->get_option( 'days', 30 ) ),
+			absint( $this->get_option( 'days' ) ),
 			esc_html_x( 'Days', 'Label for revision-strike[days]', 'revision-strike' )
 		);
 
@@ -100,7 +100,7 @@ class RevisionStrikeSettings {
 	public function limit_field() {
 		printf(
 			'<input name="revision-strike[limit]" id="revision-strike-limit" type="number" class="small-text" value="%d" /> %s',
-			absint( $this->get_option( 'limit', 50 ) ),
+			absint( $this->get_option( 'limit' ) ),
 			esc_html_x( 'Revisions', 'Label for revision-strike[limit]', 'revision-strike' )
 		);
 
@@ -121,8 +121,8 @@ class RevisionStrikeSettings {
 	 */
 	public function tools_page() {
 		$defaults = array(
-			'days'  => $this->get_option( 'days', 30 ),
-			'limit' => $this->get_option( 'limit', 50 ),
+			'days'  => $this->get_option( 'days' ),
+			'limit' => $this->get_option( 'limit' ),
 		);
 		$instance = $this->instance;
 
@@ -133,14 +133,24 @@ class RevisionStrikeSettings {
 	 * Get an option from the plugin settings.
 	 *
 	 * @param string $option  The option name.
-	 * @param mixed  $default Optional. The default value for this option. Default is an empty string.
+	 * @param mixed  $default Optional. The default value for this option. Default is null, which
+	 *                        will pull its value from $this->instance->defaults.
 	 */
-	public function get_option( $option, $default = '' ) {
+	public function get_option( $option, $default = null ) {
 		if ( null === $this->options ) {
 			$this->options = get_option( 'revision-strike', array() );
 		}
+		$defaults = $this->instance->get_defaults();
 
-		return isset( $this->options[ $option ] ) ? $this->options[ $option ] : $default;
+		if ( isset( $this->options[ $option ] ) ) {
+			return $this->options[ $option ];
+
+		} elseif ( null === $default && isset( $defaults[ $option ] ) ) {
+			return $defaults[ $option ];
+
+		} else {
+			return $default;
+		}
 	}
 
 	/**
@@ -157,7 +167,7 @@ class RevisionStrikeSettings {
 		if ( isset( $input['limit'] ) ) {
 			$input['limit'] = absint( $input['limit'] );
 			if ( 0 === $input['limit'] ) {
-				$input['limit'] = 50;
+				$input['limit'] = absint( $this->instance->defaults['limit'] );
 			}
 		}
 
