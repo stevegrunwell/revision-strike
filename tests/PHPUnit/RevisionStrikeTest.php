@@ -86,8 +86,8 @@ class RevisionStrikeTest extends TestCase {
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
 		$instance->shouldReceive( 'get_revision_ids' )
-			->once()
-			->with( 14, 100, 'post' )
+			->times( 2 )
+			->with( 14, 50, 'post' )
 			->andReturn( array( 1, 2, 3 ) );
 		$instance->settings = $settings;
 
@@ -112,7 +112,7 @@ class RevisionStrikeTest extends TestCase {
 		) );
 
 		M::wpFunction( 'wp_delete_post_revision', array(
-			'times'  => 3
+			'times'  => 6,
 		) );
 
 		$instance->strike( array( 'days' => 14, 'limit' => 100 ) );
@@ -147,6 +147,46 @@ class RevisionStrikeTest extends TestCase {
 		) );
 
 		$instance->strike( array( 'days' => 30, 'limit' => 50, 'post_type' => null, ) );
+	}
+
+	public function test_strike_batches_results() {
+		$settings = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+		$settings->shouldReceive( 'get_option' )
+			->once()
+			->with( 'days', 30 )
+			->andReturn( 30 );
+		$settings->shouldReceive( 'get_option' )
+			->once()
+			->with( 'limit', 50 )
+			->andReturn( 50 );
+
+		$instance = Mockery::mock( 'RevisionStrike' )
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
+		$instance->shouldReceive( 'get_revision_ids' )
+			->times( 2 )
+			->with( 14, 50, 'post' )
+			->andReturn(
+				array_fill( 0, 50, 'key' ),
+				array( 'key' )
+			);
+		$instance->settings = $settings;
+
+		M::wpFunction( 'wp_parse_args', array(
+			'times'  => 1,
+			'return' => array(
+				'days'      => 14,
+				'limit'     => 51,
+				'post_type' => null,
+			),
+		) );
+
+		M::wpFunction( 'wp_delete_post_revision', array(
+			'times'  => 51,
+			'args'   => 'key',
+		) );
+
+		$instance->strike( array( 'days' => 14, 'limit' => 51 ) );
 	}
 
 	public function test_get_revision_ids() {
