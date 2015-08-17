@@ -25,7 +25,7 @@ If you'd like to help build Revision Strike, please [visit the plugin's GitHub p
 
 == Installation ==
 
-1. Upload the revision-strike/ directory to your WordPress installation's plugin directory (by default, /wp-contetn/plugins).
+1. Upload the revision-strike/ directory to your WordPress installation's plugin directory (by default, /wp-content/plugins).
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 
 Activating the plugin will automatically register a daily WP Cron event to clean up revisions on established posts. If you'd prefer not to wait, you can explicitly purge post revisions through the 'Tools > Revision Strike' page within WordPress or with [WP-CLI](http://wp-cli.org/).
