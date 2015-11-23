@@ -211,5 +211,4 @@ class RevisionStrike {
 
 		return array_map( 'absint', $revision_ids );
 	}
-
 }

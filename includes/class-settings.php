@@ -173,5 +173,4 @@ class RevisionStrikeSettings {
 
 		return $input;
 	}
-
 }
