@@ -9,8 +9,8 @@
 		"phpunit/phpunit"              : "4.6.2",
 		"10up/wp_mock"                 : "dev-master",
 		"codeclimate/php-test-reporter": "dev-master",
-		"wp-coding-standards/wpcs"     : "dev-master",
-		"behat/behat"                  : "~2.5"
+		"behat/behat"                  : "~2.5",
+		"stevegrunwell/wp-enforcer"    : "dev-master"
 	},
 	"authors"          : [
 		{
@@ -18,9 +18,10 @@
 			"email": "steve@stevegrunwell.com"
 		}
 	],
-	"scripts" : {
-		"post-install-cmd" : [
-			"./vendor/bin/phpcs --config-set installed_paths ../../wp-coding-standards/wpcs;"
-		]
-	}
+	"post-install-cmd": [
+		"./vendor/bin/wp-enforcer"
+	],
+	"post-update-cmd": [
+		"./vendor/bin/wp-enforcer"
+	]
 }
