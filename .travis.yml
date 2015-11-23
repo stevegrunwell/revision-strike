@@ -10,7 +10,7 @@ env:
     - WP_CLI_BIN_DIR=/tmp/wp-cli-phar
     - WP_CLI_CONFIG_PATH=/tmp/wp-cli-phar/config.yml
     - WP_VERSION=master
-    - WP_VERSION=4.2
+    - WP_VERSION=4.3.1
 
 before_script:
   - composer install --prefer-source
