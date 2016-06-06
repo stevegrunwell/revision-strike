@@ -128,13 +128,13 @@ class RevisionStrikeSettings {
 		printf(
 			'<input name="revision-strike[keep]" id="revision-strike-keep" type="number" class="small-text" value="%d" /> %s',
 			absint( $this->get_option( 'keep' ) ),
-			esc_html_x( 'Number to Keep', 'Label for revision-strike[keep]', 'revision-strike' )
+			esc_html_x( 'Revisions', 'Label for revision-strike[keep]', 'revision-strike' )
 		);
 
 		printf(
 			'<p class="description">%s</p>',
 			esc_html__(
-				'Keep at least this many revisions per post, regardless of their age.',
+				'Keep at least this many revisions per post.',
 				'revision-strike'
 			)
 		);
@@ -150,6 +150,7 @@ class RevisionStrikeSettings {
 		$defaults = array(
 			'days'  => $this->get_option( 'days' ),
 			'limit' => $this->get_option( 'limit' ),
+			'keep'  => $this->get_option( 'keep' ),
 		);
 		$instance = $this->instance;
 

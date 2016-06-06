@@ -15,6 +15,7 @@ if ( isset( $_GET['nonce'], $_POST['days'], $_POST['limit'] ) && wp_verify_nonce
 	$args  = array(
 		'days'  => absint( $_POST['days'] ),
 		'limit' => absint( $_POST['limit'] ),
+		'keep'  => absint( $_POST['keep'] ),
 	);
 	$instance->strike( $args );
 	$stats = $instance->get_stats();
@@ -77,6 +78,18 @@ if ( isset( $_GET['nonce'], $_POST['days'], $_POST['limit'] ) && wp_verify_nonce
 					<p class="description"><?php
 						esc_html_e(
 							'The maximum number of revisions to delete.',
+							'revision-strike'
+						);
+					?></p>
+				</td>
+			</tr>
+			<tr>
+				<th scope="row"><?php esc_html_e( 'Keep', 'revision-strike' ); ?></th>
+				<td>
+					<input name="keep" type="number" class="small-text" value="<?php echo absint( $defaults['keep'] ); ?>" />
+					<p class="description"><?php
+						esc_html_e(
+							'Keep at least this many revisions per post.',
 							'revision-strike'
 						);
 					?></p>
