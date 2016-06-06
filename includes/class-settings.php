@@ -60,6 +60,14 @@ class RevisionStrikeSettings {
 			'writing',
 			'revision-strike'
 		);
+
+		add_settings_field(
+			'revision-strike-keep',
+			__( 'Revisions to Keep', 'revision-strike' ),
+			array( $this, 'keep_field' ),
+			'writing',
+			'revision-strike'
+		);
 	}
 
 	/**
@@ -108,6 +116,25 @@ class RevisionStrikeSettings {
 			'<p class="description">%s</p>',
 			esc_html__(
 				'The maximum number of revisions to be removed each day. This works best when the value is higher than the average number of daily revisions.',
+				'revision-strike'
+			)
+		);
+	}
+
+	/**
+	 * Generate the revision-strike[keep] field.
+	 */
+	public function keep_field() {
+		printf(
+			'<input name="revision-strike[keep]" id="revision-strike-keep" type="number" class="small-text" value="%d" /> %s',
+			absint( $this->get_option( 'keep' ) ),
+			esc_html_x( 'Number to Keep', 'Label for revision-strike[keep]', 'revision-strike' )
+		);
+
+		printf(
+			'<p class="description">%s</p>',
+			esc_html__(
+				'Keep at least this many revisions per post, regardless of their age.',
 				'revision-strike'
 			)
 		);
@@ -168,6 +195,13 @@ class RevisionStrikeSettings {
 			$input['limit'] = absint( $input['limit'] );
 			if ( 0 === $input['limit'] ) {
 				$input['limit'] = absint( $this->instance->defaults['limit'] );
+			}
+		}
+
+		if ( isset( $input['keep'] ) ) {
+			$input['keep'] = absint( $input['keep'] );
+			if ( 0 === $input['keep'] ) {
+				$input['keep'] = absint( $this->instance->defaults['keep'] );
 			}
 		}
 
