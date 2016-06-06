@@ -189,7 +189,6 @@ class RevisionStrike {
 	 * @return array An array of revision IDs
 	 */
 	protected function get_revision_ids( $days, $limit, $post_type, $keep ) {
-		global $wpdb;
 
 		// Return early if we don't have any eligible post types.
 		if ( ! $post_type ) {
@@ -197,16 +196,9 @@ class RevisionStrike {
 		}
 
 		$post_type    = array_map( 'trim', explode( ',', $post_type ) );
-		$results      = $wpdb->get_results( $wpdb->prepare(
-			"
-			SELECT r.ID as revision_id, r.post_date as revision_date, p.ID as post_id FROM $wpdb->posts r
-			INNER JOIN $wpdb->posts p ON r.post_parent = p.ID
-			WHERE r.post_type = 'revision' AND p.post_type IN ('%s') AND p.post_date < %s
-			ORDER BY p.post_date ASC
-			",
-			implode( "', '", $post_type ),
-			date( 'Y-m-d', time() - ( absint( $days ) * DAY_IN_SECONDS ) )
-		) );
+
+		// get a list of post IDs and their revisions
+		$results = $this->query_post_and_revision_ids( $post_type, $days );
 
 		// allow filtering of the query results
 		$posts = apply_filters( 'revisionstrike_revisions_query_results', $results );
@@ -229,6 +221,38 @@ class RevisionStrike {
 		$this->statistics['count'] = count( $revision_ids );
 
 		return array_map( 'absint', $revision_ids );
+	}
+
+	/**
+	 * Queries the database for a list of post IDs and revisions
+	 *
+	 * @param  array  $post_type   post types
+	 * @param  int    $days        The number of days since a post's publish date that must pass before
+	 *                             we can purge the post revisions.
+	 * @return array               list of objects with post_id, revision_id, and revision_date
+	 */
+	protected function query_post_and_revision_ids( $post_type, $days ) {
+
+		global $wpdb;
+
+		// we don't do a LIMIT here because we need all the revision IDs and
+		// dates for a post so we can later sort by the revision date and
+		// ensure we're only removing the oldest revisions
+
+		// this might be doable completely in SQL by doing a join on a
+		// subquery, but that gets tricky
+
+		return $wpdb->get_results( $wpdb->prepare(
+			"
+			SELECT r.ID as revision_id, r.post_date as revision_date, p.ID as post_id FROM $wpdb->posts r
+			INNER JOIN $wpdb->posts p ON r.post_parent = p.ID
+			WHERE r.post_type = 'revision' AND p.post_type IN ('%s') AND p.post_date < %s
+			ORDER BY p.post_date ASC
+			",
+			implode( "', '", $post_type ),
+			date( 'Y-m-d', time() - ( absint( $days ) * DAY_IN_SECONDS ) )
+		) );
+
 	}
 
 	/**
