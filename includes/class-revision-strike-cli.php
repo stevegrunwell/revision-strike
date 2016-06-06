@@ -130,7 +130,7 @@ class RevisionStrikeCLI extends WP_CLI {
 			isset( $assoc_args['post_type'] ) ? $assoc_args['post_type'] : $instance->settings->get_option( 'post_type' )
 		);
 
-		// allow all revisions to be deleted
+		// Allow all revisions to be deleted.
 		$assoc_args['keep'] = 0;
 
 		return $this->clean( $args, $assoc_args );

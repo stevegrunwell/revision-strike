@@ -226,10 +226,10 @@ class RevisionStrike {
 	/**
 	 * Queries the database for a list of post IDs and revisions
 	 *
-	 * @param  array  $post_type   post types
-	 * @param  int    $days        The number of days since a post's publish date that must pass before
-	 *                             we can purge the post revisions.
-	 * @return array               list of objects with post_id, revision_id, and revision_date
+	 * @param  array $post_type   post types
+	 * @param  int   $days        The number of days since a post's publish date that must pass before
+	 *                            we can purge the post revisions.
+	 * @return array              list of objects with post_id, revision_id, and revision_date
 	 */
 	protected function query_post_and_revision_ids( $post_type, $days ) {
 
@@ -268,7 +268,7 @@ class RevisionStrike {
 		$posts = array();
 		if ( ! empty( $results ) && is_array( $results ) ) {
 
-			foreach( $results as $result ) {
+			foreach ( $results as $result ) {
 				if ( ! isset( $posts[ $result->post_id ] ) ) {
 					$posts[ $result->post_id ] = array();
 				}
@@ -279,10 +279,9 @@ class RevisionStrike {
 					'revision_date' => $result->revision_date,
 					);
 			}
-
 		}
 
-		foreach( array_keys( $posts ) as $post_id ) {
+		foreach ( array_keys( $posts ) as $post_id ) {
 
 			// now sort the list of revisions for each post by revision
 			// date so the oldest revisions are first
