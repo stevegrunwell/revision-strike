@@ -3,7 +3,7 @@
  * The Tools > Revision Strike page.
  *
  * @package Revision Strike
- * @author Steve Grunwell
+ * @author  Steve Grunwell
  */
 
 if ( ! isset( $instance, $defaults ) ) {

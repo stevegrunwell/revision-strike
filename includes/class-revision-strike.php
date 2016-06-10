@@ -3,7 +3,7 @@
  * Primary plugin functionality.
  *
  * @package Revision Strike
- * @author Steve Grunwell
+ * @author  Steve Grunwell
  */
 
 /**
