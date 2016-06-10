@@ -16,6 +16,14 @@
 		<severity>0</severity>
 	</rule>
 
+	<!--
+		For some reason, PHPCS is insisting that there's no file doc on
+		revision-strike.php, despite the fact that there very clearly is.
+	-->
+	<rule ref="Squiz.Commenting.FileComment.Missing">
+		<severity>0</severity>
+	</rule>
+
 	<rule ref="WordPress-Extra"/>
 	<rule ref="WordPress-Docs"/>
 </ruleset>
