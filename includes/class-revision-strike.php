@@ -3,7 +3,7 @@
  * Primary plugin functionality.
  *
  * @package Revision Strike
- * @author Steve Grunwell
+ * @author  Steve Grunwell
  */
 
 /**
@@ -13,18 +13,21 @@ class RevisionStrike {
 
 	/**
 	 * The plugin settings.
+	 *
 	 * @var RevisionStrikeSettings $settings
 	 */
 	public $settings;
 
 	/**
 	 * The canonical source for default settings.
+	 *
 	 * @var array $defaults
 	 */
 	protected $defaults;
 
 	/**
 	 * Information about Revision Strike's current state.
+	 *
 	 * @var array $statistics
 	 */
 	protected $statistics;
@@ -211,5 +214,4 @@ class RevisionStrike {
 
 		return array_map( 'absint', $revision_ids );
 	}
-
 }
