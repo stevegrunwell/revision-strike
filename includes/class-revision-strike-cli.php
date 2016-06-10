@@ -17,6 +17,7 @@ class RevisionStrikeCLI extends WP_CLI {
 
 	/**
 	 * The current instance of the RevisionStrike class.
+	 *
 	 * @var RevisionStrike $instance
 	 */
 	protected $instance;
@@ -160,7 +161,6 @@ class RevisionStrikeCLI extends WP_CLI {
 		}
 		return $this->instance;
 	}
-
 }
 
 WP_CLI::add_command( 'revision-strike', 'RevisionStrikeCLI' );

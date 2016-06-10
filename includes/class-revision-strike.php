@@ -13,18 +13,21 @@ class RevisionStrike {
 
 	/**
 	 * The plugin settings.
+	 *
 	 * @var RevisionStrikeSettings $settings
 	 */
 	public $settings;
 
 	/**
 	 * The canonical source for default settings.
+	 *
 	 * @var array $defaults
 	 */
 	protected $defaults;
 
 	/**
 	 * Information about Revision Strike's current state.
+	 *
 	 * @var array $statistics
 	 */
 	protected $statistics;
@@ -184,7 +187,7 @@ class RevisionStrike {
 	 *                         we can purge the post revisions.
 	 * @param int   $limit     The maximum number of revision IDs to retrieve.
 	 * @param array $post_type The post types for which revisions should be located.
-	 * @param int   $keep      Keep at least this number of revisions for a post, regardless of age
+	 * @param int   $keep      Keep at least this number of revisions for a post, regardless of age.
 	 *
 	 * @return array An array of revision IDs
 	 */
@@ -197,25 +200,25 @@ class RevisionStrike {
 
 		$post_type    = array_map( 'trim', explode( ',', $post_type ) );
 
-		// get a list of post IDs and their revisions
+		// Get a list of post IDs and their revisions.
 		$results = $this->query_post_and_revision_ids( $post_type, $days );
 
-		// allow filtering of the query results
+		// Allow filtering of the query results.
 		$posts = apply_filters( 'revisionstrike_revisions_query_results', $results );
 
-		// filter the number of revisions to keep based on post types
+		// Filter the number of revisions to keep based on post types.
 		$keep  = absint( apply_filters( 'revisionstrike_revisions_post_list_keep', $keep, $post_type ) );
 
-		// scrub the list down so we're keeping the minimum number of revs per post
+		// Scrub the list down so we're keeping the minimum number of revs per post.
 		$posts = apply_filters( 'revisionstrike_revisions_post_list', $this->scrub_posts_list( $results, $keep ) );
 
-		// get a the list of revision IDs
+		// Get a the list of revision IDs.
 		$revision_ids = array();
 		foreach ( $posts as $post_id => $revisions ) {
 			$revision_ids = array_merge( $revision_ids, wp_list_pluck( $revisions, 'revision_id' ) );
 		}
 
-		// limit the final list of revision IDs by the limit
+		// Limit the final list of revision IDs by the limit.
 		$revision_ids = array_slice( $revision_ids, 0, $limit );
 
 		$this->statistics['count'] = count( $revision_ids );
@@ -226,22 +229,20 @@ class RevisionStrike {
 	/**
 	 * Queries the database for a list of post IDs and revisions
 	 *
-	 * @param  array $post_type   post types
+	 * @param  array $post_type   List of post types.
 	 * @param  int   $days        The number of days since a post's publish date that must pass before
 	 *                            we can purge the post revisions.
-	 * @return array              list of objects with post_id, revision_id, and revision_date
+	 * @return array              List of objects with post_id, revision_id, and revision_date.
 	 */
 	protected function query_post_and_revision_ids( $post_type, $days ) {
 
 		global $wpdb;
 
-		// we don't do a LIMIT here because we need all the revision IDs and
+		// We don't do a LIMIT here because we need all the revision IDs and
 		// dates for a post so we can later sort by the revision date and
-		// ensure we're only removing the oldest revisions
-
-		// this might be doable completely in SQL by doing a join on a
-		// subquery, but that gets tricky
-
+		// ensure we're only removing the oldest revisions. This might be
+		// doable completely in SQL by doing a join on a subquery, but
+		// that gets tricky.
 		return $wpdb->get_results( $wpdb->prepare(
 			"
 			SELECT r.ID as revision_id, r.post_date as revision_date, p.ID as post_id FROM $wpdb->posts r
@@ -259,9 +260,10 @@ class RevisionStrike {
 	 * Turns the list of post and revision IDs into a key/value array after
 	 * scrubbing the list to keep the supplied number of revisions for each post
 	 *
-	 * @param  array $results results from the get_revision_ids() query
-	 * @param  int   $keep    the number of posts to keep, regardless of age
-	 * @return array          list of post IDs as the key and an array of revisions (ID and post_date) as the value
+	 * @param  array $results Results from the get_revision_ids() query.
+	 * @param  int   $keep    The number of posts to keep, regardless of age.
+	 * @return array          List of post IDs as the key and an array of
+	 *                        revisions (ID and post_date) as the value.
 	 */
 	protected function scrub_posts_list( $results, $keep ) {
 
@@ -273,7 +275,7 @@ class RevisionStrike {
 					$posts[ $result->post_id ] = array();
 				}
 
-				// add the revisions to the post
+				// Add the revisions to the post.
 				$posts[ $result->post_id ][] = array(
 					'revision_id'   => $result->revision_id,
 					'revision_date' => $result->revision_date,
@@ -283,16 +285,16 @@ class RevisionStrike {
 
 		foreach ( array_keys( $posts ) as $post_id ) {
 
-			// now sort the list of revisions for each post by revision
-			// date so the oldest revisions are first
+			// Now sort the list of revisions for each post by revision
+			// date so the oldest revisions are first.
 			$revisions = $posts[ $post_id ];
 			usort( $revisions, array( $this, 'revision_date_compare' ) );
 			$posts[ $post_id ] = $revisions;
 
-			// then remove anything past the number we need to keep so the
-			// oldest revisions we're allowed to remove are returned
-			// ex: if we keep four revisions and there are six in the list,
-			// we return the two oldest revision IDs
+			// Then remove anything past the number we need to keep so the
+			// oldest revisions we're allowed to remove are returned.
+			// Ex: if we keep four revisions and there are six in the list,
+			// we return the two oldest revision IDs.
 			$posts[ $post_id ] = array_slice( $posts[ $post_id ], 0, count( $posts[ $post_id ] ) - $keep );
 
 		}
@@ -304,12 +306,11 @@ class RevisionStrike {
 	/**
 	 * Compares the revision_date in the supplied array
 	 *
-	 * @param  array $a first array
-	 * @param  array $b second array
+	 * @param  array $a The first array.
+	 * @param  array $b The second array.
 	 * @return int
 	 */
 	protected function revision_date_compare( $a, $b ) {
 		return strtotime( $a['revision_date'] ) - strtotime( $b['revision_date'] );
 	}
-
 }

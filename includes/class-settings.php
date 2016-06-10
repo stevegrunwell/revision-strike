@@ -13,12 +13,14 @@ class RevisionStrikeSettings {
 
 	/**
 	 * The current RevisionStrike instance.
+	 *
 	 * @var RevisionStrike $instance
 	 */
 	protected $instance;
 
 	/**
 	 * A cached copy of the plugin options array.
+	 *
 	 * @var array $options
 	 */
 	protected $options;
@@ -208,5 +210,4 @@ class RevisionStrikeSettings {
 
 		return $input;
 	}
-
 }
