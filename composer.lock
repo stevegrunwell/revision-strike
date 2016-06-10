@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "f3962c19f15124aece29691dd6fb774a",
-    "content-hash": "46d7cc8636fbf74da332f09ce74f66a7",
+    "hash": "c2b59002ba3a800ca3d7e03ba965f277",
+    "content-hash": "47da7382e83dd5eb4aa29dc9840c94b0",
     "packages": [],
     "packages-dev": [
         {
@@ -216,16 +216,16 @@
         },
         {
             "name": "codeclimate/php-test-reporter",
-            "version": "v0.3.2",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/codeclimate/php-test-reporter.git",
-                "reference": "3a2d3ebdc1df5acf372458c15041af240a6fc016"
+                "reference": "9217abf84d74a6a4b7b21f2a3cf88a96118db53a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/codeclimate/php-test-reporter/zipball/3a2d3ebdc1df5acf372458c15041af240a6fc016",
-                "reference": "3a2d3ebdc1df5acf372458c15041af240a6fc016",
+                "url": "https://api.github.com/repos/codeclimate/php-test-reporter/zipball/9217abf84d74a6a4b7b21f2a3cf88a96118db53a",
+                "reference": "9217abf84d74a6a4b7b21f2a3cf88a96118db53a",
                 "shasum": ""
             },
             "require": {
@@ -270,7 +270,7 @@
                 "codeclimate",
                 "coverage"
             ],
-            "time": "2016-04-19 16:54:33"
+            "time": "2016-06-07 17:55:59"
         },
         {
             "name": "doctrine/instantiator",
@@ -2492,12 +2492,13 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "codeclimate/php-test-reporter": 20,
         "wp-coding-standards/wpcs": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": {
-        "php": ">=5.3"
+        "php": ">=5.6"
     }
 }

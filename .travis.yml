@@ -18,7 +18,7 @@ before_script:
 
 script:
   - ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
-  - ./vendor/bin/test-reporter
+  - if [ $CODECLIMATE_REPO_TOKEN ]; then ./vendor/bin/test-reporter; fi;
   - ./vendor/bin/behat
 
 cache:
