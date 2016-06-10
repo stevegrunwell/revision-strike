@@ -19,7 +19,6 @@ before_script:
 script:
   - ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
   - ./vendor/bin/test-reporter
-  - ./vendor/bin/phpcs
   - ./vendor/bin/behat
 
 cache:
