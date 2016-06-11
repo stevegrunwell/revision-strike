@@ -120,6 +120,10 @@ class RevisionStrikeTest extends TestCase {
 			->andReturn( 50 );
 		$settings->shouldReceive( 'get_option' )
 			->once()
+			->with( 'keep' )
+			->andReturn( 0 );
+		$settings->shouldReceive( 'get_option' )
+			->once()
 			->with( 'post_type' )
 			->andReturn( 'post' );
 
@@ -128,7 +132,7 @@ class RevisionStrikeTest extends TestCase {
 			->makePartial();
 		$instance->shouldReceive( 'get_revision_ids' )
 			->times( 2 )
-			->with( 14, 50, 'post' )
+			->with( 14, 50, 'post', 0 )
 			->andReturn( array( 1, 2, 3 ) );
 		$instance->settings = $settings;
 
@@ -138,16 +142,19 @@ class RevisionStrikeTest extends TestCase {
 				array(
 					'days'  => 14,
 					'limit' => 100,
+					'keep'  => 0,
 				),
 				array(
 					'days'      => 30,
 					'limit'     => 50,
+					'keep'      => 0,
 					'post_type' => 'post',
 				),
 			),
 			'return' => array(
 				'days'      => 14,
 				'limit'     => 100,
+				'keep'      => 0,
 				'post_type' => 'post',
 			),
 		) );
@@ -156,7 +163,7 @@ class RevisionStrikeTest extends TestCase {
 			'times'  => 6,
 		) );
 
-		$instance->strike( array( 'days' => 14, 'limit' => 100 ) );
+		$instance->strike( array( 'days' => 14, 'limit' => 100, 'keep' => 0 ) );
 	}
 
 	public function test_strike_filters_post_types() {
@@ -171,6 +178,10 @@ class RevisionStrikeTest extends TestCase {
 			->andReturn( 50 );
 		$settings->shouldReceive( 'get_option' )
 			->once()
+			->with( 'keep' )
+			->andReturn( 0 );
+		$settings->shouldReceive( 'get_option' )
+			->once()
 			->with( 'post_type' )
 			->andReturn( 'post' );
 
@@ -179,7 +190,7 @@ class RevisionStrikeTest extends TestCase {
 			->makePartial();
 		$instance->shouldReceive( 'get_revision_ids' )
 			->once()
-			->with( 30, 50, 'POST_TYPE' )
+			->with( 30, 50, 'POST_TYPE', 0 )
 			->andReturn( array() );
 		$instance->settings = $settings;
 
@@ -191,7 +202,7 @@ class RevisionStrikeTest extends TestCase {
 			'times'  => 1,
 		) );
 
-		$instance->strike( array( 'days' => 30, 'limit' => 50, 'post_type' => null, ) );
+		$instance->strike( array( 'days' => 30, 'limit' => 50, 'post_type' => null, 'keep' => 0, ) );
 	}
 
 	public function test_strike_batches_results() {
@@ -206,6 +217,10 @@ class RevisionStrikeTest extends TestCase {
 			->andReturn( 50 );
 		$settings->shouldReceive( 'get_option' )
 			->once()
+			->with( 'keep' )
+			->andReturn( 0 );
+		$settings->shouldReceive( 'get_option' )
+			->once()
 			->with( 'post_type' )
 			->andReturn( 'post' );
 
@@ -214,7 +229,7 @@ class RevisionStrikeTest extends TestCase {
 			->makePartial();
 		$instance->shouldReceive( 'get_revision_ids' )
 			->times( 2 )
-			->with( 14, 50, 'post' )
+			->with( 14, 50, 'post', 0 )
 			->andReturn(
 				array_fill( 0, 50, 'key' ),
 				array( 'key' )
@@ -227,6 +242,7 @@ class RevisionStrikeTest extends TestCase {
 				'days'      => 14,
 				'limit'     => 51,
 				'post_type' => null,
+				'keep'      => 0,
 			),
 		) );
 
@@ -251,14 +267,14 @@ class RevisionStrikeTest extends TestCase {
 		$wpdb = Mockery::mock( '\WPDB' );
 		$wpdb->shouldReceive( 'prepare' )
 			->once()
-			->with( Mockery::any(), 'post', Mockery::any(), 25 )
+			->with( Mockery::any(), 'post', Mockery::any() )
 			->andReturnUsing( function ( $query ) {
 				if ( false === strpos( $query, 'ORDER BY p.post_date ASC' ) ) {
 					$this->fail( 'Revisions are not being ordered from oldest to newest' );
 				}
 				return 'SQL STATEMENT';
 			} );
-		$wpdb->shouldReceive( 'get_col' )
+		$wpdb->shouldReceive( 'get_results' )
 			->once()
 			->with( 'SQL STATEMENT' )
 			->andReturn( array( 1, 2, 3 ) );
@@ -266,7 +282,7 @@ class RevisionStrikeTest extends TestCase {
 
 		M::wpPassthruFunction( 'absint' );
 
-		$result = $method->invoke( $instance, 90, 25, 'post' );
+		$result = $method->invoke( $instance, 90, 25, 'post', 0 );
 		$wpdb   = null;
 
 		$this->assertEquals( array( 1, 2, 3 ), $result );

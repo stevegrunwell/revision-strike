@@ -48,6 +48,7 @@ class ToolsTest extends TestCase {
 		$defaults = array(
 			'days'  => 15,
 			'limit' => 50,
+			'keep'  => 0,
 		);
 
 		ob_start();
@@ -65,6 +66,11 @@ class ToolsTest extends TestCase {
 			$results,
 			'Limit field is not being populated'
 		);
+		$this->assertContains(
+			'<input name="keep" type="number" class="small-text" value="0" />',
+			$results,
+			'Keep field is not being populated'
+		);
 	}
 
 	public function test_load_when_defaults_array_is_undefined() {
@@ -81,6 +87,7 @@ class ToolsTest extends TestCase {
 		$defaults     = array(
 			'days'  => 30,
 			'limit' => 50,
+			'keep'  => 0,
 		);
 		$_GET     = array( 'nonce' => 'MYNONCE' );
 		$_POST    = $defaults;
@@ -109,6 +116,7 @@ class ToolsTest extends TestCase {
 		$defaults     = array(
 			'days'  => 30,
 			'limit' => 50,
+			'keep'  => 0,
 		);
 		$_GET     = array( 'nonce' => true );
 		$_POST    = $defaults;
