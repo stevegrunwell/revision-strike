@@ -201,11 +201,11 @@ class SettingsTest extends TestCase {
 		) );
 
 		M::wpPassthruFunction( 'esc_html__', array(
-			'times' => 0,
+			'times' => 1,
 		) );
 
 		M::wpPassthruFunction( 'esc_html_x', array(
-			'times' => 0,
+			'times' => 1,
 		) );
 
 		ob_start();
@@ -213,7 +213,7 @@ class SettingsTest extends TestCase {
 		$result = ob_get_contents();
 		ob_end_clean();
 
-		$this->assertContains( 'name="revision-strike[limit]"', $result );
+		$this->assertContains( 'name="revision-strike[keep]"', $result );
 	}
 
 	public function test_get_option() {
