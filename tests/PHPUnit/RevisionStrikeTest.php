@@ -260,6 +260,10 @@ class RevisionStrikeTest extends TestCase {
 		$instance = new RevisionStrike;
 		$method   = new ReflectionMethod( $instance, 'get_revision_ids' );
 		$method->setAccessible( true );
+
+		$scrub_posts_list_method   = new ReflectionMethod( $instance, 'scrub_posts_list' );
+		$scrub_posts_list_method->setAccessible( true );
+
 		$property = new ReflectionProperty( $instance, 'statistics' );
 		$property->setAccessible( true );
 		$property->setValue( $instance, array( 'count' => 0 ) );
@@ -274,21 +278,106 @@ class RevisionStrikeTest extends TestCase {
 				}
 				return 'SQL STATEMENT';
 			} );
+
+
+		$posts_and_revision_objects = $this->mock_query_post_and_revision_ids_results();
+
 		$wpdb->shouldReceive( 'get_results' )
 			->once()
 			->with( 'SQL STATEMENT' )
-			->andReturn( array( 1, 2, 3 ) );
+			->andReturn( $posts_and_revision_objects );
 		$wpdb->posts = 'wp_posts';
+
+		// scrub the query results into array of post IDs and revisions sorted by dates
+		$scrubed_posts_list = $scrub_posts_list_method->invoke( $instance, $posts_and_revision_objects, 0 );
+
+		// revision IDs for the post ID 1
+		// scrub_posts_list() calls wp_list_pluck
+		M::wpFunction( 'wp_list_pluck', array(
+			'args' => array(
+				$scrubed_posts_list["1"],
+				'revision_id',
+				),
+			'times' => 1,
+			'return' => array( 12, 10, 11 ),
+			)
+		);
+
+		// revision IDs for the post ID 2
+		M::wpFunction( 'wp_list_pluck', array(
+			'args' => array(
+				$scrubed_posts_list["2"],
+				'revision_id',
+				),
+			'times' => 1,
+			'return' => array( 13, 14 ),
+			)
+		);
+
+		// revisions for the post ID 3
+		M::wpFunction( 'wp_list_pluck', array(
+			'args' => array(
+				$scrubed_posts_list["3"],
+				'revision_id',
+				),
+			'times' => 1,
+			'return' => array( 16, 15, 17, 18 ),
+			)
+		);
+
 
 		M::wpPassthruFunction( 'absint' );
 
 		$result = $method->invoke( $instance, 90, 25, 'post', 0 );
 		$wpdb   = null;
 
-		$this->assertEquals( array( 1, 2, 3 ), $result );
+		$this->assertEquals( array( 12, 10, 11, 13, 14, 16, 15, 17, 18 ), $result );
 
 		$stats = $property->getValue( $instance );
-		$this->assertEquals( 3, $stats['count'], 'The "count" statistic is not being updated' );
+		$this->assertEquals( 9, $stats['count'], 'The "count" statistic is not being updated' );
+	}
+
+	/**
+	 * Creates array of mock query results from the wpdb SELECT query
+	 *
+	 * @return array
+	 */
+	private function mock_query_post_and_revision_ids_results() {
+		/*
+			get_results is running:
+			SELECT r.ID as revision_id, r.post_date as revision_date, p.ID as post_id
+		 */
+		$posts_and_revision_objects = array();
+
+		// post id 1 with three revisions
+		$posts_and_revision_objects[] = $this->mock_query_result( 10, '2016-04-01', 1 );
+		$posts_and_revision_objects[] = $this->mock_query_result( 11, '2016-04-10', 1 );
+		$posts_and_revision_objects[] = $this->mock_query_result( 12, '2016-03-01', 1 );
+
+		// post id 2 with two revisions
+		$posts_and_revision_objects[] = $this->mock_query_result( 13, '2016-01-01', 2 );
+		$posts_and_revision_objects[] = $this->mock_query_result( 14, '2016-02-10', 2 );
+
+		// post id 3 with four revisions
+		$posts_and_revision_objects[] = $this->mock_query_result( 15, '2016-03-01', 3 );
+		$posts_and_revision_objects[] = $this->mock_query_result( 16, '2016-02-10', 3 );
+		$posts_and_revision_objects[] = $this->mock_query_result( 17, '2016-05-01', 3 );
+		$posts_and_revision_objects[] = $this->mock_query_result( 18, '2016-05-07', 3 );
+
+		return $posts_and_revision_objects;
+	}
+
+	/**
+	 * Creates mock stdClass based on the SELECT query
+	 *
+	 * @return object
+	 */
+	function mock_query_result( $revision_id, $revision_date, $post_id ) {
+		$result = new \stdClass();
+		$result->revision_id   = $revision_id;
+		$result->revision_date = $revision_date;
+		$result->post_id       = $post_id;
+		return $result;
 	}
 
 	public function test_get_revision_ids_with_multiple_post_types() {
