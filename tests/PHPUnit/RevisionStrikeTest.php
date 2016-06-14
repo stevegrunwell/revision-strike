@@ -450,7 +450,7 @@ class RevisionStrikeTest extends TestCase {
 				'revision_id',
 				),
 			'times' => 1,
-			'return' => array( 12, 10 ),
+			'return' => array( 12, 10 ), // two oldest to delete, one not deleted
 			)
 		);
 
@@ -461,7 +461,7 @@ class RevisionStrikeTest extends TestCase {
 				'revision_id',
 				),
 			'times' => 1,
-			'return' => array( 13 ),
+			'return' => array( 13 ), // one oldest, one not deleted
 			)
 		);
 
@@ -472,7 +472,7 @@ class RevisionStrikeTest extends TestCase {
 				'revision_id',
 				),
 			'times' => 1,
-			'return' => array( 16, 15, 17 ),
+			'return' => array( 16, 15, 17 ), // three oldest, one not deleted
 			)
 		);
 
@@ -486,6 +486,89 @@ class RevisionStrikeTest extends TestCase {
 
 		$stats = $property->getValue( $instance );
 		$this->assertEquals( 6, $stats['count'], 'The "count" statistic is not being updated' );
+	}
+
+	public function test_get_revision_ids_with_keep_two() {
+		global $wpdb;
+
+		$instance = new RevisionStrike;
+		$method   = new ReflectionMethod( $instance, 'get_revision_ids' );
+		$method->setAccessible( true );
+
+		$scrub_posts_list_method   = new ReflectionMethod( $instance, 'scrub_posts_list' );
+		$scrub_posts_list_method->setAccessible( true );
+
+		$property = new ReflectionProperty( $instance, 'statistics' );
+		$property->setAccessible( true );
+		$property->setValue( $instance, array( 'count' => 0 ) );
+
+		$wpdb = Mockery::mock( '\WPDB' );
+		$wpdb->shouldReceive( 'prepare' )
+			->once()
+			->with( Mockery::any(), 'post', Mockery::any() )
+			->andReturnUsing( function ( $query ) {
+				if ( false === strpos( $query, 'ORDER BY p.post_date ASC' ) ) {
+					$this->fail( 'Revisions are not being ordered from oldest to newest' );
+				}
+				return 'SQL STATEMENT';
+			} );
+
+
+		$posts_and_revision_objects = $this->mock_query_post_and_revision_ids_results();
+
+		$wpdb->shouldReceive( 'get_results' )
+			->once()
+			->with( 'SQL STATEMENT' )
+			->andReturn( $posts_and_revision_objects );
+		$wpdb->posts = 'wp_posts';
+
+		// Scrub the query results into array of post IDs and revisions sorted by dates
+		// and keep at least 2 revision.
+		$scrubbed_posts_list = $scrub_posts_list_method->invoke( $instance, $posts_and_revision_objects, 2 );
+
+		// revision IDs for the post ID 1
+		M::wpFunction( 'wp_list_pluck', array(
+			'args' => array(
+				$scrubbed_posts_list["1"],
+				'revision_id',
+				),
+			'times' => 1,
+			'return' => array( 12 ), // delete only one oldest revision, other two are not deleted
+			)
+		);
+
+		// revision IDs for the post ID 2
+		M::wpFunction( 'wp_list_pluck', array(
+			'args' => array(
+				$scrubbed_posts_list["2"],
+				'revision_id',
+				),
+			'times' => 1,
+			'return' => array(  ), // no revisions to delete
+			)
+		);
+
+		// revisions for the post ID 3
+		M::wpFunction( 'wp_list_pluck', array(
+			'args' => array(
+				$scrubbed_posts_list["3"],
+				'revision_id',
+				),
+			'times' => 1,
+			'return' => array( 15, 16 ), // two oldest revisions
+			)
+		);
+
+
+		M::wpPassthruFunction( 'absint' );
+
+		$result = $method->invoke( $instance, 90, 25, 'post', 2 );
+		$wpdb   = null;
+
+		$this->assertEquals( array( 12, 15, 16 ), $result );
+
+		$stats = $property->getValue( $instance );
+		$this->assertEquals( 3, $stats['count'], 'The "count" statistic is not being updated' );
 	}
 
 	public function test_get_revision_ids_returns_early_with_empty_post_types() {

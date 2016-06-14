@@ -258,7 +258,9 @@ class RevisionStrike {
 
 	/**
 	 * Turns the list of post and revision IDs into a key/value array after
-	 * scrubbing the list to keep the supplied number of revisions for each post
+	 * scrubbing the list to keep the supplied number of revisions for each
+	 * post.  The revision IDs will be the ones that will be deleted from
+	 * the database.
 	 *
 	 * @param  array $results Results from the get_revision_ids() query.
 	 * @param  int   $keep    The number of posts to keep, regardless of age.
@@ -295,7 +297,8 @@ class RevisionStrike {
 			// oldest revisions we're allowed to remove are returned.
 			// Ex: if we keep four revisions and there are six in the list,
 			// we return the two oldest revision IDs.
-			$posts[ $post_id ] = array_slice( $posts[ $post_id ], 0, count( $posts[ $post_id ] ) - $keep );
+			$length = count( $posts[ $post_id ] ) - $keep;
+			$posts[ $post_id ] = array_slice( $posts[ $post_id ], 0, $length );
 
 		}
 
