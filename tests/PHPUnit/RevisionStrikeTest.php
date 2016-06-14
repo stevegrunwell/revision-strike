@@ -337,6 +337,81 @@ class RevisionStrikeTest extends TestCase {
 		$this->assertEquals( 9, $stats['count'], 'The "count" statistic is not being updated' );
 	}
 
+	public function test_get_revision_ids_with_multiple_post_types() {
+		global $wpdb;
+
+		$instance = new RevisionStrike;
+		$method   = new ReflectionMethod( $instance, 'get_revision_ids' );
+		$method->setAccessible( true );
+
+		$scrub_posts_list_method   = new ReflectionMethod( $instance, 'scrub_posts_list' );
+		$scrub_posts_list_method->setAccessible( true );
+
+		$wpdb = Mockery::mock( '\WPDB' );
+		$wpdb->shouldReceive( 'prepare' )
+			->once()
+			->with( Mockery::any(), "post', 'page", Mockery::any() )
+			->andReturn( 'SQL STATEMENT' );
+
+		$posts_and_revision_objects = $this->mock_query_post_and_revision_ids_results();
+
+		$wpdb->shouldReceive( 'get_results' )
+			->once()
+			->with( 'SQL STATEMENT' )
+			->andReturn( $posts_and_revision_objects );
+		$wpdb->posts = 'wp_posts';
+
+		M::wpPassthruFunction( 'absint' );
+
+		// scrub the query results into array of post IDs and revisions sorted by dates
+		$scrubed_posts_list = $scrub_posts_list_method->invoke( $instance, $posts_and_revision_objects, 0 );
+
+		// revision IDs for the post ID 1
+		// scrub_posts_list() calls wp_list_pluck
+		M::wpFunction( 'wp_list_pluck', array(
+			'args' => array(
+				$scrubed_posts_list["1"],
+				'revision_id',
+				),
+			'times' => 1,
+			'return' => array( 12, 10, 11 ),
+			)
+		);
+
+		// revision IDs for the post ID 2
+		M::wpFunction( 'wp_list_pluck', array(
+			'args' => array(
+				$scrubed_posts_list["2"],
+				'revision_id',
+				),
+			'times' => 1,
+			'return' => array( 13, 14 ),
+			)
+		);
+
+		// revisions for the post ID 3
+		M::wpFunction( 'wp_list_pluck', array(
+			'args' => array(
+				$scrubed_posts_list["3"],
+				'revision_id',
+				),
+			'times' => 1,
+			'return' => array( 16, 15, 17, 18 ),
+			)
+		);
+
+		$result = $method->invoke( $instance, 30, 50, 'post,page', 0 );
+		$wpdb   = null;
+	}
+
+	public function test_get_revision_ids_returns_early_with_empty_post_types() {
+		$instance = new RevisionStrike;
+		$method   = new ReflectionMethod( $instance, 'get_revision_ids' );
+		$method->setAccessible( true );
+
+		$this->assertEquals( array(), $method->invoke( $instance, 30, 50, '' ) );
+	}
+
 	/**
 	 * Creates array of mock query results from the wpdb SELECT query
 	 *
@@ -378,38 +453,6 @@ class RevisionStrikeTest extends TestCase {
 		$result->revision_date = $revision_date;
 		$result->post_id       = $post_id;
 		return $result;
-	}
-
-	public function test_get_revision_ids_with_multiple_post_types() {
-		global $wpdb;
-
-		$instance = new RevisionStrike;
-		$method   = new ReflectionMethod( $instance, 'get_revision_ids' );
-		$method->setAccessible( true );
-
-		$wpdb = Mockery::mock( '\WPDB' );
-		$wpdb->shouldReceive( 'prepare' )
-			->once()
-			->with( Mockery::any(), "post', 'page", Mockery::any(), 50 )
-			->andReturn( 'SQL STATEMENT' );
-		$wpdb->shouldReceive( 'get_col' )
-			->once()
-			->with( 'SQL STATEMENT' )
-			->andReturn( array( 1, 2, 3 ) );
-		$wpdb->posts = 'wp_posts';
-
-		M::wpPassthruFunction( 'absint' );
-
-		$result = $method->invoke( $instance, 30, 50, 'post,page' );
-		$wpdb   = null;
-	}
-
-	public function test_get_revision_ids_returns_early_with_empty_post_types() {
-		$instance = new RevisionStrike;
-		$method   = new ReflectionMethod( $instance, 'get_revision_ids' );
-		$method->setAccessible( true );
-
-		$this->assertEquals( array(), $method->invoke( $instance, 30, 50, '' ) );
 	}
 
 }
