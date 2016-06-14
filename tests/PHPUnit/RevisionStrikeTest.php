@@ -289,13 +289,13 @@ class RevisionStrikeTest extends TestCase {
 		$wpdb->posts = 'wp_posts';
 
 		// scrub the query results into array of post IDs and revisions sorted by dates
-		$scrubed_posts_list = $scrub_posts_list_method->invoke( $instance, $posts_and_revision_objects, 0 );
+		$scrubbed_posts_list = $scrub_posts_list_method->invoke( $instance, $posts_and_revision_objects, 0 );
 
 		// revision IDs for the post ID 1
 		// scrub_posts_list() calls wp_list_pluck
 		M::wpFunction( 'wp_list_pluck', array(
 			'args' => array(
-				$scrubed_posts_list["1"],
+				$scrubbed_posts_list["1"],
 				'revision_id',
 				),
 			'times' => 1,
@@ -306,7 +306,7 @@ class RevisionStrikeTest extends TestCase {
 		// revision IDs for the post ID 2
 		M::wpFunction( 'wp_list_pluck', array(
 			'args' => array(
-				$scrubed_posts_list["2"],
+				$scrubbed_posts_list["2"],
 				'revision_id',
 				),
 			'times' => 1,
@@ -317,7 +317,7 @@ class RevisionStrikeTest extends TestCase {
 		// revisions for the post ID 3
 		M::wpFunction( 'wp_list_pluck', array(
 			'args' => array(
-				$scrubed_posts_list["3"],
+				$scrubbed_posts_list["3"],
 				'revision_id',
 				),
 			'times' => 1,
@@ -364,13 +364,13 @@ class RevisionStrikeTest extends TestCase {
 		M::wpPassthruFunction( 'absint' );
 
 		// scrub the query results into array of post IDs and revisions sorted by dates
-		$scrubed_posts_list = $scrub_posts_list_method->invoke( $instance, $posts_and_revision_objects, 0 );
+		$scrubbed_posts_list = $scrub_posts_list_method->invoke( $instance, $posts_and_revision_objects, 0 );
 
 		// revision IDs for the post ID 1
 		// scrub_posts_list() calls wp_list_pluck
 		M::wpFunction( 'wp_list_pluck', array(
 			'args' => array(
-				$scrubed_posts_list["1"],
+				$scrubbed_posts_list["1"],
 				'revision_id',
 				),
 			'times' => 1,
@@ -381,7 +381,7 @@ class RevisionStrikeTest extends TestCase {
 		// revision IDs for the post ID 2
 		M::wpFunction( 'wp_list_pluck', array(
 			'args' => array(
-				$scrubed_posts_list["2"],
+				$scrubbed_posts_list["2"],
 				'revision_id',
 				),
 			'times' => 1,
@@ -392,7 +392,7 @@ class RevisionStrikeTest extends TestCase {
 		// revisions for the post ID 3
 		M::wpFunction( 'wp_list_pluck', array(
 			'args' => array(
-				$scrubed_posts_list["3"],
+				$scrubbed_posts_list["3"],
 				'revision_id',
 				),
 			'times' => 1,
@@ -404,12 +404,96 @@ class RevisionStrikeTest extends TestCase {
 		$wpdb   = null;
 	}
 
+	public function test_get_revision_ids_with_keep() {
+		global $wpdb;
+
+		$instance = new RevisionStrike;
+		$method   = new ReflectionMethod( $instance, 'get_revision_ids' );
+		$method->setAccessible( true );
+
+		$scrub_posts_list_method   = new ReflectionMethod( $instance, 'scrub_posts_list' );
+		$scrub_posts_list_method->setAccessible( true );
+
+		$property = new ReflectionProperty( $instance, 'statistics' );
+		$property->setAccessible( true );
+		$property->setValue( $instance, array( 'count' => 0 ) );
+
+		$wpdb = Mockery::mock( '\WPDB' );
+		$wpdb->shouldReceive( 'prepare' )
+			->once()
+			->with( Mockery::any(), 'post', Mockery::any() )
+			->andReturnUsing( function ( $query ) {
+				if ( false === strpos( $query, 'ORDER BY p.post_date ASC' ) ) {
+					$this->fail( 'Revisions are not being ordered from oldest to newest' );
+				}
+				return 'SQL STATEMENT';
+			} );
+
+
+		$posts_and_revision_objects = $this->mock_query_post_and_revision_ids_results();
+
+		$wpdb->shouldReceive( 'get_results' )
+			->once()
+			->with( 'SQL STATEMENT' )
+			->andReturn( $posts_and_revision_objects );
+		$wpdb->posts = 'wp_posts';
+
+		// scrub the query results into array of post IDs and revisions sorted by dates
+		// keep at least 1 revision
+		$scrubbed_posts_list = $scrub_posts_list_method->invoke( $instance, $posts_and_revision_objects, 1 );
+
+		// revision IDs for the post ID 1
+		// scrub_posts_list() calls wp_list_pluck
+		M::wpFunction( 'wp_list_pluck', array(
+			'args' => array(
+				$scrubbed_posts_list["1"],
+				'revision_id',
+				),
+			'times' => 1,
+			'return' => array( 12, 10 ),
+			)
+		);
+
+		// revision IDs for the post ID 2
+		M::wpFunction( 'wp_list_pluck', array(
+			'args' => array(
+				$scrubbed_posts_list["2"],
+				'revision_id',
+				),
+			'times' => 1,
+			'return' => array( 13 ),
+			)
+		);
+
+		// revisions for the post ID 3
+		M::wpFunction( 'wp_list_pluck', array(
+			'args' => array(
+				$scrubbed_posts_list["3"],
+				'revision_id',
+				),
+			'times' => 1,
+			'return' => array( 16, 15, 17 ),
+			)
+		);
+
+
+		M::wpPassthruFunction( 'absint' );
+
+		$result = $method->invoke( $instance, 90, 25, 'post', 1 );
+		$wpdb   = null;
+
+		$this->assertEquals( array( 12, 10, 13, 16, 15, 17 ), $result );
+
+		$stats = $property->getValue( $instance );
+		$this->assertEquals( 6, $stats['count'], 'The "count" statistic is not being updated' );
+	}
+
 	public function test_get_revision_ids_returns_early_with_empty_post_types() {
 		$instance = new RevisionStrike;
 		$method   = new ReflectionMethod( $instance, 'get_revision_ids' );
 		$method->setAccessible( true );
 
-		$this->assertEquals( array(), $method->invoke( $instance, 30, 50, '' ) );
+		$this->assertEquals( array(), $method->invoke( $instance, 30, 50, '', 0 ) );
 	}
 
 	/**

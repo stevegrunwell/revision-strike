@@ -194,7 +194,7 @@ class RevisionStrike {
 	protected function get_revision_ids( $days, $limit, $post_type, $keep ) {
 
 		// Return early if we don't have any eligible post types.
-		if ( ! $post_type ) {
+		if ( empty( $post_type ) ) {
 			return array();
 		}
 
