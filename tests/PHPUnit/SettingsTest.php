@@ -69,6 +69,17 @@ class SettingsTest extends TestCase {
 			),
 		) );
 
+		M::wpFunction( 'add_settings_field', array(
+			'times'  => 1,
+			'args'   => array(
+				'revision-strike-keep',
+				'*',
+				array( $instance, 'keep_field' ),
+				'writing',
+				'revision-strike'
+			),
+		) );
+
 		M::wpPassthruFunction( '__' );
 
 		$instance->add_settings_section();
@@ -105,6 +116,10 @@ class SettingsTest extends TestCase {
 			->once()
 			->with( 'limit' )
 			->andReturn( 42 );
+		$instance->shouldReceive( 'get_option' )
+			->once()
+			->with( 'keep' )
+			->andReturn( 0 );
 
 		M::wpPassthruFunction( 'wp_die' );
 		M::wpPassthruFunction( 'esc_html__' );
@@ -172,6 +187,33 @@ class SettingsTest extends TestCase {
 		ob_end_clean();
 
 		$this->assertContains( 'name="revision-strike[limit]"', $result );
+	}
+
+	public function test_keep_field() {
+		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+		$instance->shouldReceive( 'get_option' )
+			->with( 'keep' )
+			->andReturn( 0 );
+
+		M::wpPassthruFunction( 'absint', array(
+			'times' => 1,
+			'args'  => array( 0 ),
+		) );
+
+		M::wpPassthruFunction( 'esc_html__', array(
+			'times' => 1,
+		) );
+
+		M::wpPassthruFunction( 'esc_html_x', array(
+			'times' => 1,
+		) );
+
+		ob_start();
+		$instance->keep_field();
+		$result = ob_get_contents();
+		ob_end_clean();
+
+		$this->assertContains( 'name="revision-strike[keep]"', $result );
 	}
 
 	public function test_get_option() {

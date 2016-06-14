@@ -191,7 +191,7 @@ class CLITest extends TestCase {
 			->andReturn( $instance );
 		$cli->shouldReceive( 'clean' )
 			->once()
-			->with( array(), array( 'days' => 45, 'limit' => 777 ) );
+			->with( array(), array( 'days' => 45, 'limit' => 777, 'keep' => 0 ) );
 
 		$cli->clean_all( array(), array( 'days' => 45, ) );
 	}

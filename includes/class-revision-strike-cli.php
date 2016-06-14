@@ -35,6 +35,10 @@ class RevisionStrikeCLI extends WP_CLI {
 	 * : The maximum number of revisions to remove. This is determined by the
 	 * value set on Settings > Writing or a default value of 50.
 	 *
+	 * [--keep=<keep>]
+	 * : The minimum number of revisions to keep.  This is determined by the
+	 * value set on Settings > Writing or a default value of 0.
+	 *
 	 * [--post_type=<post_type>]
 	 * : One or more post types (comma-separated) for which revisions should be
 	 * struck. Default value is 'post'.
@@ -47,9 +51,10 @@ class RevisionStrikeCLI extends WP_CLI {
 	 *   wp revision-strike clean
 	 *   wp revision-strike clean --days=45
 	 *   wp revision-strike clean --limit=75
+	 *   wp revision-strike clean --keep=3
 	 *   wp revision-strike clean --post_type=post,page
 	 *
-	 * @synopsis [--days=<days>] [--limit=<limit>] [--post_type=<post_type>] [--verbose]
+	 * @synopsis [--days=<days>] [--limit=<limit>] [--keep=<keep>] [--post_type=<post_type>] [--verbose]
 	 *
 	 * @param array $args       A numeric array of position-based arguments.
 	 * @param array $assoc_args An associative array of key-based arguments.
@@ -62,7 +67,7 @@ class RevisionStrikeCLI extends WP_CLI {
 		$instance = $this->get_instance();
 		$args     = array();
 
-		foreach ( array( 'days', 'limit', 'post_type' ) as $arg ) {
+		foreach ( array( 'days', 'limit', 'post_type', 'keep' ) as $arg ) {
 			if ( isset( $assoc_args[ $arg ] ) ) {
 				$args[ $arg ] = $assoc_args[ $arg ];
 			}
@@ -125,6 +130,9 @@ class RevisionStrikeCLI extends WP_CLI {
 			isset( $assoc_args['days'] ) ? $assoc_args['days'] : $instance->settings->get_option( 'days' ),
 			isset( $assoc_args['post_type'] ) ? $assoc_args['post_type'] : $instance->settings->get_option( 'post_type' )
 		);
+
+		// Allow all revisions to be deleted.
+		$assoc_args['keep'] = 0;
 
 		return $this->clean( $args, $assoc_args );
 	}

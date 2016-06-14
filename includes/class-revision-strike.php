@@ -51,6 +51,7 @@ class RevisionStrike {
 			'days'      => 30,
 			'limit'     => 50,
 			'post_type' => 'post',
+			'keep'      => 0,
 		);
 		$this->statistics = array(
 			'count'   => 0, // Number of revision IDs found.
@@ -147,6 +148,7 @@ class RevisionStrike {
 			'days'      => $this->settings->get_option( 'days' ),
 			'limit'     => $this->settings->get_option( 'limit' ),
 			'post_type' => $this->settings->get_option( 'post_type' ),
+			'keep'      => $this->settings->get_option( 'keep' ),
 		);
 		$args         = wp_parse_args( $args, $default_args );
 
@@ -165,7 +167,7 @@ class RevisionStrike {
 		$batch_count = ceil( $args['limit'] / $limit );
 
 		for ( $i = 0; $i < $batch_count; $i++ ) {
-			$revision_ids = $this->get_revision_ids( $args['days'], $limit, $args['post_type'] );
+			$revision_ids = $this->get_revision_ids( $args['days'], $limit, $args['post_type'], $args['keep'] );
 
 			if ( ! empty( $revision_ids ) ) {
 				foreach ( $revision_ids as $revision_id ) {
@@ -185,33 +187,133 @@ class RevisionStrike {
 	 *                         we can purge the post revisions.
 	 * @param int   $limit     The maximum number of revision IDs to retrieve.
 	 * @param array $post_type The post types for which revisions should be located.
+	 * @param int   $keep      Keep at least this number of revisions for a post, regardless of age.
 	 *
-	 * @return array An array of post IDs (unless 'fields' is manipulated in $args).
+	 * @return array An array of revision IDs
 	 */
-	protected function get_revision_ids( $days, $limit, $post_type ) {
-		global $wpdb;
+	protected function get_revision_ids( $days, $limit, $post_type, $keep ) {
 
 		// Return early if we don't have any eligible post types.
-		if ( ! $post_type ) {
+		if ( empty( $post_type ) ) {
 			return array();
 		}
 
 		$post_type    = array_map( 'trim', explode( ',', $post_type ) );
-		$revision_ids = $wpdb->get_col( $wpdb->prepare(
-			"
-			SELECT r.ID FROM $wpdb->posts r
-			LEFT JOIN $wpdb->posts p ON r.post_parent = p.ID
-			WHERE r.post_type = 'revision' AND p.post_type IN ('%s') AND p.post_date < %s
-			ORDER BY p.post_date ASC
-			LIMIT %d
-			",
-			implode( "', '", $post_type ),
-			date( 'Y-m-d', time() - ( absint( $days ) * DAY_IN_SECONDS ) ),
-			absint( $limit )
-		) );
+
+		// Get a list of post IDs and their revisions.
+		$results = $this->query_post_and_revision_ids( $post_type, $days );
+
+		// Allow filtering of the query results.
+		$posts = apply_filters( 'revisionstrike_revisions_query_results', $results );
+
+		// Filter the number of revisions to keep based on post types.
+		$keep  = absint( apply_filters( 'revisionstrike_revisions_post_list_keep', $keep, $post_type ) );
+
+		// Scrub the list down so we're keeping the minimum number of revs per post.
+		$posts = apply_filters( 'revisionstrike_revisions_post_list', $this->scrub_posts_list( $results, $keep ) );
+
+		// Get a the list of revision IDs.
+		$revision_ids = array();
+		foreach ( $posts as $post_id => $revisions ) {
+			$revision_ids = array_merge( $revision_ids, wp_list_pluck( $revisions, 'revision_id' ) );
+		}
+
+		// Limit the final list of revision IDs by the limit.
+		$revision_ids = array_slice( $revision_ids, 0, $limit );
 
 		$this->statistics['count'] = count( $revision_ids );
 
 		return array_map( 'absint', $revision_ids );
+	}
+
+	/**
+	 * Queries the database for a list of post IDs and revisions
+	 *
+	 * @param  array $post_type   List of post types.
+	 * @param  int   $days        The number of days since a post's publish date that must pass before
+	 *                            we can purge the post revisions.
+	 * @return array              List of objects with post_id, revision_id, and revision_date.
+	 */
+	protected function query_post_and_revision_ids( $post_type, $days ) {
+
+		global $wpdb;
+
+		// We don't do a LIMIT here because we need all the revision IDs and
+		// dates for a post so we can later sort by the revision date and
+		// ensure we're only removing the oldest revisions. This might be
+		// doable completely in SQL by doing a join on a subquery, but
+		// that gets tricky.
+		return $wpdb->get_results( $wpdb->prepare(
+			"
+			SELECT r.ID as revision_id, r.post_date as revision_date, p.ID as post_id FROM $wpdb->posts r
+			INNER JOIN $wpdb->posts p ON r.post_parent = p.ID
+			WHERE r.post_type = 'revision' AND p.post_type IN ('%s') AND p.post_date < %s
+			ORDER BY p.post_date ASC
+			",
+			implode( "', '", $post_type ),
+			date( 'Y-m-d', time() - ( absint( $days ) * DAY_IN_SECONDS ) )
+		) );
+
+	}
+
+	/**
+	 * Turns the list of post and revision IDs into a key/value array after
+	 * scrubbing the list to keep the supplied number of revisions for each
+	 * post.  The revision IDs will be the ones that will be deleted from
+	 * the database.
+	 *
+	 * @param  array $results Results from the get_revision_ids() query.
+	 * @param  int   $keep    The number of posts to keep, regardless of age.
+	 * @return array          List of post IDs as the key and an array of
+	 *                        revisions (ID and post_date) as the value.
+	 */
+	protected function scrub_posts_list( $results, $keep ) {
+
+		$posts = array();
+		if ( ! empty( $results ) && is_array( $results ) ) {
+
+			foreach ( $results as $result ) {
+				if ( ! isset( $posts[ $result->post_id ] ) ) {
+					$posts[ $result->post_id ] = array();
+				}
+
+				// Add the revisions to the post.
+				$posts[ $result->post_id ][] = array(
+					'revision_id'   => $result->revision_id,
+					'revision_date' => $result->revision_date,
+					);
+			}
+		}
+
+		foreach ( array_keys( $posts ) as $post_id ) {
+
+			// Now sort the list of revisions for each post by revision
+			// date so the oldest revisions are first.
+			$revisions = $posts[ $post_id ];
+			usort( $revisions, array( $this, 'revision_date_compare' ) );
+			$posts[ $post_id ] = $revisions;
+
+			// Then remove anything past the number we need to keep so the
+			// oldest revisions we're allowed to remove are returned.
+			// Ex: if we keep four revisions and there are six in the list,
+			// we return the two oldest revision IDs.
+			$length = count( $posts[ $post_id ] ) - $keep;
+			$posts[ $post_id ] = array_slice( $posts[ $post_id ], 0, $length );
+
+		}
+
+		return $posts;
+
+	}
+
+	/**
+	 * Compares the revision_date in the supplied array
+	 *
+	 * @param  array $a The first array.
+	 * @param  array $b The second array.
+	 * @return int
+	 */
+	protected function revision_date_compare( $a, $b ) {
+		return strtotime( $a['revision_date'] ) - strtotime( $b['revision_date'] );
 	}
 }

@@ -62,6 +62,14 @@ class RevisionStrikeSettings {
 			'writing',
 			'revision-strike'
 		);
+
+		add_settings_field(
+			'revision-strike-keep',
+			__( 'Revisions to Keep', 'revision-strike' ),
+			array( $this, 'keep_field' ),
+			'writing',
+			'revision-strike'
+		);
 	}
 
 	/**
@@ -116,6 +124,25 @@ class RevisionStrikeSettings {
 	}
 
 	/**
+	 * Generate the revision-strike[keep] field.
+	 */
+	public function keep_field() {
+		printf(
+			'<input name="revision-strike[keep]" id="revision-strike-keep" type="number" class="small-text" value="%d" /> %s',
+			absint( $this->get_option( 'keep' ) ),
+			esc_html_x( 'Revisions', 'Label for revision-strike[keep]', 'revision-strike' )
+		);
+
+		printf(
+			'<p class="description">%s</p>',
+			esc_html__(
+				'Keep at least this many revisions per post.',
+				'revision-strike'
+			)
+		);
+	}
+
+	/**
 	 * Generate the Tools > Revision Strike page.
 	 *
 	 * This method works by setting the $default configuration, then loading tools.php, which is a
@@ -125,6 +152,7 @@ class RevisionStrikeSettings {
 		$defaults = array(
 			'days'  => $this->get_option( 'days' ),
 			'limit' => $this->get_option( 'limit' ),
+			'keep'  => $this->get_option( 'keep' ),
 		);
 		$instance = $this->instance;
 
@@ -170,6 +198,13 @@ class RevisionStrikeSettings {
 			$input['limit'] = absint( $input['limit'] );
 			if ( 0 === $input['limit'] ) {
 				$input['limit'] = absint( $this->instance->defaults['limit'] );
+			}
+		}
+
+		if ( isset( $input['keep'] ) ) {
+			$input['keep'] = absint( $input['keep'] );
+			if ( 0 === $input['keep'] ) {
+				$input['keep'] = absint( $this->instance->defaults['keep'] );
 			}
 		}
 
