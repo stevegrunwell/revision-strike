@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 * Lock Composer dependency versions to ensure more consistent testing via Travis-CI.
+* Add the `revisionstrike_get_revision_ids` filter to enable third-party plugins and themes to alter the array of revision IDs. ([#21]).
 
 
 ## [0.2.0] - 2015-08-16
@@ -31,3 +32,4 @@ Initial public release.
 [#14]: https://github.com/stevegrunwell/revision-strike/issues/14
 [#16]: https://github.com/stevegrunwell/revision-strike/issues/16
 [#17]: https://github.com/stevegrunwell/revision-strike/issues/17
+[#21]: https://github.com/stevegrunwell/revision-strike/issues/17
