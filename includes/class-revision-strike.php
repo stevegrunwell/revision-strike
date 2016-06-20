@@ -213,6 +213,8 @@ class RevisionStrike {
 		/**
 		 * Filter the list of eligible revision IDs.
 		 *
+		 * @since 0.3.0
+		 *
 		 * @param array $revision_ids Revision IDs to be struck.
 		 * @param int   $days      The number of days since a post's publish date that must pass before
 		 *                         we can purge the post revisions.
