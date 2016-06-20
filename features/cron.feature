@@ -39,7 +39,7 @@ Feature: WP Cron
     When I run `wp cron event run revisionstrike_strike_old_revisions`
     Then STDOUT should contain:
       """
-      Success: Executed the cron event 'revisionstrike_strike_old_revisions'
+      Executed the cron event 'revisionstrike_strike_old_revisions'
       """
 
     When I run `wp post list --post_type=revision --format=count`

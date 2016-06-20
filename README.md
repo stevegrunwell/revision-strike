@@ -23,7 +23,7 @@ Upon plugin activation, a hook is registered to trigger the `revisionstrike_stri
 
 ### Tools &rsaquo; Revision Strike
 
-![The Tools > Revision Strike page](assets/screenshot-1.png)
+![The Tools > Revision Strike page](plugin-repo-assets/screenshot-1.png)
 
 You can manually trigger a revision strike by logging into WordPress and visiting the Tools &rsaquo; Revision Strike page.
 

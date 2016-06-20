@@ -307,4 +307,28 @@ class RevisionStrikeTest extends TestCase {
 		$this->assertEquals( array(), $method->invoke( $instance, 30, 50, '' ) );
 	}
 
+	public function test_get_revision_ids_applies_filter() {
+		global $wpdb;
+
+		$instance = new RevisionStrike;
+		$method   = new ReflectionMethod( $instance, 'get_revision_ids' );
+		$method->setAccessible( true );
+
+		$wpdb = Mockery::mock( '\WPDB' );
+		$wpdb->shouldReceive( 'prepare' );
+		$wpdb->shouldReceive( 'get_col' )->andReturn( array( 1, 2, 3 ) );
+		$wpdb->posts = 'wp_posts';
+
+		M::wpPassthruFunction( 'absint' );
+
+		M::onFilter( 'revisionstrike_get_revision_ids' )
+			->with( array( 1, 2, 3 ), 90, 25, array( 'post' ) )
+			->reply( array( 'FILTERED' ) );
+
+		$result = $method->invoke( $instance, 90, 25, 'post' );
+		$wpdb   = null;
+
+		$this->assertEquals( array( 'FILTERED' ), $result );
+	}
+
 }

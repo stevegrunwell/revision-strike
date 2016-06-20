@@ -3,7 +3,7 @@
  * Primary plugin functionality.
  *
  * @package Revision Strike
- * @author Steve Grunwell
+ * @author  Steve Grunwell
  */
 
 /**
@@ -13,18 +13,21 @@ class RevisionStrike {
 
 	/**
 	 * The plugin settings.
+	 *
 	 * @var RevisionStrikeSettings $settings
 	 */
 	public $settings;
 
 	/**
 	 * The canonical source for default settings.
+	 *
 	 * @var array $defaults
 	 */
 	protected $defaults;
 
 	/**
 	 * Information about Revision Strike's current state.
+	 *
 	 * @var array $statistics
 	 */
 	protected $statistics;
@@ -207,9 +210,21 @@ class RevisionStrike {
 			absint( $limit )
 		) );
 
+		/**
+		 * Filter the list of eligible revision IDs.
+		 *
+		 * @since 0.3.0
+		 *
+		 * @param array $revision_ids Revision IDs to be struck.
+		 * @param int   $days      The number of days since a post's publish date that must pass before
+		 *                         we can purge the post revisions.
+		 * @param int   $limit     The maximum number of revision IDs to retrieve.
+		 * @param array $post_type The post types for which revisions should be located.
+		 */
+		$revision_ids = apply_filters( 'revisionstrike_get_revision_ids', $revision_ids, $days, $limit, $post_type );
+
 		$this->statistics['count'] = count( $revision_ids );
 
-		return array_map( 'absint', $revision_ids );
+		return $revision_ids;
 	}
-
 }
