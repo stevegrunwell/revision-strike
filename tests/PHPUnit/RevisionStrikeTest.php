@@ -69,7 +69,7 @@ class RevisionStrikeTest extends TestCase {
 		$wpdb = Mockery::mock( '\WPDB' );
 		$wpdb->shouldReceive( 'prepare' )
 			->once()
-			->with( Mockery::any(), 'post', Mockery::any() )
+			->with( Mockery::any(), Mockery::any() )
 			->andReturnUsing( function ( $query ) {
 				if ( 0 !== strpos( trim( $query ), 'SELECT COUNT(r.ID) FROM' ) ) {
 					$this->fail( 'Results are not being limited to a count' );
@@ -83,6 +83,7 @@ class RevisionStrikeTest extends TestCase {
 		$wpdb->posts = 'wp_posts';
 
 		M::wpPassthruFunction( 'absint' );
+		M::wpPassthruFunction( 'esc_sql' );
 
 		$this->assertEquals( 12, $instance->count_eligible_revisions( 30, 'post' ) );
 		$wpdb = null;
@@ -106,6 +107,30 @@ class RevisionStrikeTest extends TestCase {
 		$property->setValue( $instance, $value );
 
 		$this->assertEquals( $value, $instance->get_stats() );
+	}
+
+	public function test_single_get_slug_in_string() {
+
+		$instance = Mockery::mock( 'RevisionStrike' )
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
+
+		M::wpPassthruFunction( 'esc_sql' );
+
+		$this->assertEquals( "'post'", $instance->get_slug_in_string( 'post' ) );
+
+	}
+
+	public function test_multiple_get_slug_in_string() {
+
+		$instance = Mockery::mock( 'RevisionStrike' )
+			->shouldAllowMockingProtectedMethods()
+			->makePartial();
+
+		M::wpPassthruFunction( 'esc_sql' );
+
+		$this->assertEquals( "'post','page'", $instance->get_slug_in_string( 'post,page' ) );
+
 	}
 
 	public function test_strike() {
@@ -201,6 +226,7 @@ class RevisionStrikeTest extends TestCase {
 		) );
 
 		M::wpPassthruFunction( 'absint' );
+		M::wpPassthruFunction( 'esc_sql' );
 
 		// change the post type with the filter
 		M::onFilter( 'revisionstrike_post_types' )
@@ -273,7 +299,7 @@ class RevisionStrikeTest extends TestCase {
 		$wpdb = Mockery::mock( '\WPDB' );
 		$wpdb->shouldReceive( 'prepare' )
 			->once()
-			->with( Mockery::any(), 'post', Mockery::any(), 25 )
+			->with( Mockery::any(), Mockery::any(), 25 )
 			->andReturnUsing( function ( $query ) {
 				if ( false === strpos( $query, 'ORDER BY p.post_date ASC' ) ) {
 					$this->fail( 'Revisions are not being ordered from oldest to newest' );
@@ -287,6 +313,7 @@ class RevisionStrikeTest extends TestCase {
 		$wpdb->posts = 'wp_posts';
 
 		M::wpPassthruFunction( 'absint' );
+		M::wpPassthruFunction( 'esc_sql' );
 
 		$result = $method->invoke( $instance, 90, 25, 'post' );
 		$wpdb   = null;
@@ -307,7 +334,7 @@ class RevisionStrikeTest extends TestCase {
 		$wpdb = Mockery::mock( '\WPDB' );
 		$wpdb->shouldReceive( 'prepare' )
 			->once()
-			->with( Mockery::any(), "post', 'page", Mockery::any(), 50 )
+			->with( Mockery::any(), Mockery::any(), 50 )
 			->andReturn( 'SQL STATEMENT' );
 		$wpdb->shouldReceive( 'get_col' )
 			->once()
@@ -316,6 +343,7 @@ class RevisionStrikeTest extends TestCase {
 		$wpdb->posts = 'wp_posts';
 
 		M::wpPassthruFunction( 'absint' );
+		M::wpPassthruFunction( 'esc_sql' );
 
 		$result = $method->invoke( $instance, 30, 50, 'post,page' );
 		$wpdb   = null;
@@ -342,6 +370,7 @@ class RevisionStrikeTest extends TestCase {
 		$wpdb->posts = 'wp_posts';
 
 		M::wpPassthruFunction( 'absint' );
+		M::wpPassthruFunction( 'esc_sql' );
 
 		M::onFilter( 'revisionstrike_get_revision_ids' )
 			->with( array( 1, 2, 3 ), 90, 25, array( 'post' ) )
