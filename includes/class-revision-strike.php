@@ -150,15 +150,12 @@ class RevisionStrike {
 		);
 		$args         = wp_parse_args( $args, $default_args );
 
-		if ( null === $args['post_type'] ) {
-
-			/**
-			 * Set the default post type(s) for which revisions should be struck.
-			 *
-			 * @param string $post_type A comma-separated list of post types.
-			 */
-			$args['post_type'] = apply_filters( 'revisionstrike_post_types', 'post' );
-		}
+		/**
+		 * Set the post type(s) for which revisions should be struck.
+		 *
+		 * @param string $post_type A comma-separated list of post types.
+		 */
+		$args['post_type'] = apply_filters( 'revisionstrike_post_types', $args['post_type'] );
 
 		// Calculate the number of batches to run.
 		$limit       = self::BATCH_SIZE >= $args['limit'] ? $args['limit'] : self::BATCH_SIZE;
