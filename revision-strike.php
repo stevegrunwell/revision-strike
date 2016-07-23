@@ -6,6 +6,8 @@
  * Version:     0.3.0
  * Author:      Steve Grunwell
  * Author URI:  https://stevegrunwell.com
+ * Text Domain: revision-strike
+ * Domain Path: /languages
  *
  * @package Revision Strike
  * @author  Steve Grunwell
