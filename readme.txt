@@ -48,6 +48,14 @@ Yup, just visit Tools > Revision Strike within the WordPress admin area. If you'
 
 == Changelog ==
 
+= 0.3.0 =
+
+*June 20, 2016*
+
+* Lock Composer dependency versions to ensure more consistent testing via Travis-CI.
+* Add the `revisionstrike_get_revision_ids` filter to enable third-party plugins and themes to alter the array of revision IDs. ([#21](https://github.com/stevegrunwell/revision-strike/issues/21))
+* Implement Grunt to more consistently build releases. ([#18](https://github.com/stevegrunwell/revision-strike/issues/18))
+
 = 0.2 =
 
 *August 16, 2015*
@@ -64,6 +72,9 @@ Yup, just visit Tools > Revision Strike within the WordPress admin area. If you'
 * Initial public release
 
 == Upgrade Notice ==
+
+= 0.3.0 =
+Added new `revisionstrike_get_revision_ids` filter.
 
 = 0.2 =
 Performance enhancements, added a `strike-all` WP-CLI command to automatically clean up *all* of your eligible post revisions in one fell swoop.
