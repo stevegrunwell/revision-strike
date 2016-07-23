@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file, according t
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+* Move from the manual pre-commit hook to [WP-Enforcer](https://github.com/stevegrunwell/wp-enforcer).
 
 ## [0.3.0] - 2016-06-20
 
