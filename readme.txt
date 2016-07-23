@@ -48,6 +48,8 @@ Yup, just visit Tools > Revision Strike within the WordPress admin area. If you'
 
 == Changelog ==
 
+For a full list of changes, please see the [Change Log in the GitHub repo](https://github.com/stevegrunwell/revision-strike/blob/develop/CHANGELOG.md).
+
 = 0.3.0 =
 
 *June 20, 2016*
