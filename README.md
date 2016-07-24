@@ -20,6 +20,8 @@ There are a number of ways to interact with Revision Strike:
 
 Upon plugin activation, a hook is registered to trigger the `revisionstrike_strike_old_revisions` action daily, which kicks off the striking process. This hook is then automatically removed upon plugin deactivation.
 
+The WP Cron method is great for ongoing maintenance, but when you manually need to purge larger amounts of revisions&hellip;
+
 
 ### Tools &rsaquo; Revision Strike
 
@@ -75,16 +77,16 @@ Under the hood, this command just determines how many eligible revisions are in 
 </dl>
 
 
-## Filters
+## Hooks
 
 Revision Strike leverages the [WordPress Plugin API](https://codex.wordpress.org/Plugin_API) to let you customize its behavior without editing the codebase directly.
 
-### revisionstrike_post_types
+### Filter: `revisionstrike_post_types`
 
 Controls the post types for which revisions should be automatically be purged.
 
 <dl>
-	<dt>(string) $post_types</dt>
+	<dt>(string) <code>$post_types</code></dt>
 	<dd>A comma-separated list of post types.</dd>
 </dl>
 
@@ -103,6 +105,21 @@ function theme_set_post_types( $post_types ) {
 }
 add_filter( 'revisionstrike_post_types', 'theme_set_post_types' );
 ```
+
+### Filter: `revisionstrike_get_revision_ids`
+
+Filter the list of eligible revision IDs.
+
+<dl>
+	<dt>(array) <code>$revision_ids</code></dt>
+	<dd>Revision IDs to be struck.</dd>
+	<dt>(int) <code>$days</code></dt>
+	<dd>The number of days since a post's publish date that must pass before we can purge the post revisions.</dd>
+	<dt>(int) <code>$limit</code></dt>
+	<dd>The maximum number of revision IDs to retrieve.</dd>
+	<dt>(array) <code>$post_type</code></dt>
+	<dd>The post types for which revisions should be located.</dd>
+</dl>
 
 
 ## Contributing
