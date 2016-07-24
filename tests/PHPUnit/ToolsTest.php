@@ -32,12 +32,18 @@ class ToolsTest extends TestCase {
 		M::wpPassthruFunction( 'esc_html__' );
 		M::wpPassthruFunction( 'esc_html_e' );
 		M::wpPassthruFunction( 'esc_url' );
+		M::wpPassthruFunction( 'wp_kses_post' );
 	}
 
 	public function test_default_load() {
 		M::wpFunction( 'wp_nonce_url', array(
 			'times'  => 1,
 			'args'   => array( 'tools.php?page=revision-strike', 'revision-strike', 'nonce' ),
+		) );
+
+		M::wpFunction( 'admin_url', array(
+			'times'  => 1,
+			'args'   => array( 'options-writing.php' ),
 		) );
 
 		M::wpFunction( 'submit_button', array(

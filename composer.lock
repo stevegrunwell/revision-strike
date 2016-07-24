@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "efc21a35ce3632689486a0decbb3720c",
-    "content-hash": "da209fbd3dc108f4b1057fc09508d49f",
+    "hash": "204fc9732905e7ff07bef839a7b92a6b",
+    "content-hash": "5b06b46a1223048a3c681c010106a28e",
     "packages": [],
     "packages-dev": [
         {
@@ -1850,6 +1850,47 @@
             "time": "2016-05-30 22:24:32"
         },
         {
+            "name": "stevegrunwell/wp-enforcer",
+            "version": "0.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/stevegrunwell/wp-enforcer.git",
+                "reference": "3aea90cb0a8bbd89f1fbbba042ed025a4674c640"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/stevegrunwell/wp-enforcer/zipball/3aea90cb0a8bbd89f1fbbba042ed025a4674c640",
+                "reference": "3aea90cb0a8bbd89f1fbbba042ed025a4674c640",
+                "shasum": ""
+            },
+            "require": {
+                "wp-coding-standards/wpcs": "0.8.0"
+            },
+            "bin": [
+                "bin/wp-enforcer"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Steve Grunwell",
+                    "email": "steve@stevegrunwell.com",
+                    "homepage": "https://stevegrunwell.com"
+                }
+            ],
+            "description": "Git hooks to encourage well-written WordPress.",
+            "keywords": [
+                "PHP_CodeSniffer",
+                "coding standards",
+                "git hooks",
+                "wordpress"
+            ],
+            "time": "2016-01-06 20:19:11"
+        },
+        {
             "name": "symfony/config",
             "version": "v2.8.7",
             "source": {
@@ -2455,16 +2496,16 @@
         },
         {
             "name": "wp-coding-standards/wpcs",
-            "version": "dev-master",
+            "version": "0.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards.git",
-                "reference": "f50ccffe5ef3a77e84b3be9487cb7a477248a8ea"
+                "reference": "b3d4d8eedd8b0b7f4fdf8764df1c8b23ff099334"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress-Coding-Standards/WordPress-Coding-Standards/zipball/f50ccffe5ef3a77e84b3be9487cb7a477248a8ea",
-                "reference": "f50ccffe5ef3a77e84b3be9487cb7a477248a8ea",
+                "url": "https://api.github.com/repos/WordPress-Coding-Standards/WordPress-Coding-Standards/zipball/b3d4d8eedd8b0b7f4fdf8764df1c8b23ff099334",
+                "reference": "b3d4d8eedd8b0b7f4fdf8764df1c8b23ff099334",
                 "shasum": ""
             },
             "require": {
@@ -2487,14 +2528,13 @@
                 "standards",
                 "wordpress"
             ],
-            "time": "2016-05-02 03:33:03"
+            "time": "2015-10-02 22:20:22"
         }
     ],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "codeclimate/php-test-reporter": 20,
-        "wp-coding-standards/wpcs": 20
+        "codeclimate/php-test-reporter": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
