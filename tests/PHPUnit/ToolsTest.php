@@ -24,7 +24,6 @@ class ToolsTest extends TestCase {
 		$this->tools_file = PROJECT . 'tools.php';
 
 		M::wpPassthruFunction( '__' );
-		M::wpPassthruFunction( '_n' );
 		M::wpPassthruFunction( '_x' );
 		M::wpPassthruFunction( 'absint' );
 		M::wpPassthruFunction( 'esc_attr' );
@@ -133,6 +132,11 @@ class ToolsTest extends TestCase {
 			'return' => true,
 		) );
 
+		M::wpFunction( '_n', array(
+			'times'  => 1,
+			'return' => '%d post revisions',
+		) );
+
 		M::wpPassthruFunction( 'wp_nonce_url' );
 		M::wpPassthruFunction( 'submit_button' );
 
@@ -156,6 +160,7 @@ class ToolsTest extends TestCase {
 		$result = ob_get_contents();
 		ob_end_clean();
 		$this->assertContains( '<div class="updated"><p>', $result, 'Notify the user when revisions are deleted' );
+		$this->assertContains( '5 post revisions', $result, 'Display the number of revisions that were removed.' );
 
 		unset( $_GET, $_POST );
 	}
