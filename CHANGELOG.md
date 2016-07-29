@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file, according t
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.4.0] - 2016-07-29
 
 * Move from the manual pre-commit hook to [WP Enforcer](https://github.com/stevegrunwell/wp-enforcer).
 	* As a result, minor standards-related changes have been made to the code to comply with the [WordPress Coding Standards](https://codex.wordpress.org/WordPress_Coding_Standards).
@@ -32,6 +32,7 @@ Initial public release.
 
 
 [Unreleased]: https://github.com/stevegrunwell/revision-strike/compare/master...develop
+[0.4.0]: https://github.com/stevegrunwell/revision-strike/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/stevegrunwell/revision-strike/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/stevegrunwell/revision-strike/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/stevegrunwell/revision-strike/releases/tag/v0.1.0
