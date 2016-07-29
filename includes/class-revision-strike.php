@@ -92,6 +92,7 @@ class RevisionStrike {
 		global $wpdb;
 
 		$post_type_in_string = $this->get_slug_in_string( $post_type );
+		// @codingStandardsIgnoreStart
 		$count     = $wpdb->get_var( $wpdb->prepare(
 			"
 			SELECT COUNT(r.ID) FROM $wpdb->posts r
@@ -100,6 +101,7 @@ class RevisionStrike {
 			",
 			date( 'Y-m-d', time() - ( absint( $days ) * DAY_IN_SECONDS ) )
 		) );
+		// @codingStandardsIgnoreEnd
 
 		return absint( $count );
 	}
@@ -213,7 +215,8 @@ class RevisionStrike {
 		}
 
 		$post_type_in_string = $this->get_slug_in_string( $post_type );
-		$revision_ids = $wpdb->get_col( $wpdb->prepare(
+		// @codingStandardsIgnoreStart
+		$revision_ids        = $wpdb->get_col( $wpdb->prepare(
 			"
 			SELECT r.ID FROM $wpdb->posts r
 			LEFT JOIN $wpdb->posts p ON r.post_parent = p.ID
@@ -224,6 +227,7 @@ class RevisionStrike {
 			date( 'Y-m-d', time() - ( absint( $days ) * DAY_IN_SECONDS ) ),
 			absint( $limit )
 		) );
+		// @codingStandardsIgnoreEnd
 
 		/**
 		 * Filter the list of eligible revision IDs.
