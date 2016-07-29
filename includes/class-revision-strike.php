@@ -225,7 +225,6 @@ class RevisionStrike {
 			absint( $limit )
 		) );
 
-
 		/**
 		 * Filter the list of eligible revision IDs.
 		 *
