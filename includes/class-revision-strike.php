@@ -167,38 +167,28 @@ class RevisionStrike {
 				array_map( 'wp_delete_post_revision', $revision_ids );
 			}
 		}
-
 	}
 
 	/**
 	 * Converts a comma-delimited list of slugs into a string usable
 	 * as with an SQL IN statement.
 	 *
-	 * @param  string $post_type Comma-delimited list of slugs (post,page).
+	 * This mimics the functionality in core for building IN strings.
+	 *
+	 * @see get_page_by_path()
+	 *
+	 * @param  string $slugs Comma-delimited list of slugs (post,page).
 	 * @return string List of slugs for IN statement ('post','page').
 	 */
 	protected function get_slug_in_string( $slugs ) {
 
-		/*
-		This mimics the functionality in core for building IN strings.
-		From post.php:
-		$post_types = esc_sql( $post_types );
-		$post_type_in_string = "'" . implode( "','", $post_types ) . "'";
-		$sql = "
-			SELECT ID, post_name, post_parent, post_type
-			FROM $wpdb->posts
-			WHERE post_name IN ($in_string)
-			AND post_type IN ($post_type_in_string)
-		";
-		 */
-
 		// Split the list into an array.
 		$slugs = explode( ',', $slugs );
 
-		// Run esc_sql on the array of slugs
+		// Run esc_sql on the array of slugs.
 		$slugs = esc_sql( $slugs );
 
-		// Return a string usable in an IN statement
+		// Return a string usable in an IN statement.
 		return "'" . implode( "','", $slugs ) . "'";
 	}
 
