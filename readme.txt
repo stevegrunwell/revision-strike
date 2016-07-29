@@ -2,8 +2,8 @@
 Contributors: stevegrunwell
 Tags: revisions, cron, performance, maintenance
 Requires at least: 4.2
-Tested up to: 4.3
-Stable tag: 0.3.0
+Tested up to: 4.6
+Stable tag: 0.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,15 @@ Yup, just visit Tools > Revision Strike within the WordPress admin area. If you'
 == Changelog ==
 
 For a full list of changes, please see the [Change Log in the GitHub repo](https://github.com/stevegrunwell/revision-strike/blob/develop/CHANGELOG.md).
+
+= 0.4.0 =
+
+*July 29, 2016*
+
+* Move from the manual pre-commit hook to [WP Enforcer](https://github.com/stevegrunwell/wp-enforcer).
+	* As a result, minor standards-related changes have been made to the code to comply with the [WordPress Coding Standards](https://codex.wordpress.org/WordPress_Coding_Standards).
+* Re-work the copy on Tools &rsaquo; Revision Strike to be more clear to site administrators. ([#26](https://github.com/stevegrunwell/revision-strike/issues/26))
+* Add additional tests around the Tools &rsaquo; Revision Strike page confirmation messages. ([#25](https://github.com/stevegrunwell/revision-strike/issues/25))
 
 = 0.3.0 =
 
