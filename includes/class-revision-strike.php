@@ -164,9 +164,7 @@ class RevisionStrike {
 			$revision_ids = $this->get_revision_ids( $args['days'], $limit, $args['post_type'] );
 
 			if ( ! empty( $revision_ids ) ) {
-				foreach ( $revision_ids as $revision_id ) {
-					wp_delete_post_revision( $revision_id );
-				}
+				array_map( 'wp_delete_post_revision', $revision_ids );
 			}
 		}
 
