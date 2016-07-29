@@ -17,6 +17,7 @@ class RevisionStrikeCLI extends WP_CLI {
 
 	/**
 	 * The current instance of the RevisionStrike class.
+	 *
 	 * @var RevisionStrike $instance
 	 */
 	protected $instance;

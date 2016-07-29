@@ -3,7 +3,7 @@
  * The Tools > Revision Strike page.
  *
  * @package Revision Strike
- * @author Steve Grunwell
+ * @author  Steve Grunwell
  */
 
 if ( ! isset( $instance, $defaults ) ) {
@@ -47,14 +47,20 @@ if ( isset( $_GET['nonce'], $_POST['days'], $_POST['limit'] ) && wp_verify_nonce
 
 <div class="wrap">
 	<div id="icon-tools" class="icon32"></div>
-	<h2><?php esc_html_e( 'Revision Strike', 'revision-strike' ); ?></h2>
+	<h2><?php esc_html_e( 'Revision Strike: On-Demand', 'revision-strike' ); ?></h2>
 
 	<form method="POST" action="<?php echo esc_url( wp_nonce_url( 'tools.php?page=revision-strike', 'revision-strike', 'nonce' ) ); ?>">
 		<p><?php
 			esc_html_e(
-				'Revision Strike will remove old revisions from the post database.',
+				'This page will allow Revision Strike will remove old revisions from the post database immediately.',
 				'revision-strike'
 			);
+		?></p>
+		<p><?php
+			echo wp_kses_post( sprintf( __(
+				'To change the default settings for Revision Strike\'s automatic, daily run, please see <a href="%s">Settings &rsaquo; Writing</a>.',
+				'revision_strike'
+			), admin_url( 'options-writing.php' ) ) );
 		?></p>
 
 		<table class="form-table">

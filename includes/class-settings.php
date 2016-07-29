@@ -3,7 +3,7 @@
  * WordPress Settings API integration.
  *
  * @package Revision Strike
- * @author Steve Grunwell
+ * @author  Steve Grunwell
  */
 
 /**
@@ -13,12 +13,14 @@ class RevisionStrikeSettings {
 
 	/**
 	 * The current RevisionStrike instance.
+	 *
 	 * @var RevisionStrike $instance
 	 */
 	protected $instance;
 
 	/**
 	 * A cached copy of the plugin options array.
+	 *
 	 * @var array $options
 	 */
 	protected $options;

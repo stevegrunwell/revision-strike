@@ -20,10 +20,12 @@ There are a number of ways to interact with Revision Strike:
 
 Upon plugin activation, a hook is registered to trigger the `revisionstrike_strike_old_revisions` action daily, which kicks off the striking process. This hook is then automatically removed upon plugin deactivation.
 
+The WP Cron method is great for ongoing maintenance, but when you manually need to purge larger amounts of revisions&hellip;
+
 
 ### Tools &rsaquo; Revision Strike
 
-![The Tools > Revision Strike page](assets/screenshot-1.png)
+![The Tools > Revision Strike page](plugin-repo-assets/screenshot-1.png)
 
 You can manually trigger a revision strike by logging into WordPress and visiting the Tools &rsaquo; Revision Strike page.
 
@@ -75,16 +77,16 @@ Under the hood, this command just determines how many eligible revisions are in 
 </dl>
 
 
-## Filters
+## Hooks
 
 Revision Strike leverages the [WordPress Plugin API](https://codex.wordpress.org/Plugin_API) to let you customize its behavior without editing the codebase directly.
 
-### revisionstrike_post_types
+### Filter: `revisionstrike_post_types`
 
 Controls the post types for which revisions should be automatically be purged.
 
 <dl>
-	<dt>(string) $post_types</dt>
+	<dt>(string) <code>$post_types</code></dt>
 	<dd>A comma-separated list of post types.</dd>
 </dl>
 
@@ -104,19 +106,20 @@ function theme_set_post_types( $post_types ) {
 add_filter( 'revisionstrike_post_types', 'theme_set_post_types' );
 ```
 
+### Filter: `revisionstrike_get_revision_ids`
 
-## Releases
+Filter the list of eligible revision IDs.
 
-### 0.2
-
-* Added a "Limit" setting to Settings &rsaquo; Writing. ([#13](https://github.com/stevegrunwell/revision-strike/issues/13))
-* Added a "clean-all" WP-CLI command. ([#14](https://github.com/stevegrunwell/revision-strike/issues/14))
-* Clarified language on the Settings &rsaquo; Writing and Tools &rsaquo; Revision Strike pages. Props to @GhostToast for the suggestion! ([#16](https://github.com/stevegrunwell/revision-strike/issues/16))
-* Strike requests are now batched into groupings of 50 IDs at a time to avoid overwhelming underpowered machines. ([#17](https://github.com/stevegrunwell/revision-strike/issues/17))
-
-### 0.1
-
-Initial public release.
+<dl>
+	<dt>(array) <code>$revision_ids</code></dt>
+	<dd>Revision IDs to be struck.</dd>
+	<dt>(int) <code>$days</code></dt>
+	<dd>The number of days since a post's publish date that must pass before we can purge the post revisions.</dd>
+	<dt>(int) <code>$limit</code></dt>
+	<dd>The maximum number of revision IDs to retrieve.</dd>
+	<dt>(array) <code>$post_type</code></dt>
+	<dd>The post types for which revisions should be located.</dd>
+</dl>
 
 
 ## Contributing
