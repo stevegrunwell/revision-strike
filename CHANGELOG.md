@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 * Move from the manual pre-commit hook to [WP Enforcer](https://github.com/stevegrunwell/wp-enforcer).
 * Re-work the copy on Tools &rsaquo; Revision Strike to be more clear to site administrators. ([#26])
+* Add additional tests around the Tools &rsaquo; Revision Strike page confirmation messages. ([#25])
 
 ## [0.3.0] - 2016-06-20
 
@@ -39,4 +40,5 @@ Initial public release.
 [#17]: https://github.com/stevegrunwell/revision-strike/issues/17
 [#18]: https://github.com/stevegrunwell/revision-strike/issues/18
 [#21]: https://github.com/stevegrunwell/revision-strike/issues/21
+[#25]: https://github.com/stevegrunwell/revision-strike/issues/25
 [#26]: https://github.com/stevegrunwell/revision-strike/issues/26
