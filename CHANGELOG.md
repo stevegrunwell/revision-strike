@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 * Move from the manual pre-commit hook to [WP Enforcer](https://github.com/stevegrunwell/wp-enforcer).
+	* As a result, minor standards-related changes have been made to the code to comply with the [WordPress Coding Standards](https://codex.wordpress.org/WordPress_Coding_Standards).
 * Re-work the copy on Tools &rsaquo; Revision Strike to be more clear to site administrators. ([#26])
 * Add additional tests around the Tools &rsaquo; Revision Strike page confirmation messages. ([#25])
 

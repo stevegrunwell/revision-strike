@@ -92,6 +92,7 @@ class RevisionStrike {
 		global $wpdb;
 
 		$post_type_in_string = $this->get_slug_in_string( $post_type );
+		// @codingStandardsIgnoreStart
 		$count     = $wpdb->get_var( $wpdb->prepare(
 			"
 			SELECT COUNT(r.ID) FROM $wpdb->posts r
@@ -100,6 +101,7 @@ class RevisionStrike {
 			",
 			date( 'Y-m-d', time() - ( absint( $days ) * DAY_IN_SECONDS ) )
 		) );
+		// @codingStandardsIgnoreEnd
 
 		return absint( $count );
 	}
@@ -167,38 +169,28 @@ class RevisionStrike {
 				array_map( 'wp_delete_post_revision', $revision_ids );
 			}
 		}
-
 	}
 
 	/**
 	 * Converts a comma-delimited list of slugs into a string usable
 	 * as with an SQL IN statement.
 	 *
-	 * @param  string $post_type Comma-delimited list of slugs (post,page).
+	 * This mimics the functionality in core for building IN strings.
+	 *
+	 * @see get_page_by_path()
+	 *
+	 * @param  string $slugs Comma-delimited list of slugs (post,page).
 	 * @return string List of slugs for IN statement ('post','page').
 	 */
 	protected function get_slug_in_string( $slugs ) {
 
-		/*
-		This mimics the functionality in core for building IN strings.
-		From post.php:
-		$post_types = esc_sql( $post_types );
-		$post_type_in_string = "'" . implode( "','", $post_types ) . "'";
-		$sql = "
-			SELECT ID, post_name, post_parent, post_type
-			FROM $wpdb->posts
-			WHERE post_name IN ($in_string)
-			AND post_type IN ($post_type_in_string)
-		";
-		 */
-
 		// Split the list into an array.
 		$slugs = explode( ',', $slugs );
 
-		// Run esc_sql on the array of slugs
+		// Run esc_sql on the array of slugs.
 		$slugs = esc_sql( $slugs );
 
-		// Return a string usable in an IN statement
+		// Return a string usable in an IN statement.
 		return "'" . implode( "','", $slugs ) . "'";
 	}
 
@@ -223,7 +215,8 @@ class RevisionStrike {
 		}
 
 		$post_type_in_string = $this->get_slug_in_string( $post_type );
-		$revision_ids = $wpdb->get_col( $wpdb->prepare(
+		// @codingStandardsIgnoreStart
+		$revision_ids        = $wpdb->get_col( $wpdb->prepare(
 			"
 			SELECT r.ID FROM $wpdb->posts r
 			LEFT JOIN $wpdb->posts p ON r.post_parent = p.ID
@@ -234,7 +227,7 @@ class RevisionStrike {
 			date( 'Y-m-d', time() - ( absint( $days ) * DAY_IN_SECONDS ) ),
 			absint( $limit )
 		) );
-
+		// @codingStandardsIgnoreEnd
 
 		/**
 		 * Filter the list of eligible revision IDs.
