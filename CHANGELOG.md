@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 * Converted unit tests to use the 1.0.x development branch of [WP_Mock](https://github.com/10up/wp_mock)
+* Adjusted visibility of `RevisionStrikeCLI::log_deleted_revision()`. ([#20])
 
 
 ## [0.4.0] - 2016-07-29
@@ -48,6 +49,7 @@ Initial public release.
 [#16]: https://github.com/stevegrunwell/revision-strike/issues/16
 [#17]: https://github.com/stevegrunwell/revision-strike/issues/17
 [#18]: https://github.com/stevegrunwell/revision-strike/issues/18
+[#20]: https://github.com/stevegrunwell/revision-strike/issues/20
 [#21]: https://github.com/stevegrunwell/revision-strike/issues/21
 [#25]: https://github.com/stevegrunwell/revision-strike/issues/25
 [#26]: https://github.com/stevegrunwell/revision-strike/issues/26
