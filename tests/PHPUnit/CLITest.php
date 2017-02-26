@@ -48,7 +48,7 @@ class CLITest extends TestCase {
 			->once()
 			->andReturn( $instance );
 
-		M::wpPassthruFunction( '_n' );
+		M::passthruFunction( '_n' );
 
 		$cli->clean( array(), array() );
 	}
@@ -69,7 +69,7 @@ class CLITest extends TestCase {
 			->once()
 			->andReturn( $instance );
 
-		M::wpPassthruFunction( 'esc_html__' );
+		M::passthruFunction( 'esc_html__' );
 
 		$cli->clean( array(), array( 'days' => 7 ) );
 	}
@@ -90,7 +90,7 @@ class CLITest extends TestCase {
 			->once()
 			->andReturn( $instance );
 
-		M::wpPassthruFunction( 'esc_html__' );
+		M::passthruFunction( 'esc_html__' );
 
 		$cli->clean( array(), array( 'limit' => 100 ) );
 	}
@@ -111,7 +111,7 @@ class CLITest extends TestCase {
 			->once()
 			->andReturn( $instance );
 
-		M::wpPassthruFunction( 'esc_html__' );
+		M::passthruFunction( 'esc_html__' );
 
 		$cli->clean( array(), array( 'post_type' => 'page' ) );
 	}
@@ -130,7 +130,7 @@ class CLITest extends TestCase {
 			->once()
 			->andReturn( $instance );
 
-		M::wpPassthruFunction( 'esc_html__' );
+		M::passthruFunction( 'esc_html__' );
 
 		M::expectActionAdded(
 			'wp_delete_post_revision',
@@ -156,10 +156,10 @@ class CLITest extends TestCase {
 			->once()
 			->andReturn( $instance );
 
-		M::wpPassthruFunction( 'esc_html__', array(
+		M::passthruFunction( 'esc_html__', array(
 			'times' => 0,
 		) );
-		M::wpPassthruFunction( '_n' );
+		M::passthruFunction( '_n' );
 
 		$cli->clean( array(), array() );
 	}
@@ -201,7 +201,7 @@ class CLITest extends TestCase {
 		$wp_cli = WP_CLI::getInstance();
 		$wp_cli->shouldReceive( '_log' )->once();
 
-		M::wpPassthruFunction( 'esc_html__' );
+		M::passthruFunction( 'esc_html__' );
 
 		$rs_cli->log_deleted_revision( 4, new \stdClass );
 	}
