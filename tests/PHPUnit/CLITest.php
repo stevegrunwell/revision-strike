@@ -200,10 +200,12 @@ class CLITest extends TestCase {
 		$rs_cli = new RevisionStrikeCLI;
 		$wp_cli = WP_CLI::getInstance();
 		$wp_cli->shouldReceive( '_log' )->once();
+		$method = new ReflectionMethod( $rs_cli, 'log_deleted_revision' );
+		$method->setAccessible( true );
 
 		M::passthruFunction( 'esc_html__' );
 
-		$rs_cli->log_deleted_revision( 4, new \stdClass );
+		$method->invoke( $rs_cli, 4, new \stdClass );
 	}
 
 	public function test_get_instance() {

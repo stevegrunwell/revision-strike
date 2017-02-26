@@ -135,7 +135,7 @@ class RevisionStrikeCLI extends WP_CLI {
 	 * @param int          $revision_id Post revision ID.
 	 * @param object|array $revision    Post revision object or array.
 	 */
-	public function log_deleted_revision( $revision_id, $revision ) {
+	protected function log_deleted_revision( $revision_id, $revision ) {
 		WP_CLI::log( sprintf(
 			esc_html__( 'Revision ID %d has been deleted.', 'revision-strike' ),
 			$revision_id
