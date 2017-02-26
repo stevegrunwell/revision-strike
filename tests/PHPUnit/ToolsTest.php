@@ -23,29 +23,29 @@ class ToolsTest extends TestCase {
 
 		$this->tools_file = PROJECT . 'tools.php';
 
-		M::wpPassthruFunction( '__' );
-		M::wpPassthruFunction( '_x' );
-		M::wpPassthruFunction( 'absint' );
-		M::wpPassthruFunction( 'esc_attr' );
-		M::wpPassthruFunction( 'esc_html' );
-		M::wpPassthruFunction( 'esc_html__' );
-		M::wpPassthruFunction( 'esc_html_e' );
-		M::wpPassthruFunction( 'esc_url' );
-		M::wpPassthruFunction( 'wp_kses_post' );
+		M::passthruFunction( '__' );
+		M::passthruFunction( '_x' );
+		M::passthruFunction( 'absint' );
+		M::passthruFunction( 'esc_attr' );
+		M::passthruFunction( 'esc_html' );
+		M::passthruFunction( 'esc_html__' );
+		M::passthruFunction( 'esc_html_e' );
+		M::passthruFunction( 'esc_url' );
+		M::passthruFunction( 'wp_kses_post' );
 	}
 
 	public function test_default_load() {
-		M::wpFunction( 'wp_nonce_url', array(
+		M::userFunction( 'wp_nonce_url', array(
 			'times'  => 1,
 			'args'   => array( 'tools.php?page=revision-strike', 'revision-strike', 'nonce' ),
 		) );
 
-		M::wpFunction( 'admin_url', array(
+		M::userFunction( 'admin_url', array(
 			'times'  => 1,
 			'args'   => array( 'options-writing.php' ),
 		) );
 
-		M::wpFunction( 'submit_button', array(
+		M::userFunction( 'submit_button', array(
 			'times'  => 1,
 		) );
 
@@ -73,7 +73,7 @@ class ToolsTest extends TestCase {
 	}
 
 	public function test_load_when_defaults_array_is_undefined() {
-		M::wpFunction( 'wp_die', array(
+		M::userFunction( 'wp_die', array(
 			'times'  => 1,
 		) );
 
@@ -97,7 +97,7 @@ class ToolsTest extends TestCase {
 			->once()
 			->andReturn( array( 'count' => 0 ) );
 
-		M::wpFunction( 'wp_verify_nonce', array(
+		M::userFunction( 'wp_verify_nonce', array(
 			'times'  => 1,
 			'args'   => array( 'MYNONCE', 'revision-strike' ),
 			'return' => true,
@@ -128,17 +128,17 @@ class ToolsTest extends TestCase {
 				array( 'count' => 5, 'deleted' => 5 ) // We're good
 			);
 
-		M::wpFunction( 'wp_verify_nonce', array(
+		M::userFunction( 'wp_verify_nonce', array(
 			'return' => true,
 		) );
 
-		M::wpFunction( '_n', array(
+		M::userFunction( '_n', array(
 			'times'  => 1,
 			'return' => '%d post revisions',
 		) );
 
-		M::wpPassthruFunction( 'wp_nonce_url' );
-		M::wpPassthruFunction( 'submit_button' );
+		M::passthruFunction( 'wp_nonce_url' );
+		M::passthruFunction( 'submit_button' );
 
 		// Pass 1: no revisions found
 		ob_start();
