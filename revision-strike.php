@@ -1,14 +1,16 @@
 <?php
 /**
  * Plugin Name: Revision Strike
- * Plugin URI: https://stevegrunwell.com/blog/revision-strike
+ * Plugin URI:  https://stevegrunwell.com/blog/revision-strike
  * Description: Periodically purge old post revisions via WP Cron.
- * Version: 0.1
- * Author: Steve Grunwell
- * Author URI: https://stevegrunwell.com
+ * Version:     0.4.0
+ * Author:      Steve Grunwell
+ * Author URI:  https://stevegrunwell.com
+ * Text Domain: revision-strike
+ * Domain Path: /languages
  *
  * @package Revision Strike
- * @author Steve Grunwell
+ * @author  Steve Grunwell
  */
 
 require_once dirname( __FILE__ ) . '/includes/class-revision-strike.php';

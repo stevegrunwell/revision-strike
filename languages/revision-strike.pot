@@ -1,0 +1,125 @@
+# Copyright (C) 2016 Steve Grunwell
+# This file is distributed under the same license as the Revision Strike package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Revision Strike 0.3.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/revision-strike\n"
+"POT-Creation-Date: 2015-08-17 01:44:35+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"X-Generator: grunt-wp-i18n 0.5.4\n"
+
+#: dist/includes/class-revision-strike-cli.php:78
+#: includes/class-revision-strike-cli.php:78
+msgid "No errors occurred, but no post revisions were removed."
+msgstr ""
+
+#: dist/includes/class-revision-strike-cli.php:82
+#: includes/class-revision-strike-cli.php:82
+msgid "One post revision was deleted successfully"
+msgid_plural "%d post revisions were deleted successfully"
+msgstr[0] ""
+msgstr[1] ""
+
+#: dist/includes/class-revision-strike-cli.php:140
+#: includes/class-revision-strike-cli.php:140
+msgid "Revision ID %d has been deleted."
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Revision Strike"
+msgstr ""
+
+#: dist/includes/class-settings.php:52 includes/class-settings.php:52
+msgid "Expire Revisions after X Days"
+msgstr ""
+
+#: dist/includes/class-settings.php:60 includes/class-settings.php:60
+msgid "Revisions per Day"
+msgstr ""
+
+#: dist/includes/class-settings.php:92 dist/includes/tools.php:66
+#: includes/class-settings.php:92 includes/tools.php:66
+msgid ""
+"A post must be published at least this many days before its revisions can "
+"be removed."
+msgstr ""
+
+#: dist/includes/class-settings.php:111 includes/class-settings.php:111
+msgid ""
+"The maximum number of revisions to be removed each day. This works best "
+"when the value is higher than the average number of daily revisions."
+msgstr ""
+
+#: dist/includes/tools.php:10 includes/tools.php:10
+msgid "You cannot access this page directly"
+msgstr ""
+
+#: dist/includes/tools.php:24 includes/tools.php:24
+msgid "No revisions were found that matched your criteria."
+msgstr ""
+
+#: dist/includes/tools.php:27 includes/tools.php:27
+msgid "Something went wrong deleting post revisions, please try again!"
+msgstr ""
+
+#: dist/includes/tools.php:30 includes/tools.php:30
+msgid "One post revision has been deleted successfully!"
+msgid_plural "%d post revisions have been deleted successfully!"
+msgstr[0] ""
+msgstr[1] ""
+
+#: dist/includes/tools.php:54 includes/tools.php:54
+msgid "Revision Strike will remove old revisions from the post database."
+msgstr ""
+
+#: dist/includes/tools.php:62 includes/tools.php:62
+msgid "Post Age Threshold"
+msgstr ""
+
+#: dist/includes/tools.php:74 includes/tools.php:74
+msgid "Limit"
+msgstr ""
+
+#: dist/includes/tools.php:78 includes/tools.php:78
+msgid "The maximum number of revisions to delete."
+msgstr ""
+
+#: dist/includes/tools.php:87 includes/tools.php:87
+msgid "Strike Revisions"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://stevegrunwell.com/blog/revision-strike"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Periodically purge old post revisions via WP Cron."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Steve Grunwell"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://stevegrunwell.com"
+msgstr ""
+
+#: dist/includes/class-settings.php:73 includes/class-settings.php:73
+msgctxt "Tools menu link"
+msgid "Revision Strike"
+msgstr ""
+
+#: dist/includes/class-settings.php:87 includes/class-settings.php:87
+msgctxt "Label for revision-strike[days]"
+msgid "Days"
+msgstr ""
+
+#: dist/includes/class-settings.php:106 includes/class-settings.php:106
+msgctxt "Label for revision-strike[limit]"
+msgid "Revisions"
+msgstr ""

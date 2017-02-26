@@ -2,8 +2,8 @@
 Contributors: stevegrunwell
 Tags: revisions, cron, performance, maintenance
 Requires at least: 4.2
-Tested up to: 4.3
-Stable tag: 0.1
+Tested up to: 4.6
+Stable tag: 0.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,7 +25,7 @@ If you'd like to help build Revision Strike, please [visit the plugin's GitHub p
 
 == Installation ==
 
-1. Upload the revision-strike/ directory to your WordPress installation's plugin directory (by default, /wp-contetn/plugins).
+1. Upload the revision-strike/ directory to your WordPress installation's plugin directory (by default, /wp-content/plugins).
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 
 Activating the plugin will automatically register a daily WP Cron event to clean up revisions on established posts. If you'd prefer not to wait, you can explicitly purge post revisions through the 'Tools > Revision Strike' page within WordPress or with [WP-CLI](http://wp-cli.org/).
@@ -48,5 +48,44 @@ Yup, just visit Tools > Revision Strike within the WordPress admin area. If you'
 
 == Changelog ==
 
+For a full list of changes, please see the [Change Log in the GitHub repo](https://github.com/stevegrunwell/revision-strike/blob/develop/CHANGELOG.md).
+
+= 0.4.0 =
+
+*July 29, 2016*
+
+* Move from the manual pre-commit hook to [WP Enforcer](https://github.com/stevegrunwell/wp-enforcer).
+	* As a result, minor standards-related changes have been made to the code to comply with the [WordPress Coding Standards](https://codex.wordpress.org/WordPress_Coding_Standards).
+* Re-work the copy on Tools &rsaquo; Revision Strike to be more clear to site administrators. ([#26](https://github.com/stevegrunwell/revision-strike/issues/26))
+* Add additional tests around the Tools &rsaquo; Revision Strike page confirmation messages. ([#25](https://github.com/stevegrunwell/revision-strike/issues/25))
+
+= 0.3.0 =
+
+*June 20, 2016*
+
+* Lock Composer dependency versions to ensure more consistent testing via Travis-CI.
+* Add the `revisionstrike_get_revision_ids` filter to enable third-party plugins and themes to alter the array of revision IDs. ([#21](https://github.com/stevegrunwell/revision-strike/issues/21))
+* Implement Grunt to more consistently build releases. ([#18](https://github.com/stevegrunwell/revision-strike/issues/18))
+
+= 0.2 =
+
+*August 16, 2015*
+
+* Added a "Limit" setting to Settings &rsaquo; Writing. ([#13](https://github.com/stevegrunwell/revision-strike/issues/13))
+* Added a "clean-all" WP-CLI command. ([#14](https://github.com/stevegrunwell/revision-strike/issues/14))
+* Clarified language on the Settings &rsaquo; Writing and Tools &rsaquo; Revision Strike pages. Props to @GhostToast for the suggestion! ([#16](https://github.com/stevegrunwell/revision-strike/issues/16))
+* Strike requests are now batched into groupings of 50 IDs at a time to avoid overwhelming underpowered machines. ([#17](https://github.com/stevegrunwell/revision-strike/issues/17))
+
 = 0.1 =
+
+*August 9, 2015*
+
 * Initial public release
+
+== Upgrade Notice ==
+
+= 0.3.0 =
+Added new `revisionstrike_get_revision_ids` filter.
+
+= 0.2 =
+Performance enhancements, added a `strike-all` WP-CLI command to automatically clean up *all* of your eligible post revisions in one fell swoop.

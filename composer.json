@@ -1,27 +1,29 @@
 {
-	"name"             : "stevegrunwell/revision-strike",
-	"description"      : "Periodically purge old post revisions via WP Cron.",
-	"version"          : "0.1",
-	"type"             : "wordpress-plugin",
-	"minimum-stability": "stable",
-	"require-dev"      : {
-		"php"                          : ">=5.3",
-		"phpunit/phpunit"              : "4.6.2",
-		"10up/wp_mock"                 : "dev-master",
+	"name": "stevegrunwell/revision-strike",
+	"description": "Periodically purge old post revisions via WP Cron.",
+	"type": "wordpress-plugin",
+	"require-dev": {
+		"php": ">=5.6",
+		"phpunit/phpunit": "^5.7",
+		"10up/wp_mock": "1.0.x-dev",
+		"behat/behat": "~2.5",
+		"stevegrunwell/wp-enforcer": "^0.4",
 		"codeclimate/php-test-reporter": "dev-master",
-		"wp-coding-standards/wpcs"     : "dev-master",
-		"behat/behat"                  : "~2.5",
-		"phpdocumentor/phpdocumentor"  : "2.*"
+		"phpdocumentor/phpdocumentor": "2.*"
 	},
-	"authors"          : [
+	"authors": [
 		{
-			"name" : "Steve Grunwell",
-			"email": "steve@stevegrunwell.com"
+			"name": "Steve Grunwell",
+			"email": "steve@stevegrunwell.com",
+			"homepage": "https://stevegrunwell.com"
 		}
 	],
-	"scripts" : {
-		"post-install-cmd" : [
-			"./vendor/bin/phpcs --config-set installed_paths ../../wp-coding-standards/wpcs;"
+	"scripts": {
+		"post-install-cmd": [
+			"wp-enforcer"
+		],
+		"post-update-cmd": [
+			"wp-enforcer"
 		]
 	}
 }

@@ -20,15 +20,24 @@ class SettingsTest extends TestCase {
 		'class-settings.php',
 	];
 
+	public function test__construct() {
+		$revisionstrike = new \stdClass;
+		$instance       = Mockery::mock( 'RevisionStrikeSettings', array( $revisionstrike ) );
+		$property       = new ReflectionProperty( $instance, 'instance' );
+		$property->setAccessible( true );
+
+		$this->assertEquals( $revisionstrike, $property->getValue( $instance ) );
+	}
+
 	public function test_add_settings_section() {
 		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
 
-		M::wpFunction( 'register_setting', array(
+		M::userFunction( 'register_setting', array(
 			'times'  => 1,
 			'args'   => array( 'writing', 'revision-strike', array( $instance, 'sanitize_settings' ) ),
 		) );
 
-		M::wpFunction( 'add_settings_section', array(
+		M::userFunction( 'add_settings_section', array(
 			'times'  => 1,
 			'args'   => array(
 				'revision-strike',
@@ -38,7 +47,7 @@ class SettingsTest extends TestCase {
 			),
 		) );
 
-		M::wpFunction( 'add_settings_field', array(
+		M::userFunction( 'add_settings_field', array(
 			'times'  => 1,
 			'args'   => array(
 				'revision-strike-days',
@@ -49,27 +58,84 @@ class SettingsTest extends TestCase {
 			),
 		) );
 
-		M::wpPassthruFunction( '__' );
+		M::userFunction( 'add_settings_field', array(
+			'times'  => 1,
+			'args'   => array(
+				'revision-strike-limit',
+				'*',
+				array( $instance, 'limit_field' ),
+				'writing',
+				'revision-strike'
+			),
+		) );
+
+		M::passthruFunction( '__' );
 
 		$instance->add_settings_section();
+	}
+
+	public function test_add_tools_page() {
+		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+
+		M::userFunction( 'add_management_page', array(
+			'times'  => 1,
+			'args'   => array(
+				'Revision Strike',
+				'Revision Strike',
+				'edit_others_posts',
+				'revision-strike',
+				array( $instance, 'tools_page' ),
+			),
+		) );
+
+		M::passthruFunction( '__' );
+		M::passthruFunction( '_x' );
+		M::passthruFunction( 'esc_html_e' );
+
+		$instance->add_tools_page();
+	}
+
+	public function test_tools_page() {
+		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+		$instance->shouldReceive( 'get_option' )
+			->once()
+			->with( 'days' )
+			->andReturn( 15 );
+		$instance->shouldReceive( 'get_option' )
+			->once()
+			->with( 'limit' )
+			->andReturn( 42 );
+
+		M::passthruFunction( 'wp_die' );
+		M::passthruFunction( 'esc_html__' );
+
+		$tools_template = PROJECT . 'tools.php';
+		$this->assertNotContains( $tools_template, get_included_files() );
+
+		// We don't care what's *in* the file, just that it's loaded
+		ob_start();
+		$instance->tools_page();
+		ob_end_clean();
+
+		$this->assertContains( $tools_template, get_included_files() );
 	}
 
 	public function test_days_field() {
 		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
 		$instance->shouldReceive( 'get_option' )
-			->with( 'days', 30 )
+			->with( 'days' )
 			->andReturn( 30 );
 
-		M::wpPassthruFunction( 'absint', array(
+		M::passthruFunction( 'absint', array(
 			'times' => 1,
 			'args'  => array( 30 ),
 		) );
 
-		M::wpPassthruFunction( 'esc_html__', array(
+		M::passthruFunction( 'esc_html__', array(
 			'times' => 1,
 		) );
 
-		M::wpPassthruFunction( 'esc_html_x', array(
+		M::passthruFunction( 'esc_html_x', array(
 			'times' => 1,
 		) );
 
@@ -81,10 +147,39 @@ class SettingsTest extends TestCase {
 		$this->assertContains( 'name="revision-strike[days]"', $result );
 	}
 
-	public function test_get_option() {
+	public function test_limit_field() {
 		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+		$instance->shouldReceive( 'get_option' )
+			->with( 'limit' )
+			->andReturn( 50 );
 
-		M::wpFunction( 'get_option', array(
+		M::passthruFunction( 'absint', array(
+			'times' => 1,
+			'args'  => array( 50 ),
+		) );
+
+		M::passthruFunction( 'esc_html__', array(
+			'times' => 1,
+		) );
+
+		M::passthruFunction( 'esc_html_x', array(
+			'times' => 1,
+		) );
+
+		ob_start();
+		$instance->limit_field();
+		$result = ob_get_contents();
+		ob_end_clean();
+
+		$this->assertContains( 'name="revision-strike[limit]"', $result );
+	}
+
+	public function test_get_option() {
+		$rs       = Mockery::mock( 'RevisionStrike' )->makePartial();
+		$rs->shouldReceive( 'get_defaults' )->once();
+		$instance = Mockery::mock( 'RevisionStrikeSettings', array( $rs ) )->makePartial();
+
+		M::userFunction( 'get_option', array(
 			'times'  => 1,
 			'args'   => array( 'revision-strike', array() ),
 			'return' => array(
@@ -96,9 +191,11 @@ class SettingsTest extends TestCase {
 	}
 
 	public function test_get_option_uses_defaults() {
-		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+		$rs       = Mockery::mock( 'RevisionStrike' )->makePartial();
+		$rs->shouldReceive( 'get_defaults' )->once();
+		$instance = Mockery::mock( 'RevisionStrikeSettings', array( $rs ) )->makePartial();
 
-		M::wpFunction( 'get_option', array(
+		M::userFunction( 'get_option', array(
 			'times'  => 1,
 			'args'   => array( 'revision-strike', array() ),
 			'return' => array(
@@ -109,8 +206,26 @@ class SettingsTest extends TestCase {
 		$this->assertEquals( 15, $instance->get_option( 'days', 15 ) );
 	}
 
+	public function test_get_option_automatically_pulls_plugin_defaults() {
+		$rs       = Mockery::mock( 'RevisionStrike' )->makePartial();
+		$rs->shouldReceive( 'get_defaults' )
+			->once()
+			->andReturn( array( 'days' => 30 ) );
+		$instance = Mockery::mock( 'RevisionStrikeSettings', array( $rs ) )->makePartial();
+
+		M::userFunction( 'get_option', array(
+			'times'  => 1,
+			'args'   => array( 'revision-strike', array() ),
+			'return' => array(),
+		) );
+
+		$this->assertEquals( 30, $instance->get_option( 'days' ) );
+	}
+
 	public function test_get_option_caches_value() {
-		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+		$rs       = Mockery::mock( 'RevisionStrike' )->makePartial();
+		$rs->shouldReceive( 'get_defaults' )->once();
+		$instance = Mockery::mock( 'RevisionStrikeSettings', array( $rs ) )->makePartial();
 		$options  = array(
 			'foo' => 'bar',
 		);
@@ -119,7 +234,7 @@ class SettingsTest extends TestCase {
 		$property->setAccessible( true );
 		$property->setValue( $instance, $options );
 
-		M::wpFunction( 'get_option', array(
+		M::userFunction( 'get_option', array(
 			'times'  => 0,
 		) );
 
@@ -129,19 +244,44 @@ class SettingsTest extends TestCase {
 	public function test_sanitize_settings() {
 		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
 		$input    = array(
-			'days' => 16,
+			'days'  => 16,
+			'limit' => 50,
 		);
 
-		M::wpPassthruFunction( 'absint', array(
+		M::passthruFunction( 'absint', array(
 			'times'  => 1,
 			'args'   => array( 16 ),
 		) );
 
+		M::passthruFunction( 'absint', array(
+			'times'  => 1,
+			'args'   => array( 50 ),
+		) );
+
 		$this->assertEquals(
 			array(
-				'days' => 16,
+				'days'  => 16,
+				'limit' => 50,
 			),
 			$instance->sanitize_settings( $input )
 		);
+	}
+
+	public function test_sanitize_settings_doesnt_permit_limit_0() {
+		$instance     = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+		$input        = array(
+			'limit' => 0,
+		);
+		$rs           = new \stdClass;
+		$rs->defaults = array(
+			'limit' => 50,
+		);
+		$property     = new ReflectionProperty( $instance, 'instance' );
+		$property->setAccessible( true );
+		$property->setValue( $instance, $rs );
+
+		M::passthruFunction( 'absint' );
+
+		$this->assertEquals( array( 'limit' => 50 ), $instance->sanitize_settings( $input ) );
 	}
 }
