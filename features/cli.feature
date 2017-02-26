@@ -6,9 +6,9 @@ Feature: WP-CLI
 Background:
 	Given a WP install
 	When I run `wp plugin activate revision-strike`
-    Then STDOUT should be:
+    Then STDOUT should contain:
     	"""
-			Success: Plugin 'revision-strike' activated.
+			Plugin 'revision-strike' activated.
     	"""
 
 Scenario: Removing old revisions with defaults
