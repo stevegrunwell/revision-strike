@@ -4,12 +4,19 @@ All notable changes to this project will be documented in this file, according t
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## [Unreleased]
+
+* Converted unit tests to use the 1.0.x development branch of [WP_Mock](https://github.com/10up/wp_mock)
+
+
 ## [0.4.0] - 2016-07-29
 
 * Move from the manual pre-commit hook to [WP Enforcer](https://github.com/stevegrunwell/wp-enforcer).
 	* As a result, minor standards-related changes have been made to the code to comply with the [WordPress Coding Standards](https://codex.wordpress.org/WordPress_Coding_Standards).
 * Re-work the copy on Tools &rsaquo; Revision Strike to be more clear to site administrators. ([#26])
 * Add additional tests around the Tools &rsaquo; Revision Strike page confirmation messages. ([#25])
+
 
 ## [0.3.0] - 2016-06-20
 
