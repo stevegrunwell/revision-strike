@@ -82,8 +82,8 @@ class RevisionStrikeTest extends TestCase {
 			->andReturn( 12 );
 		$wpdb->posts = 'wp_posts';
 
-		M::wpPassthruFunction( 'absint' );
-		M::wpPassthruFunction( 'esc_sql' );
+		M::passthruFunction( 'absint' );
+		M::passthruFunction( 'esc_sql' );
 
 		$this->assertEquals( 12, $instance->count_eligible_revisions( 30, 'post' ) );
 		$wpdb = null;
@@ -115,7 +115,7 @@ class RevisionStrikeTest extends TestCase {
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
 
-		M::wpPassthruFunction( 'esc_sql' );
+		M::passthruFunction( 'esc_sql' );
 
 		$this->assertEquals( "'post'", $instance->get_slug_in_string( 'post' ) );
 
@@ -127,7 +127,7 @@ class RevisionStrikeTest extends TestCase {
 			->shouldAllowMockingProtectedMethods()
 			->makePartial();
 
-		M::wpPassthruFunction( 'esc_sql' );
+		M::passthruFunction( 'esc_sql' );
 
 		$this->assertEquals( "'post','page'", $instance->get_slug_in_string( 'post,page' ) );
 
@@ -157,7 +157,7 @@ class RevisionStrikeTest extends TestCase {
 			->andReturn( array( 1, 2, 3 ) );
 		$instance->settings = $settings;
 
-		M::wpFunction( 'wp_parse_args', array(
+		M::userFunction( 'wp_parse_args', array(
 			'times'  => 1,
 			'args'   => array(
 				array(
@@ -177,7 +177,7 @@ class RevisionStrikeTest extends TestCase {
 			),
 		) );
 
-		M::wpFunction( 'wp_delete_post_revision', array(
+		M::userFunction( 'wp_delete_post_revision', array(
 			'times'  => 6,
 		) );
 
@@ -204,7 +204,7 @@ class RevisionStrikeTest extends TestCase {
 			->makePartial();
 		$instance->settings = $settings;
 
-		M::wpFunction( 'wp_parse_args', array(
+		M::userFunction( 'wp_parse_args', array(
 			'times'  => 1,
 			'args'   => array(
 					array( // these are the args from the strike() command
@@ -225,8 +225,8 @@ class RevisionStrikeTest extends TestCase {
 			),
 		) );
 
-		M::wpPassthruFunction( 'absint' );
-		M::wpPassthruFunction( 'esc_sql' );
+		M::passthruFunction( 'absint' );
+		M::passthruFunction( 'esc_sql' );
 
 		// change the post type with the filter
 		M::onFilter( 'revisionstrike_post_types' )
@@ -269,7 +269,7 @@ class RevisionStrikeTest extends TestCase {
 			);
 		$instance->settings = $settings;
 
-		M::wpFunction( 'wp_parse_args', array(
+		M::userFunction( 'wp_parse_args', array(
 			'times'  => 1,
 			'return' => array(
 				'days'      => 14,
@@ -278,7 +278,7 @@ class RevisionStrikeTest extends TestCase {
 			),
 		) );
 
-		M::wpFunction( 'wp_delete_post_revision', array(
+		M::userFunction( 'wp_delete_post_revision', array(
 			'times'  => 51,
 			'args'   => 'key',
 		) );
@@ -312,8 +312,8 @@ class RevisionStrikeTest extends TestCase {
 			->andReturn( array( 1, 2, 3 ) );
 		$wpdb->posts = 'wp_posts';
 
-		M::wpPassthruFunction( 'absint' );
-		M::wpPassthruFunction( 'esc_sql' );
+		M::passthruFunction( 'absint' );
+		M::passthruFunction( 'esc_sql' );
 
 		$result = $method->invoke( $instance, 90, 25, 'post' );
 		$wpdb   = null;
@@ -342,8 +342,8 @@ class RevisionStrikeTest extends TestCase {
 			->andReturn( array( 1, 2, 3 ) );
 		$wpdb->posts = 'wp_posts';
 
-		M::wpPassthruFunction( 'absint' );
-		M::wpPassthruFunction( 'esc_sql' );
+		M::passthruFunction( 'absint' );
+		M::passthruFunction( 'esc_sql' );
 
 		$result = $method->invoke( $instance, 30, 50, 'post,page' );
 		$wpdb   = null;
@@ -369,8 +369,8 @@ class RevisionStrikeTest extends TestCase {
 		$wpdb->shouldReceive( 'get_col' )->andReturn( array( 1, 2, 3 ) );
 		$wpdb->posts = 'wp_posts';
 
-		M::wpPassthruFunction( 'absint' );
-		M::wpPassthruFunction( 'esc_sql' );
+		M::passthruFunction( 'absint' );
+		M::passthruFunction( 'esc_sql' );
 
 		M::onFilter( 'revisionstrike_get_revision_ids' )
 			->with( array( 1, 2, 3 ), 90, 25, array( 'post' ) )

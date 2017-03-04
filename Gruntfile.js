@@ -20,6 +20,15 @@ module.exports = function(grunt) {
 			target: {
 				options: {
 					domainPath: 'languages/',
+					exclude: [
+						'bin/*',
+						'dist/*',
+						'features/*',
+						'node_modules/*',
+						'plugin-repo-assets/*',
+						'tests/*',
+						'vendor/*'
+					],
 					mainFile: 'revision-strike.php',
 					type: 'wp-plugin',
 					updateTimestamp: false,

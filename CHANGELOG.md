@@ -4,12 +4,20 @@ All notable changes to this project will be documented in this file, according t
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## [0.4.1] - 2017-03-04
+
+* Converted unit tests to use the 1.0.x development branch of [WP_Mock](https://github.com/10up/wp_mock)
+* Adjusted visibility of `RevisionStrikeCLI::log_deleted_revision()`. ([#20])
+
+
 ## [0.4.0] - 2016-07-29
 
 * Move from the manual pre-commit hook to [WP Enforcer](https://github.com/stevegrunwell/wp-enforcer).
 	* As a result, minor standards-related changes have been made to the code to comply with the [WordPress Coding Standards](https://codex.wordpress.org/WordPress_Coding_Standards).
 * Re-work the copy on Tools &rsaquo; Revision Strike to be more clear to site administrators. ([#26])
 * Add additional tests around the Tools &rsaquo; Revision Strike page confirmation messages. ([#25])
+
 
 ## [0.3.0] - 2016-06-20
 
@@ -32,6 +40,7 @@ Initial public release.
 
 
 [Unreleased]: https://github.com/stevegrunwell/revision-strike/compare/master...develop
+[0.4.1]: https://github.com/stevegrunwell/revision-strike/compare/v0.3.0...v0.4.1
 [0.4.0]: https://github.com/stevegrunwell/revision-strike/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/stevegrunwell/revision-strike/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/stevegrunwell/revision-strike/compare/v0.1.0...v0.2.0
@@ -41,6 +50,7 @@ Initial public release.
 [#16]: https://github.com/stevegrunwell/revision-strike/issues/16
 [#17]: https://github.com/stevegrunwell/revision-strike/issues/17
 [#18]: https://github.com/stevegrunwell/revision-strike/issues/18
+[#20]: https://github.com/stevegrunwell/revision-strike/issues/20
 [#21]: https://github.com/stevegrunwell/revision-strike/issues/21
 [#25]: https://github.com/stevegrunwell/revision-strike/issues/25
 [#26]: https://github.com/stevegrunwell/revision-strike/issues/26
