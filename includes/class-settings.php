@@ -71,7 +71,7 @@ class RevisionStrikeSettings {
 		add_management_page(
 			__( 'Revision Strike', 'revision-strike' ),
 			_x( 'Revision Strike', 'Tools menu link', 'revision-strike' ),
-			'edit_others_posts',
+			apply_filters( 'revisionstrike_capabilities', 'edit_others_posts' ),
 			'revision-strike',
 			array( $this, 'tools_page' )
 		);
