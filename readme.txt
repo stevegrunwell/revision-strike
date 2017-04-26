@@ -3,7 +3,7 @@ Contributors: stevegrunwell
 Tags: revisions, cron, performance, maintenance
 Requires at least: 4.2
 Tested up to: 4.7.2
-Stable tag: 0.4.1
+Stable tag: 0.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -49,6 +49,11 @@ Yup, just visit Tools > Revision Strike within the WordPress admin area. If you'
 == Changelog ==
 
 For a full list of changes, please see the [Change Log in the GitHub repo](https://github.com/stevegrunwell/revision-strike/blob/develop/CHANGELOG.md).
+
+= 0.4.2 =
+*April 26, 2017*
+
+* Add the `revisionstrike_capabilities` filter to allow setting required capabalities to access Revision Strike settings page.
 
 = 0.4.1 =
 
