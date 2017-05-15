@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Revision Strike package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Revision Strike 0.4.1\n"
+"Project-Id-Version: Revision Strike 0.5.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/revision-strike\n"
 "POT-Creation-Date: 2015-08-17 01:44:35+00:00\n"
 "MIME-Version: 1.0\n"
@@ -39,13 +39,13 @@ msgstr ""
 msgid "Revisions per Day"
 msgstr ""
 
-#: includes/class-settings.php:92 includes/tools.php:72
+#: includes/class-settings.php:99 includes/tools.php:72
 msgid ""
 "A post must be published at least this many days before its revisions can "
 "be removed."
 msgstr ""
 
-#: includes/class-settings.php:111
+#: includes/class-settings.php:118
 msgid ""
 "The maximum number of revisions to be removed each day. This works best "
 "when the value is higher than the average number of daily revisions."
@@ -117,17 +117,17 @@ msgstr ""
 msgid "https://stevegrunwell.com"
 msgstr ""
 
-#: includes/class-settings.php:73
+#: includes/class-settings.php:80
 msgctxt "Tools menu link"
 msgid "Revision Strike"
 msgstr ""
 
-#: includes/class-settings.php:87
+#: includes/class-settings.php:94
 msgctxt "Label for revision-strike[days]"
 msgid "Days"
 msgstr ""
 
-#: includes/class-settings.php:106
+#: includes/class-settings.php:113
 msgctxt "Label for revision-strike[limit]"
 msgid "Revisions"
 msgstr ""
