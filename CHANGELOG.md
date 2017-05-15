@@ -7,7 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 * Updated Composer and npm dependencies.
-* Update the Code Climate configuration
+* Update the Code Climate configuration.
+* Coding standards cleanup.
 
 
 ## [0.4.2] - 2017-04-26
