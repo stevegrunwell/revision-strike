@@ -11,9 +11,9 @@
     "name": "Steve Grunwell",
     "url": "https://stevegrunwell.com"
   },
-  "repository" : {
-    "type" : "git",
-    "url" : "https://github.com/stevegrunwell/revision-strike.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/stevegrunwell/revision-strike.git"
   },
   "license": "MIT"
 }

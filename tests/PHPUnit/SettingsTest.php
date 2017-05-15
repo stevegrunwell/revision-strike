@@ -95,6 +95,23 @@ class SettingsTest extends TestCase {
 		$instance->add_tools_page();
 	}
 
+	public function test_add_tools_page_filters_capability() {
+		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
+
+		M::userFunction( 'add_management_page', array(
+			'times'  => 1,
+			'args'   => array( '*', '*', 'some_cap', '*', '*' ),
+		) );
+
+		M::passthruFunction( 'esc_html_e' );
+
+		M::onFilter( 'revisionstrike_capabilities' )
+			->with( 'edit_others_posts' )
+			->reply( 'some_cap' );
+
+		$instance->add_tools_page();
+	}
+
 	public function test_tools_page() {
 		$instance = Mockery::mock( 'RevisionStrikeSettings' )->makePartial();
 		$instance->shouldReceive( 'get_option' )
