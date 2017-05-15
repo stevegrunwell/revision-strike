@@ -4,15 +4,11 @@ All notable changes to this project will be documented in this file, according t
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.5.0] - 2017-05-15
 
+* Add the `revisionstrike_capabilities` filter to allow setting required capabilities to access Revision Strike settings page. Props @pereirinha. ([#28])
 * Updated Composer and npm dependencies.
-* Update the Code Climate configuration
-
-
-## [0.4.2] - 2017-04-26
-
-* Add the `revisionstrike_capabilities` filter to allow setting required capabalities to access Revision Strike settings page.
+* Update the Code Climate configuration.
 
 
 ## [0.4.1] - 2017-03-04
@@ -50,7 +46,7 @@ Initial public release.
 
 
 [Unreleased]: https://github.com/stevegrunwell/revision-strike/compare/master...develop
-[0.4.2]: https://github.com/stevegrunwell/revision-strike/compare/v0.4.1...v0.4.2
+[0.5.0]: https://github.com/stevegrunwell/revision-strike/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/stevegrunwell/revision-strike/compare/v0.3.0...v0.4.1
 [0.4.0]: https://github.com/stevegrunwell/revision-strike/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/stevegrunwell/revision-strike/compare/v0.2.0...v0.3.0
@@ -65,3 +61,4 @@ Initial public release.
 [#21]: https://github.com/stevegrunwell/revision-strike/issues/21
 [#25]: https://github.com/stevegrunwell/revision-strike/issues/25
 [#26]: https://github.com/stevegrunwell/revision-strike/issues/26
+[#28]: https://github.com/stevegrunwell/revision-strike/pull/28
