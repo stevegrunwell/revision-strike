@@ -68,10 +68,17 @@ class RevisionStrikeSettings {
 	 * Add the Tools > Revision Strike page.
 	 */
 	public function add_tools_page() {
+		/**
+		 * Determine the WordPress capability required to see the Revision Strike tool page.
+		 *
+		 * @param string $capability The capability required to view the page.
+		 */
+		$capability = apply_filters( 'revisionstrike_capabilities', 'edit_others_posts' );
+
 		add_management_page(
 			__( 'Revision Strike', 'revision-strike' ),
 			_x( 'Revision Strike', 'Tools menu link', 'revision-strike' ),
-			apply_filters( 'revisionstrike_capabilities', 'edit_others_posts' ),
+			$capability,
 			'revision-strike',
 			array( $this, 'tools_page' )
 		);

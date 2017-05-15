@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * Add the `revisionstrike_capabilities` filter to allow setting required capabilities to access Revision Strike settings page. Props @pereirinha. ([#28])
 * Updated Composer and npm dependencies.
 * Update the Code Climate configuration.
+* Coding standards cleanup.
 
 
 ## [0.4.1] - 2017-03-04
