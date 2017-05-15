@@ -2,7 +2,7 @@
 Contributors: stevegrunwell
 Tags: revisions, cron, performance, maintenance
 Requires at least: 4.2
-Tested up to: 4.7.2
+Tested up to: 4.7.4
 Stable tag: 0.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -14,9 +14,11 @@ Periodically purge old post revisions via WP Cron.
 
 Unless post revisions are explicitly limited, WordPress will build up a hefty sum of revisions over time. While it's great to have revision history for some recent content, the chances that old revisions will be necessary diminish the longer a post has been published. Revision Strike is designed to automatically remove these unneeded revisions on older, published posts.
 
+
 = How does it work? =
 
 First, a threshold is set, with a default of 30 days. Once a day, Revision Strike will run and find any post revisions in the database attached to published posts with a post date of at least 30 (or your custom threshold) days ago, and "strike" (tear-down and remove) them from the WordPress database.
+
 
 = Contributing =
 
@@ -45,6 +47,7 @@ Yup, just visit Tools > Revision Strike within the WordPress admin area. If you'
 == Screenshots ==
 
 1. The Tools > Revision Strike page in action.
+
 
 == Changelog ==
 
@@ -92,6 +95,7 @@ For a full list of changes, please see the [Change Log in the GitHub repo](https
 *August 9, 2015*
 
 * Initial public release
+
 
 == Upgrade Notice ==
 

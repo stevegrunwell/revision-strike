@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file, according t
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+* Updated Composer and npm dependencies.
+* Update the Code Climate configuration
+
+
 ## [0.4.2] - 2017-04-26
 
 * Add the `revisionstrike_capabilities` filter to allow setting required capabalities to access Revision Strike settings page.
