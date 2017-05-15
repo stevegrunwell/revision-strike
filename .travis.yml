@@ -9,9 +9,8 @@ env:
   global:
     - WP_CLI_BIN_DIR=/tmp/wp-cli-phar
     - WP_CLI_CONFIG_PATH=/tmp/wp-cli-phar/config.yml
-    - WP_VERSION=master
-    - WP_VERSION=4.5
-    - WP_VERSION=4.6
+    - WP_VERSION=trunk
+    - WP_VERSION=4.7
 
 before_script:
   - composer install --prefer-source
@@ -20,8 +19,10 @@ before_script:
 
 script:
   - ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
-  - if [ $CODECLIMATE_REPO_TOKEN ]; then ./vendor/bin/test-reporter; fi;
   - ./vendor/bin/behat
+
+after_script:
+  - if [ $CODECLIMATE_REPO_TOKEN ]; then ./vendor/bin/test-reporter; fi;
 
 cache:
   directories:
