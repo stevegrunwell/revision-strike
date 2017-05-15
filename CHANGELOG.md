@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file, according t
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.4.2] - 2017-04-26
+
+* Add the `revisionstrike_capabilities` filter to allow setting required capabalities to access Revision Strike settings page.
+
 
 ## [0.4.1] - 2017-03-04
 
@@ -40,6 +44,7 @@ Initial public release.
 
 
 [Unreleased]: https://github.com/stevegrunwell/revision-strike/compare/master...develop
+[0.4.2]: https://github.com/stevegrunwell/revision-strike/compare/v0.4.1...v0.4.2
 [0.4.1]: https://github.com/stevegrunwell/revision-strike/compare/v0.3.0...v0.4.1
 [0.4.0]: https://github.com/stevegrunwell/revision-strike/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/stevegrunwell/revision-strike/compare/v0.2.0...v0.3.0

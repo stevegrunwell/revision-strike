@@ -121,6 +121,24 @@ Filter the list of eligible revision IDs.
 	<dd>The post types for which revisions should be located.</dd>
 </dl>
 
+### Filter: `revisionstrike_capabilities`
+
+Sets capabilities to access Revision Strike managment page.
+
+#### Example
+
+By default, Revision Strike sets required capabilities to access plugin managment page as `edit_others_posts`. You can use this filter to change this in order to have more control on who can access it.
+
+```php
+/**
+ * Sets capabilities to access Revision Strike settings page.
+ */
+function rs_capabilities() {
+	return 'manage_options';
+}
+add_filter( 'revisionstrike_capabilities', 'rs_capabilities' );
+```
+
 
 ## Contributing
 
