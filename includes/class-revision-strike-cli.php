@@ -56,7 +56,12 @@ class RevisionStrikeCLI extends WP_CLI {
 	 */
 	public function clean( $args, $assoc_args ) {
 		if ( isset( $assoc_args['verbose'] ) ) {
-			add_action( 'wp_delete_post_revision', array( $this, 'log_deleted_revision' ), 10, 2 );
+			add_action( 'wp_delete_post_revision', function ( $revision_id ) {
+				WP_CLI::log( sprintf(
+					esc_html__( 'Revision ID %d has been deleted.', 'revision-strike' ),
+					$revision_id
+				) );
+			} );
 		}
 
 		$instance = $this->get_instance();
@@ -127,19 +132,6 @@ class RevisionStrikeCLI extends WP_CLI {
 		);
 
 		return $this->clean( $args, $assoc_args );
-	}
-
-	/**
-	 * Log a deleted post revision.
-	 *
-	 * @param int          $revision_id Post revision ID.
-	 * @param object|array $revision    Post revision object or array.
-	 */
-	protected function log_deleted_revision( $revision_id, $revision ) {
-		WP_CLI::log( sprintf(
-			esc_html__( 'Revision ID %d has been deleted.', 'revision-strike' ),
-			$revision_id
-		) );
 	}
 
 	/**
