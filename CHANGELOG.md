@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file, according t
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+
+* Fixed bug where warnings were being thrown when Revision Strike was being run verbosely via WP-CLI. Props @ivankruchkoff. ([#29])
+
 ## [0.5.0] - 2017-05-15
 
 * Add the `revisionstrike_capabilities` filter to allow setting required capabilities to access Revision Strike settings page. Props @pereirinha. ([#28])
@@ -63,3 +67,4 @@ Initial public release.
 [#25]: https://github.com/stevegrunwell/revision-strike/issues/25
 [#26]: https://github.com/stevegrunwell/revision-strike/issues/26
 [#28]: https://github.com/stevegrunwell/revision-strike/pull/28
+[#29]: https://github.com/stevegrunwell/revision-strike/pull/29
