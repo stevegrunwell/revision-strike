@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a38c7e9071d9adbba696434c417b74a8",
+    "content-hash": "b4a2e4bfd47fe516121955b2afc1fb4b",
     "packages": [],
     "packages-dev": [
         {
@@ -1981,20 +1981,20 @@
         },
         {
             "name": "stevegrunwell/wp-enforcer",
-            "version": "v0.4.2",
+            "version": "v0.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/stevegrunwell/wp-enforcer.git",
-                "reference": "d975e353d768005746d9104ba2846040e0f31061"
+                "reference": "6d583588d06346982b5819066f14675ddc8004d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/stevegrunwell/wp-enforcer/zipball/d975e353d768005746d9104ba2846040e0f31061",
-                "reference": "d975e353d768005746d9104ba2846040e0f31061",
+                "url": "https://api.github.com/repos/stevegrunwell/wp-enforcer/zipball/6d583588d06346982b5819066f14675ddc8004d7",
+                "reference": "6d583588d06346982b5819066f14675ddc8004d7",
                 "shasum": ""
             },
             "require": {
-                "wp-coding-standards/wpcs": "^0.10.0"
+                "wp-coding-standards/wpcs": "*"
             },
             "bin": [
                 "bin/wp-enforcer"
@@ -2018,7 +2018,7 @@
                 "git hooks",
                 "wordpress"
             ],
-            "time": "2017-01-04T15:51:27+00:00"
+            "time": "2017-05-28T18:44:13+00:00"
         },
         {
             "name": "symfony/config",
