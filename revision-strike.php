@@ -21,7 +21,7 @@ require_once dirname( __FILE__ ) . '/includes/class-settings.php';
  * Bootstrap the plugin.
  */
 function revisionstrike_init() {
-	new RevisionStrike;
+	new RevisionStrike();
 
 	load_plugin_textdomain( 'revision-strike', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 }

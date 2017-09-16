@@ -7,6 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 * Fixed bug where warnings were being thrown when Revision Strike was being run verbosely via WP-CLI. Props @ivankruchkoff. ([#29])
+* Updated Composer dependencies and bumped the minimum development version of PHP to 7.0 (though the plugin is still targeting PHP 5.3+). ([#32])
+
 
 ## [0.5.0] - 2017-05-15
 
@@ -68,3 +70,4 @@ Initial public release.
 [#26]: https://github.com/stevegrunwell/revision-strike/issues/26
 [#28]: https://github.com/stevegrunwell/revision-strike/pull/28
 [#29]: https://github.com/stevegrunwell/revision-strike/pull/29
+[#32]: https://github.com/stevegrunwell/revision-strike/pull/32
