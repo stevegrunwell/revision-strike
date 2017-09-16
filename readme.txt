@@ -4,7 +4,7 @@ Tags: revisions, cron, performance, maintenance
 Requires at least: 4.2
 Tested up to: 4.8.1
 Requires PHP: 5.4
-Stable tag: 0.5.0
+Stable tag: 0.6.0
 License: MIT
 License URI: https://github.com/stevegrunwell/revision-strike/blob/develop/LICENSE.txt
 
@@ -54,6 +54,13 @@ Yup, just visit Tools > Revision Strike within the WordPress admin area. If you'
 
 For a full list of changes, please see the [Change Log in the GitHub repo](https://github.com/stevegrunwell/revision-strike/blob/develop/CHANGELOG.md).
 
+= 0.6.0 =
+
+*September 16, 2017*
+
+* Fixed bug where warnings were being thrown when Revision Strike was being run verbosely via WP-CLI. Props @ivankruchkoff.
+* Re-licensed the plugin under the MIT license.
+
 = 0.5.0 =
 
 *May 15, 2017*
@@ -100,6 +107,9 @@ For a full list of changes, please see the [Change Log in the GitHub repo](https
 
 
 == Upgrade Notice ==
+
+= 0.6.0 =
+Fixed bug where warnings were being thrown when Revision Strike was being run verbosely via WP-CLI.
 
 = 0.3.0 =
 Added new `revisionstrike_get_revision_ids` filter.

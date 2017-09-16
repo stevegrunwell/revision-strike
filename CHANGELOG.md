@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file, according t
 
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [0.6.0] - 2017-09-16
 
 * Fixed bug where warnings were being thrown when Revision Strike was being run verbosely via WP-CLI. Props @ivankruchkoff. ([#29])
 * Re-licensed the plugin under the MIT license.
@@ -54,6 +54,7 @@ Initial public release.
 
 
 [Unreleased]: https://github.com/stevegrunwell/revision-strike/compare/master...develop
+[0.6.0]: https://github.com/stevegrunwell/revision-strike/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/stevegrunwell/revision-strike/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/stevegrunwell/revision-strike/compare/v0.3.0...v0.4.1
 [0.4.0]: https://github.com/stevegrunwell/revision-strike/compare/v0.3.0...v0.4.0
