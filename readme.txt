@@ -4,7 +4,7 @@ Tags: revisions, cron, performance, maintenance
 Requires at least: 4.2
 Tested up to: 4.8.1
 Requires PHP: 5.4
-Stable tag: 0.5.0
+Stable tag: 0.6.0
 License: MIT
 License URI: https://github.com/stevegrunwell/revision-strike/blob/develop/LICENSE.txt
 
