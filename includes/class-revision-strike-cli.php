@@ -56,7 +56,13 @@ class RevisionStrikeCLI extends WP_CLI {
 	 */
 	public function clean( $args, $assoc_args ) {
 		if ( isset( $assoc_args['verbose'] ) ) {
-			add_action( 'wp_delete_post_revision', array( $this, 'log_deleted_revision' ), 10, 2 );
+			add_action( 'wp_delete_post_revision', function ( $revision_id ) {
+				WP_CLI::log( sprintf(
+					/* Translators: %1$d represents the ID of the deleted revision. */
+					esc_html__( 'Revision ID %1$d has been deleted.', 'revision-strike' ),
+					$revision_id
+				) );
+			} );
 		}
 
 		$instance = $this->get_instance();
@@ -74,18 +80,22 @@ class RevisionStrikeCLI extends WP_CLI {
 
 		$stats = $instance->get_stats();
 		if ( 0 === $stats['deleted'] ) {
-			return WP_CLI::success(
-				esc_html__( 'No errors occurred, but no post revisions were removed.', 'revision-strike' )
-			);
+			$message = __( 'No errors occurred, but no post revisions were removed.', 'revision-strike' );
+
+		} elseif ( 1 === $stats['deleted'] ) {
+			$message = __( 'One post revision was deleted successfully', 'revision-strike' );
 
 		} else {
-			return WP_CLI::success( sprintf( _n(
-				'One post revision was deleted successfully',
-				'%d post revisions were deleted successfully',
+			/* Translators: %1$d represents the number of deleted revisions. */
+			$message = sprintf( _n(
+				'%1$d post revision was deleted successfully',
+				'%1$d post revisions were deleted successfully',
 				$stats['deleted'],
 				'revision-strike'
-			), $stats['deleted'] ) );
+			), $stats['deleted'] );
 		}
+
+		WP_CLI::success( esc_html( $message ) );
 	}
 
 	/**
@@ -130,26 +140,13 @@ class RevisionStrikeCLI extends WP_CLI {
 	}
 
 	/**
-	 * Log a deleted post revision.
-	 *
-	 * @param int          $revision_id Post revision ID.
-	 * @param object|array $revision    Post revision object or array.
-	 */
-	protected function log_deleted_revision( $revision_id, $revision ) {
-		WP_CLI::log( sprintf(
-			esc_html__( 'Revision ID %d has been deleted.', 'revision-strike' ),
-			$revision_id
-		) );
-	}
-
-	/**
 	 * Get the current RevisionStrike instance.
 	 *
 	 * @return RevisionStrike The current instance in $this->instance.
 	 */
 	protected function get_instance() {
 		if ( null === $this->instance ) {
-			$this->instance = new RevisionStrike;
+			$this->instance = new RevisionStrike();
 		}
 		return $this->instance;
 	}

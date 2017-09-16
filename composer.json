@@ -2,12 +2,12 @@
 	"name": "stevegrunwell/revision-strike",
 	"description": "Periodically purge old post revisions via WP Cron.",
 	"type": "wordpress-plugin",
+	"license": "MIT",
 	"require-dev": {
-		"php": ">=5.6",
-		"phpunit/phpunit": "^5.7",
-		"10up/wp_mock": "1.0.x-dev",
+		"php": ">=7.0",
+		"10up/wp_mock": "dev-dev",
 		"behat/behat": "~2.5",
-		"stevegrunwell/wp-enforcer": "^0.4",
+		"stevegrunwell/wp-enforcer": "^0.5.0",
 		"codeclimate/php-test-reporter": "dev-master"
 	},
 	"authors": [

@@ -163,22 +163,3 @@ There are a few integration tests for the plugin, written using [Behat](http://b
 $ bin/install-package-tests.sh
 $ vendor/bin/behat
 ```
-
-## License
-
-Revision Strike<br>
-Copyright &copy; 2015 Steve Grunwell
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-[GNU General Public License](http://www.gnu.org/licenses/gpl-2.0.html) for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.

@@ -28,6 +28,19 @@
 		<severity>0</severity>
 	</rule>
 
+	<!-- Don't get upset about file naming schemes. -->
+	<rule ref="WordPress.Files.FileName.InvalidClassFileName">
+		<severity>0</severity>
+	</rule>
+
+	<!--
+		There's a fair bit of embedded PHP on tools.php, and some of the "Opening/closing PHP tags
+		must be on lines by themselves" rules will make them really difficult to read.
+	-->
+	<rule ref="Squiz.PHP.EmbeddedPhp">
+		<exclude-pattern>includes/tools.php</exclude-pattern>
+	</rule>
+
 	<rule ref="WordPress-Extra"/>
 	<rule ref="WordPress-Docs"/>
 </ruleset>
