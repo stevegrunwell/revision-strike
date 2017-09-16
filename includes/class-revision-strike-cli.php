@@ -146,7 +146,7 @@ class RevisionStrikeCLI extends WP_CLI {
 	 */
 	protected function get_instance() {
 		if ( null === $this->instance ) {
-			$this->instance = new RevisionStrike;
+			$this->instance = new RevisionStrike();
 		}
 		return $this->instance;
 	}
