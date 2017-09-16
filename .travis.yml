@@ -1,20 +1,21 @@
 language: php
 
 php:
-  - 5.6
   - 7.0
   - 7.1
+  - 7.2
 
 env:
   global:
-    - WP_CLI_BIN_DIR=/tmp/wp-cli-phar
-    - WP_CLI_CONFIG_PATH=/tmp/wp-cli-phar/config.yml
+    - WP_CLI_BIN_DIR=/tmp/wp-cli-phar WP_CLI_CONFIG_PATH=/tmp/wp-cli-phar/config.yml
     - WP_VERSION=trunk
-    - WP_VERSION=4.7
+    - WP_VERSION=4.8.1
 
-before_script:
+install:
   - composer install --prefer-source
   - bash ./bin/install-package-tests.sh
+
+before_script:
   - mkdir -p build/logs
 
 script:
