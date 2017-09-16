@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Revision Strike package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Revision Strike 0.5.0\n"
+"Project-Id-Version: Revision Strike 0.6.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/revision-strike\n"
 "POT-Creation-Date: 2015-08-17 01:44:35+00:00\n"
 "MIME-Version: 1.0\n"
@@ -13,19 +13,25 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "X-Generator: grunt-wp-i18n 0.5.4\n"
 
-#: includes/class-revision-strike-cli.php:78
+#: includes/class-revision-strike-cli.php:62
+#. Translators: %1$d represents the ID of the deleted revision.
+msgid "Revision ID %1$d has been deleted."
+msgstr ""
+
+#: includes/class-revision-strike-cli.php:83
 msgid "No errors occurred, but no post revisions were removed."
 msgstr ""
 
-#: includes/class-revision-strike-cli.php:82
+#: includes/class-revision-strike-cli.php:86
 msgid "One post revision was deleted successfully"
-msgid_plural "%d post revisions were deleted successfully"
+msgstr ""
+
+#: includes/class-revision-strike-cli.php:90
+#. Translators: %1$d represents the number of deleted revisions.
+msgid "%1$d post revision was deleted successfully"
+msgid_plural "%1$d post revisions were deleted successfully"
 msgstr[0] ""
 msgstr[1] ""
-
-#: includes/class-revision-strike-cli.php:140
-msgid "Revision ID %d has been deleted."
-msgstr ""
 
 #. Plugin Name of the plugin/theme
 msgid "Revision Strike"
@@ -39,7 +45,7 @@ msgstr ""
 msgid "Revisions per Day"
 msgstr ""
 
-#: includes/class-settings.php:99 includes/tools.php:72
+#: includes/class-settings.php:99 includes/tools.php:78
 msgid ""
 "A post must be published at least this many days before its revisions can "
 "be removed."
@@ -65,39 +71,45 @@ msgstr ""
 
 #: includes/tools.php:30
 msgid "One post revision has been deleted successfully!"
-msgid_plural "%d post revisions have been deleted successfully!"
+msgstr ""
+
+#: includes/tools.php:35
+#. Translators: %1$d represents the number of deleted revisions.
+msgid "%1$d post revision has been deleted successfully!"
+msgid_plural "%1$d post revisions have been deleted successfully!"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/tools.php:50
+#: includes/tools.php:55
 msgid "Revision Strike: On-Demand"
 msgstr ""
 
-#: includes/tools.php:54
+#: includes/tools.php:59
 msgid ""
 "This page will allow Revision Strike will remove old revisions from the "
 "post database immediately."
 msgstr ""
 
-#: includes/tools.php:60
+#: includes/tools.php:66
+#. Translators: %1$s is the URL of the "Writing" settings page.
 msgid ""
 "To change the default settings for Revision Strike's automatic, daily run, "
-"please see <a href=\"%s\">Settings &rsaquo; Writing</a>."
+"please see <a href=\"%1$s\">Settings &rsaquo; Writing</a>."
 msgstr ""
 
-#: includes/tools.php:68
+#: includes/tools.php:74
 msgid "Post Age Threshold"
 msgstr ""
 
-#: includes/tools.php:80
+#: includes/tools.php:86
 msgid "Limit"
 msgstr ""
 
-#: includes/tools.php:84
+#: includes/tools.php:90
 msgid "The maximum number of revisions to delete."
 msgstr ""
 
-#: includes/tools.php:93
+#: includes/tools.php:99
 msgid "Strike Revisions"
 msgstr ""
 
