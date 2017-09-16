@@ -31,9 +31,10 @@ if ( isset( $_GET['nonce'], $_POST['days'], $_POST['limit'] ) && wp_verify_nonce
 		$class   = 'updated';
 
 	} else {
+		/* Translators: %1$d represents the number of deleted revisions. */
 		$message = sprintf( _n(
-			'%d post revision has been deleted successfully!',
-			'%d post revisions have been deleted successfully!',
+			'%1$d post revision has been deleted successfully!',
+			'%1$d post revisions have been deleted successfully!',
 			$stats['deleted'],
 			'revision-strike'
 		), $stats['deleted'] );
@@ -61,8 +62,9 @@ if ( isset( $_GET['nonce'], $_POST['days'], $_POST['limit'] ) && wp_verify_nonce
 			);
 		?></p>
 		<p><?php
+			/* Translators: %1$s is the URL of the "Writing" settings page. */
 			echo wp_kses_post( sprintf( __(
-				'To change the default settings for Revision Strike\'s automatic, daily run, please see <a href="%s">Settings &rsaquo; Writing</a>.',
+				'To change the default settings for Revision Strike\'s automatic, daily run, please see <a href="%1$s">Settings &rsaquo; Writing</a>.',
 				'revision_strike'
 			), admin_url( 'options-writing.php' ) ) );
 		?></p>

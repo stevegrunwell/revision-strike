@@ -58,7 +58,8 @@ class RevisionStrikeCLI extends WP_CLI {
 		if ( isset( $assoc_args['verbose'] ) ) {
 			add_action( 'wp_delete_post_revision', function ( $revision_id ) {
 				WP_CLI::log( sprintf(
-					esc_html__( 'Revision ID %d has been deleted.', 'revision-strike' ),
+					/* Translators: %1$d represents the ID of the deleted revision. */
+					esc_html__( 'Revision ID %1$d has been deleted.', 'revision-strike' ),
 					$revision_id
 				) );
 			} );
@@ -85,9 +86,10 @@ class RevisionStrikeCLI extends WP_CLI {
 			$message = __( 'One post revision was deleted successfully', 'revision-strike' );
 
 		} else {
+			/* Translators: %1$d represents the number of deleted revisions. */
 			$message = sprintf( _n(
-				'%d post revision was deleted successfully',
-				'%d post revisions were deleted successfully',
+				'%1$d post revision was deleted successfully',
+				'%1$d post revisions were deleted successfully',
 				$stats['deleted'],
 				'revision-strike'
 			), $stats['deleted'] );
