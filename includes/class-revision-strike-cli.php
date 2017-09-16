@@ -79,18 +79,21 @@ class RevisionStrikeCLI extends WP_CLI {
 
 		$stats = $instance->get_stats();
 		if ( 0 === $stats['deleted'] ) {
-			return WP_CLI::success(
-				esc_html__( 'No errors occurred, but no post revisions were removed.', 'revision-strike' )
-			);
+			$message = __( 'No errors occurred, but no post revisions were removed.', 'revision-strike' );
+
+		} elseif ( 1 === $stats['deleted'] ) {
+			$message = __( 'One post revision was deleted successfully', 'revision-strike' );
 
 		} else {
-			return WP_CLI::success( sprintf( _n(
-				'One post revision was deleted successfully',
+			$message = sprintf( _n(
+				'%d post revision was deleted successfully',
 				'%d post revisions were deleted successfully',
 				$stats['deleted'],
 				'revision-strike'
-			), $stats['deleted'] ) );
+			), $stats['deleted'] );
 		}
+
+		WP_CLI::success( esc_html( $message ) );
 	}
 
 	/**

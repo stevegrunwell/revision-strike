@@ -26,9 +26,13 @@ if ( isset( $_GET['nonce'], $_POST['days'], $_POST['limit'] ) && wp_verify_nonce
 	} elseif ( 0 === $stats['deleted'] && 0 < $stats['count'] ) {
 		$message = __( 'Something went wrong deleting post revisions, please try again!', 'revision-strike' );
 
+	} elseif ( 1 === $stats['deleted'] ) {
+		$message = __( 'One post revision has been deleted successfully!', 'revision-strike' );
+		$class   = 'updated';
+
 	} else {
 		$message = sprintf( _n(
-			'One post revision has been deleted successfully!',
+			'%d post revision has been deleted successfully!',
 			'%d post revisions have been deleted successfully!',
 			$stats['deleted'],
 			'revision-strike'
