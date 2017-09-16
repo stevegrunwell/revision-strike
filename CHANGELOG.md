@@ -7,6 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 * Fixed bug where warnings were being thrown when Revision Strike was being run verbosely via WP-CLI. Props @ivankruchkoff. ([#29])
+* Re-licensed the plugin under the MIT license.
+
 
 ## [0.5.0] - 2017-05-15
 
