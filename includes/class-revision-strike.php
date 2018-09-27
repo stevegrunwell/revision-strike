@@ -160,7 +160,7 @@ class RevisionStrike {
 
 		// Calculate the number of batches to run.
 		$limit       = self::BATCH_SIZE >= $args['limit'] ? $args['limit'] : self::BATCH_SIZE;
-		$batch_count = ceil( $args['limit'] / $limit );
+		$batch_count = $limit > 0 ? ceil( $args['limit'] / $limit ) : 0;
 
 		for ( $i = 0; $i < $batch_count; $i++ ) {
 			$revision_ids = $this->get_revision_ids( $args['days'], $limit, $args['post_type'] );
